@@ -1,0 +1,194 @@
+/* ========================================
+   CONTACT PAGE & GET STARTED
+   ======================================== */
+
+.contact-us-page {
+    padding: 60px 0;
+}
+
+.contact-us-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.contact-us-form {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+}
+
+.contact-us-form h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.contact-us-form .form-subtitle {
+    color: var(--gray-500);
+    margin-bottom: 20px;
+}
+
+.contact-us-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.contact-us-info .info-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+}
+
+.contact-us-info .info-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.contact-us-info .info-card p {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.6;
+}
+
+.contact-us-info .info-card a {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.contact-us-info .info-card a:hover {
+    text-decoration: underline;
+}
+
+.contact-us-info .info-card.social .social-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.contact-us-info .info-card.social .social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius);
+    background: var(--gray-100);
+    transition: var(--transition);
+}
+
+.contact-us-info .info-card.social .social-links a:hover {
+    background: var(--primary-light);
+}
+
+.contact-us-info .info-card.social .social-links img {
+    width: 20px;
+    height: 20px;
+}
+
+/* ---------- GET STARTED ---------- */
+.get-started-page {
+    padding: 60px 0;
+}
+
+.get-started-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.get-started-form {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+}
+
+.get-started-form h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.get-started-form .form-subtitle {
+    color: var(--gray-500);
+    margin-bottom: 20px;
+}
+
+.get-started-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.get-started-info .info-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+}
+
+.get-started-info .info-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.get-started-info .info-card ul,
+.get-started-info .info-card ol {
+    padding-left: 20px;
+    color: var(--gray-600);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.get-started-info .info-card ul li,
+.get-started-info .info-card ol li {
+    margin-bottom: 4px;
+}
+
+.get-started-info .info-card p {
+    font-size: 14px;
+    color: var(--gray-600);
+    margin-bottom: 12px;
+}
+
+.get-started-info .social-links {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.get-started-info .social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--gray-100);
+    transition: var(--transition);
+}
+
+.get-started-info .social-links a:hover {
+    background: var(--primary-light);
+    transform: translateY(-2px);
+}
+
+.get-started-info .social-links img {
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+}
+
+.get-started-info .social-links a:hover img {
+    opacity: 1;
+}

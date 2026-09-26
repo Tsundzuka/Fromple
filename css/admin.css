@@ -1,0 +1,122 @@
+/* ============================================================
+   ADMIN CSS - MAIN IMPORT FILE
+   ============================================================
+   This file imports all admin-related styles. 
+   Pages using this: dashboard.html, admin dashboard pages
+   ============================================================ */
+
+/* ============================================================
+   BASE - Core admin layout structure
+   ============================================================
+   Provides the admin wrapper, sidebar, and main content area layout.
+   Pages: All admin pages
+   ============================================================ */
+@import 'pages/admin/base.css';
+
+/* ============================================================
+   MAIN - Admin page header, stats grids, quick stats, mini stats
+   ============================================================
+   Contains the admin page header with title/subtitle, stats cards,
+   quick stats bar, and mini stats cards.
+   Pages: Admin dashboard, overview pages
+   ============================================================ */
+@import 'pages/admin/main.css';
+
+/* ============================================================
+   COMPONENTS - Admin cards, grids, filters
+   ============================================================
+   Provides card containers, 2-column and 3-column grid layouts,
+   and filter input/select styles for admin forms.
+   Pages: All admin pages with cards or filters
+   ============================================================ */
+@import 'pages/admin/components.css';
+
+/* ============================================================
+   TABLES - Admin data tables with pagination
+   ============================================================
+   Styles for admin data tables including headers, rows, hover states,
+   table footer with pagination controls, and action buttons.
+   Pages: User management, campaign list, data views
+   ============================================================ */
+@import 'pages/admin/tables.css';
+
+/* ============================================================
+   QUICK ACTIONS - Action buttons and activity list
+   ============================================================
+   Quick action button grid (2-column) and activity feed list
+   with timestamps for recent admin actions.
+   Pages: Admin dashboard, activity logs
+   ============================================================ */
+@import 'pages/admin/quick-actions.css';
+
+/* ============================================================
+   PROMPTS - Category buttons for prompt management
+   ============================================================
+   Category filter buttons with active/hover states for
+   organizing and filtering prompts or content types.
+   Pages: AI prompt management, content templates
+   ============================================================ */
+@import 'pages/admin/prompts.css';
+
+/* ============================================================
+   SETTINGS - Admin settings forms and toggles
+   ============================================================
+   Settings grid layout, form fields, toggle switches,
+   checkbox labels, and range sliders for admin preferences.
+   Pages: Admin settings, configuration pages
+   ============================================================ */
+@import 'pages/admin/settings.css';
+
+/* ============================================================
+   MODALS - Popup modal dialogs
+   ============================================================
+   Full-screen overlay modals with header, body, footer sections.
+   Includes large modal variant and form row layouts inside modals.
+   Pages: Add/edit forms, confirm dialogs, detail views
+   ============================================================ */
+@import 'pages/admin/modals.css';
+
+/* ============================================================
+   CHARTS - Chart placeholders and bar charts
+   ============================================================
+   Placeholder containers for charts with bar chart styling
+   for visual data representation in admin dashboards.
+   Pages: Admin dashboard, analytics pages
+   ============================================================ */
+@import 'pages/admin/charts.css';
+
+/* ============================================================
+   BREAKDOWN - User breakdown bars and queue status
+   ============================================================
+   Horizontal progress bars for user plan breakdowns and
+   queue status details with labeled stats.
+   Pages: Admin dashboard, user analytics, queue monitoring
+   ============================================================ */
+@import 'pages/admin/breakdown.css';
+
+/* ============================================================
+   TOGGLE - Mobile sidebar toggle button
+   ============================================================
+   Hamburger menu toggle with animated lines and "Menu" text.
+   Used to open/close the admin sidebar on mobile devices.
+   Pages: All admin pages (mobile only)
+   ============================================================ */
+@import 'pages/admin/toggle.css';
+
+/* ============================================================
+   RESPONSIVE - Admin responsive breakpoints
+   ============================================================
+   Responsive styles for tablet (1024px), mobile (768px), 
+   and small phone (480px) including sidebar slide-in.
+   Pages: All admin pages
+   ============================================================ */
+@import 'pages/admin/responsive.css';
+
+/* ============================================================
+   DARK MODE - Admin dark mode overrides
+   ============================================================
+   Dark mode color overrides for all admin components
+   when system preference is dark mode.
+   Pages: All admin pages
+   ============================================================ */
+@import 'pages/admin/dark-mode.css';

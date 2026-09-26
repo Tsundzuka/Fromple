@@ -1,0 +1,133 @@
+/* ========================================
+   BADGES
+   ======================================== */
+
+.badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge.success {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.badge.warning {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.badge.muted {
+    background: var(--gray-200);
+    color: var(--gray-600);
+}
+
+.badge.info {
+    background: #F0FDFA;
+    color: #0D9488;
+}
+
+.badge-success {
+    background: #D1FAE5;
+    color: #065F46;
+    padding: 2px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-processing {
+    background: #FEF3C7;
+    color: #92400E;
+    padding: 2px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-badge.completed {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.status-badge.in-progress {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.status-badge.pending {
+    background: var(--gray-200);
+    color: var(--gray-600);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot.waiting {
+    background: var(--gray-400);
+}
+.status-dot.processing {
+    background: var(--warning);
+    animation: pulse 1s infinite;
+}
+.status-dot.done {
+    background: var(--success);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.4;
+    }
+}
+
+.platform-pill {
+    padding: 4px 16px;
+    background: var(--gray-100);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-700);
+}
+
+.active-tag {
+    background: var(--primary-light) !important;
+    color: var(--primary) !important;
+}
+
+.expertise-tag {
+    display: inline-block;
+    padding: 4px 16px;
+    background: var(--gray-100);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-700);
+    margin: 4px 4px 4px 0;
+}
+
+.tag-pill {
+    background: var(--gray-100);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--gray-600);
+}

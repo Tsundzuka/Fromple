@@ -1,0 +1,221 @@
+/* ============================================================
+   DARK MODE SUPPORT FOR ADMIN
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+    .admin-sidebar {
+        background: var(--gray-900);
+        border-right: 1px solid var(--gray-800);
+    }
+    
+    .admin-main {
+        background: var(--gray-900);
+    }
+    
+    .admin-stat-card {
+        background: var(--gray-800);
+        border-color: var(--gray-700);
+    }
+    
+    .admin-stat-card .stat-value {
+        color: #fff;
+    }
+    
+    .admin-stat-card .stat-label {
+        color: var(--gray-400);
+    }
+    
+    .admin-card {
+        background: var(--gray-800);
+        border-color: var(--gray-700);
+    }
+    
+    .admin-card-header h3 {
+        color: var(--gray-200);
+    }
+    
+    .quick-stat {
+        background: var(--gray-800);
+        border-color: var(--gray-700);
+    }
+    
+    .quick-stat .quick-value {
+        color: #fff;
+    }
+    
+    .quick-stat .quick-label {
+        color: var(--gray-400);
+    }
+    
+    .mini-stat {
+        background: var(--gray-800);
+        border-color: var(--gray-700);
+    }
+    
+    .mini-stat .mini-value {
+        color: #fff;
+    }
+    
+    .mini-stat .mini-label {
+        color: var(--gray-400);
+    }
+    
+    .admin-table thead {
+        background: var(--gray-800);
+        border-bottom: 2px solid var(--gray-700);
+    }
+    
+    .admin-table thead th {
+        color: var(--gray-400);
+    }
+    
+    .admin-table tbody tr {
+        border-bottom: 1px solid var(--gray-700);
+    }
+    
+    .admin-table tbody tr:hover {
+        background: var(--gray-800);
+    }
+    
+    .admin-table tbody td {
+        color: var(--gray-300);
+    }
+    
+    .filter-input,
+    .filter-select {
+        background: var(--gray-800);
+        border-color: var(--gray-700);
+        color: #fff;
+    }
+    
+    .filter-input:focus,
+    .filter-select:focus {
+        background: var(--gray-800);
+        border-color: var(--primary);
+    }
+    
+    .quick-action-btn {
+        background: var(--gray-800);
+        border-color: var(--gray-700);
+        color: var(--gray-300);
+    }
+    
+    .quick-action-btn:hover {
+        background: var(--gray-700);
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+    
+    .activity-item {
+        background: var(--gray-800);
+        color: var(--gray-300);
+    }
+    
+    .admin-modal-content {
+        background: var(--gray-800);
+    }
+    
+    .admin-modal-header {
+        border-bottom: 1px solid var(--gray-700);
+    }
+    
+    .admin-modal-header h2 {
+        color: #fff;
+    }
+    
+    .modal-close {
+        color: var(--gray-400);
+    }
+    
+    .modal-close:hover {
+        color: #fff;
+    }
+    
+    .admin-modal-footer {
+        border-top: 1px solid var(--gray-700);
+    }
+    
+    .admin-modal-body {
+        color: var(--gray-300);
+    }
+    
+    .admin-modal-body label {
+        color: var(--gray-300);
+    }
+    
+    .settings-field label {
+        color: var(--gray-300);
+    }
+    
+    .toggle-label {
+        color: var(--gray-300);
+    }
+    
+    .admin-page-header h1 {
+        color: #fff;
+    }
+    
+    .admin-page-header .page-subtitle {
+        color: var(--gray-400);
+    }
+    
+    .admin-last-updated {
+        color: var(--gray-500);
+    }
+    
+    .pagination-btn {
+        background: var(--gray-800);
+        border-color: var(--gray-700);
+        color: var(--gray-300);
+    }
+    
+    .pagination-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+    
+    .page-info {
+        color: var(--gray-400);
+    }
+    
+    .breakdown-label {
+        color: var(--gray-300);
+    }
+    
+    .breakdown-value {
+        color: #fff;
+    }
+    
+    .breakdown-bar {
+        background: var(--gray-700);
+    }
+    
+    .queue-stat {
+        background: var(--gray-800);
+    }
+    
+    .queue-stat-label {
+        color: var(--gray-400);
+    }
+    
+    .queue-stat-value {
+        color: var(--gray-300);
+    }
+    
+    .category-btn {
+        background: var(--gray-800);
+        border-color: var(--gray-700);
+        color: var(--gray-400);
+    }
+    
+    .category-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+    
+    .category-btn.active {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+    }
+}

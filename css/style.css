@@ -1,0 +1,177 @@
+/* ============================================================
+   MAIN CSS - IMPORT FILE
+   ============================================================
+   This is the main entry point for all front-end styles.
+   Pages using this: All public pages (index, about, blog, careers, contact, faq, pricing, services, team, etc.)
+   ============================================================ */
+
+/* ============================================================
+   BASE - CSS variables and reset styles
+   ============================================================
+   Contains all CSS custom properties (colors, spacing, shadows, fonts)
+   and global reset styles (margin:0, padding:0, box-sizing:border-box).
+   Pages: All pages
+   ============================================================ */
+@import 'base/variables.css';
+@import 'base/reset.css';
+
+/* ============================================================
+   LAYOUT - Header, footer, and hero section
+   ============================================================
+   Header with navigation, mobile drawer, profile dropdown.
+   Footer with grid, social links, and bottom bar.
+   Hero section for the landing page with dashboard preview.
+   Pages: All pages (header/footer), index.html (hero)
+   ============================================================ */
+@import 'layout/header.css';
+@import 'layout/footer.css';
+@import 'layout/hero.css';
+
+/* ============================================================
+   COMPONENTS - Reusable UI components
+   ============================================================
+   Buttons (primary, secondary, sizes), form inputs (text, select, textarea),
+   card containers with headers, and badge/tag styles.
+   Pages: All pages with interactive elements
+   ============================================================ */
+@import 'components/buttons.css';
+@import 'components/forms.css';
+@import 'components/cards.css';
+@import 'components/badges.css';
+
+/* ============================================================
+   PAGES - Page-specific styles
+   ============================================================ */
+
+/* HOME - Landing page styles
+   Features grid, how it works steps, platforms grid,
+   testimonials cards, and CTA section.
+   Pages: index.html
+   ============================================================ */
+@import 'pages/home.css';
+
+/* AUTH - Login and registration pages
+   Auth container, tabs, form inputs, social login buttons,
+   responsive auth styles, and dark mode support.
+   Pages: login.html
+   ============================================================ */
+@import 'pages/auth.css';
+
+/* DASHBOARD - User dashboard
+   Sidebar navigation, stats grid, campaign list, quick actions,
+   queue list, activity table with filters, upload dropzone,
+   review cards, planner grid, brand voice settings, and user settings.
+   Pages: dashboard.html
+   ============================================================ */
+@import 'pages/dashboard.css';
+
+/* BLOG - Blog listing and blog post detail
+   Blog grid with cards, featured posts, category tags.
+   Blog post with featured image, header, body content,
+   tags, share buttons, and related posts.
+   Pages: blog.html, blog-post.html
+   ============================================================ */
+@import 'pages/blog.css';
+
+/* PRICING - Pricing plans page
+   Pricing cards with plans (Free, Professional, Growth),
+   pricing badges, feature lists, and pricing FAQ section.
+   Pages: pricing.html
+   ============================================================ */
+@import 'pages/pricing.css';
+
+/* CAREERS - Job listings and company culture
+   Why join us cards, open positions list with role items,
+   benefits and perks grid.
+   Pages: careers.html
+   ============================================================ */
+@import 'pages/careers.css';
+
+/* ABOUT - Company information
+   Mission, story, values grid with cards, and team CTA.
+   Pages: about.html
+   ============================================================ */
+@import 'pages/about.css';
+
+/* CONTACT - Contact forms and info
+   Contact form with subject selector, contact info cards
+   with email, phone, social links.
+   Also includes Get Started page form styles.
+   Pages: contact.html, get-started.html
+   ============================================================ */
+@import 'pages/contact.css';
+
+/* LEGAL - Terms of Service and Privacy Policy
+   Legal content with table of contents, section headings,
+   highlight boxes, and responsive legal text styles.
+   Pages: terms.html, policies.html
+   ============================================================ */
+@import 'pages/legal.css';
+
+/* FAQ - Frequently Asked Questions
+   FAQ search bar, category sections, accordion items
+   with expand/collapse, and FAQ CTA section.
+   Pages: faq.html
+   ============================================================ */
+@import 'pages/faq.css';
+
+/* APPLY - Job application form
+   Job details display, application form with file upload,
+   form row layouts (2-column), success and error states.
+   Pages: apply.html
+   ============================================================ */
+@import 'pages/apply.css';
+
+/* GET STARTED - Free trial signup form
+   Clean form with info cards, social links, and responsive layout.
+   Pages: get-started.html
+   ============================================================ */
+@import 'pages/get-started.css';
+
+/* SERVICES - Services listing and detail
+   Services grid with cards, service features list,
+   service detail with overview, key features, platforms supported,
+   and how it works steps.
+   Pages: services.html, service-detail.html
+   ============================================================ */
+@import 'pages/services.css';
+
+/* TEAM - Team members and individual profiles
+   Team grid with avatars, roles, bios.
+   Team detail with social links, bio, and expertise tags.
+   Pages: team.html, team-detail.html
+   ============================================================ */
+@import 'pages/payment.css';
+
+/* PAGE HERO - Shared hero section for inner pages
+   Page hero with title, subtitle, and back link.
+   Used across multiple pages for consistent top section styling.
+   Pages: about, apply, blog, careers, contact, faq, pricing, services, team, terms, policies
+   ============================================================ */
+@import 'pages/page-hero.css';
+
+/* BILLING - Dashboard billing tab
+   Billing summary cards, subscription details, payment method,
+   usage tracking bars, invoice table, and upgrade options.
+   Pages: dashboard.html (Billing tab)
+   ============================================================ */
+@import 'pages/billing.css';
+
+/* ============================================================
+   UTILITIES - Global utility styles
+   ============================================================ */
+
+/* RESPONSIVE - All responsive breakpoints
+   Tablet (1024px), mobile (768px), small phone (480px).
+   Handles layout stacking, sizing, sidebar slide-in,
+   table conversions to card view, and form adjustments.
+   Pages: All pages
+   ============================================================ */
+@import 'utilities/responsive.css';
+
+/* DARK MODE - System dark mode overrides
+   Dark mode color overrides for all components including
+   header, footer, cards, forms, tables, modals, and more.
+   Pages: All pages
+   ============================================================ */
+@import 'utilities/dark-mode.css';

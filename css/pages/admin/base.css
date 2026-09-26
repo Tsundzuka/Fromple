@@ -1,0 +1,418 @@
+/* ============================================================
+   ADMIN LAYOUT
+   ============================================================ */
+
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+    padding-top: 64px;
+}
+
+/* ============================================================
+   ADMIN SIDEBAR
+   ============================================================ */
+
+.admin-sidebar {
+    width: 220px;
+    background: var(--gray-900);
+    color: #fff;
+    padding: 20px 0;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    flex-shrink: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.admin-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 12px;
+}
+
+.admin-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    color: var(--gray-400);
+    transition: var(--transition);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.admin-nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.admin-nav-item.active {
+    background: rgba(20, 184, 166, 0.15);
+    color: var(--primary);
+}
+
+.admin-nav-item .nav-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.admin-nav-item .nav-badge {
+    margin-left: auto;
+    background: var(--primary);
+    color: #fff;
+    font-size: 11px;
+    padding: 1px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.admin-sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin-top: auto;
+}
+
+.admin-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.admin-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.admin-name {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.admin-role {
+    font-size: 11px;
+    color: var(--gray-400);
+}
+
+/* ============================================================
+   AUTH LOADING OVERLAY
+   ============================================================ */
+
+.auth-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    opacity: 1;
+    visibility: visible;
+}
+
+.auth-loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.auth-loading-logo {
+    max-width: 80px;
+    max-height: 80px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+.auth-loading-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #14B8A6;
+    border-radius: 50%;
+    animation: auth-spin 0.8s linear infinite;
+}
+
+.auth-loading-text {
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6B7280;
+    font-family: 'Inter', sans-serif;
+}
+
+@keyframes auth-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Dark mode support for auth loading overlay */
+.dark-mode .auth-loading-overlay {
+    background: #1a1a2e;
+}
+
+.dark-mode .auth-loading-text {
+    color: #9CA3AF;
+}
+
+/* ============================================================
+   TOAST NOTIFICATION
+   ============================================================ */
+
+.toast-notification {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    z-index: 99999;
+    max-width: 420px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    animation: slideUp 0.3s ease;
+    background: #1a1a2e;
+    color: #ffffff;
+}
+
+.toast-notification.success {
+    background: #065F46;
+    color: #ffffff;
+}
+
+.toast-notification.error {
+    background: #991B1B;
+    color: #ffffff;
+}
+
+.toast-notification.warning {
+    background: #92400E;
+    color: #ffffff;
+}
+
+.toast-notification.info {
+    background: #1E40AF;
+    color: #ffffff;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dark mode support for toast */
+.dark-mode .toast-notification {
+    background: #1f2937;
+    color: #f3f4f6;
+}
+
+/* ============================================================
+   PROGRESS MODAL
+   ============================================================ */
+
+.progress-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99998;
+    backdrop-filter: blur(4px);
+}
+
+.progress-modal-content {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px 40px 40px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.progress-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.progress-modal-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+}
+
+.progress-percentage {
+    font-size: 16px;
+    font-weight: 700;
+    color: #14B8A6;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #14B8A6, #0D9488);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    width: 0%;
+}
+
+.progress-status {
+    font-size: 14px;
+    color: #4B5563;
+    margin-bottom: 20px;
+    min-height: 24px;
+    text-align: center;
+}
+
+.progress-stages {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding: 12px 0;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    gap: 4px;
+}
+
+.stage-dot {
+    font-size: 11px;
+    color: #9CA3AF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.3s ease;
+    opacity: 0.5;
+    flex: 1;
+    text-align: center;
+}
+
+.stage-dot.active {
+    color: #14B8A6;
+    opacity: 1;
+    font-weight: 600;
+}
+
+.stage-dot.completed {
+    color: #10B981;
+    opacity: 1;
+}
+
+.stage-dot.completed::after {
+    content: '✓';
+    display: block;
+    font-size: 14px;
+    color: #10B981;
+}
+
+.stage-dot.active::after {
+    content: '●';
+    display: block;
+    font-size: 12px;
+    color: #14B8A6;
+    animation: pulse-dot 1s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.progress-cancel {
+    display: block;
+    margin: 0 auto;
+    padding: 8px 24px;
+    font-size: 13px;
+    background: #f3f4f6;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #6B7280;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s ease;
+}
+
+.progress-cancel:hover {
+    background: #e5e7eb;
+}
+
+/* Dark mode support for progress modal */
+.dark-mode .progress-modal-content {
+    background: #1f2937;
+}
+
+.dark-mode .progress-modal-header h3 {
+    color: #f3f4f6;
+}
+
+.dark-mode .progress-status {
+    color: #d1d5db;
+}
+
+.dark-mode .progress-stages {
+    border-color: #374151;
+}
+
+.dark-mode .stage-dot {
+    color: #6B7280;
+}
+
+.dark-mode .stage-dot.active {
+    color: #14B8A6;
+}
+
+.dark-mode .stage-dot.completed {
+    color: #34D399;
+}
+
+.dark-mode .progress-cancel {
+    background: #374151;
+    color: #9CA3AF;
+}
+
+.dark-mode .progress-cancel:hover {
+    background: #4B5563;
+}

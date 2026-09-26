@@ -1,0 +1,193 @@
+/* ============================================================
+   ADMIN MAIN CONTENT
+   ============================================================ */
+
+.admin-main {
+    flex: 1;
+    padding: 24px 32px 40px;
+    background: var(--gray-50);
+    min-height: calc(100vh - 64px);
+}
+
+/* ============================================================
+   ADMIN PAGE HEADER
+   ============================================================ */
+
+.admin-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.admin-page-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.admin-page-header .page-subtitle {
+    color: var(--gray-500);
+    font-size: 14px;
+    margin-top: 2px;
+}
+
+.admin-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.admin-last-updated {
+    font-size: 13px;
+    color: var(--gray-400);
+}
+
+/* ============================================================
+   ADMIN STATS
+   ============================================================ */
+
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.admin-stat-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.admin-stat-card .stat-icon {
+    font-size: 28px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    flex-shrink: 0;
+}
+
+.admin-stat-card .stat-icon.users { background: #DBEAFE; }
+.admin-stat-card .stat-icon.revenue { background: #D1FAE5; }
+.admin-stat-card .stat-icon.campaigns { background: #FEF3C7; }
+.admin-stat-card .stat-icon.ai { background: #EDE9FE; }
+
+.admin-stat-card .stat-value {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.admin-stat-card .stat-label {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+.admin-stat-card .stat-change {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.admin-stat-card .stat-change.positive { color: var(--success); }
+.admin-stat-card .stat-change.negative { color: var(--danger); }
+.admin-stat-card .stat-change.neutral { color: var(--gray-500); }
+
+/* ============================================================
+   QUICK STATS
+   ============================================================ */
+
+.admin-quick-stats {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.quick-stat {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    text-align: center;
+}
+
+.quick-stat .quick-label {
+    display: block;
+    font-size: 12px;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.quick-stat .quick-value {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.quick-stat .quick-value.status-ok {
+    color: var(--success);
+}
+
+.quick-stat .quick-value.status-warning {
+    color: var(--warning);
+}
+
+.quick-stat .quick-value.status-error {
+    color: var(--danger);
+}
+
+/* ============================================================
+   MINI STATS
+   ============================================================ */
+
+.admin-stats-mini {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.mini-stat {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    text-align: center;
+}
+
+.mini-stat .mini-label {
+    display: block;
+    font-size: 12px;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.mini-stat .mini-value {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.mini-stat .mini-value.positive {
+    color: var(--success);
+}
+
+.mini-stat .mini-value.negative {
+    color: var(--danger);
+}

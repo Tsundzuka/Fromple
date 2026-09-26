@@ -1,0 +1,74 @@
+/* ============================================================
+   MODALS
+   ============================================================ */
+
+.admin-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+}
+
+.admin-modal-content {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-xl);
+}
+
+.admin-modal-large {
+    max-width: 800px;
+}
+
+.admin-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.admin-modal-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--gray-400);
+    transition: var(--transition);
+    padding: 4px 8px;
+}
+
+.modal-close:hover {
+    color: var(--gray-600);
+}
+
+.admin-modal-body {
+    padding: 24px;
+}
+
+.admin-modal-body .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.admin-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--gray-200);
+}

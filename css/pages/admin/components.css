@@ -1,0 +1,87 @@
+/* ============================================================
+   ADMIN CARDS
+   ============================================================ */
+
+.admin-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+}
+
+.admin-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.admin-card-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+/* ============================================================
+   ADMIN GRID
+   ============================================================ */
+
+.admin-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.admin-grid-3col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+/* ============================================================
+   ADMIN FILTERS
+   ============================================================ */
+
+.admin-filters {
+    margin-bottom: 20px;
+}
+
+.filter-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-input {
+    padding: 8px 14px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: inherit;
+    background: #fff;
+    min-width: 160px;
+    flex: 1;
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+.filter-select {
+    padding: 8px 14px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: inherit;
+    background: #fff;
+    min-width: 120px;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary);
+}

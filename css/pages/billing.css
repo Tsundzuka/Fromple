@@ -1,0 +1,455 @@
+/* ========================================
+   BILLING TAB (Dashboard)
+   ======================================== */
+
+.billing-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.billing-summary-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: var(--shadow);
+}
+
+.billing-summary-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.billing-summary-icon img {
+    width: 22px;
+    height: 22px;
+}
+
+.billing-summary-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.billing-summary-label {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+.billing-summary-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+/* ---------- SUBSCRIPTION ---------- */
+.subscription-details {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.subscription-plan {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.subscription-plan-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+.subscription-plan-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.subscription-plan-price span {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--gray-500);
+}
+
+.subscription-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.subscription-feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--gray-700);
+}
+
+.subscription-feature img {
+    width: 16px;
+    height: 16px;
+}
+
+.subscription-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--gray-50);
+    border-radius: var(--radius);
+}
+
+.subscription-meta-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.meta-label {
+    font-size: 12px;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.meta-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.subscription-actions {
+    display: flex;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-200);
+}
+
+/* ---------- PAYMENT METHOD ---------- */
+.payment-method {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.payment-card-type {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: var(--gray-50);
+    border-radius: var(--radius);
+}
+
+.payment-card-icon {
+    width: 40px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.payment-card-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.payment-card-details {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.payment-card-number {
+    font-weight: 600;
+    color: var(--gray-800);
+    font-size: 15px;
+}
+
+.payment-card-expiry {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+.payment-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* ---------- BILLING ADDRESS ---------- */
+.billing-address p {
+    font-size: 14px;
+    color: var(--gray-600);
+    margin: 2px 0;
+}
+
+/* ---------- USAGE TRACKING ---------- */
+.usage-tracking {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.usage-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.usage-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.usage-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-700);
+}
+
+.usage-numbers {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.usage-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.usage-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--primary);
+    transition: width 0.5s ease;
+}
+
+.usage-status {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* ---------- INVOICE TABLE ---------- */
+.invoice-table-container {
+    overflow-x: auto;
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.invoice-table thead {
+    background: var(--gray-50);
+}
+
+.invoice-table thead th {
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray-500);
+}
+
+.invoice-table tbody tr {
+    border-bottom: 1px solid var(--gray-100);
+    transition: var(--transition);
+}
+
+.invoice-table tbody tr:hover {
+    background: var(--gray-50);
+}
+
+.invoice-table tbody td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    color: var(--gray-700);
+}
+
+.invoice-table tbody td:last-child {
+    text-align: right;
+}
+
+/* ---------- UPGRADE OPTIONS ---------- */
+.upgrade-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.upgrade-option {
+    background: var(--gray-50);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    border: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    transition: var(--transition);
+}
+
+.upgrade-option:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.08);
+}
+
+.upgrade-option-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.upgrade-option-header h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0;
+}
+
+.upgrade-option-header p {
+    font-size: 14px;
+    color: var(--gray-500);
+    margin: 0;
+}
+
+.upgrade-option-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.upgrade-option-price span {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--gray-500);
+}
+
+.upgrade-option-features {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.upgrade-option-features span {
+    font-size: 13px;
+    color: var(--gray-600);
+}
+
+/* ---------- RESPONSIVE - BILLING ---------- */
+@media (max-width: 1024px) {
+    .billing-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .billing-summary {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .subscription-features {
+        grid-template-columns: 1fr;
+    }
+
+    .subscription-meta {
+        grid-template-columns: 1fr;
+    }
+
+    .subscription-actions {
+        flex-direction: column;
+    }
+
+    .subscription-actions .btn-primary,
+    .subscription-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .payment-actions {
+        flex-direction: column;
+    }
+
+    .payment-actions .btn-primary,
+    .payment-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .upgrade-option {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .upgrade-option-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .upgrade-option-features {
+        justify-content: center;
+    }
+
+    .invoice-table thead {
+        display: none;
+    }
+
+    .invoice-table tbody tr {
+        display: block;
+        padding: 12px;
+        border-bottom: 1px solid var(--gray-200);
+    }
+
+    .invoice-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border: none;
+    }
+
+    .invoice-table tbody td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--gray-500);
+        font-size: 12px;
+    }
+
+    .invoice-table tbody td:last-child {
+        text-align: left;
+    }
+}
+
+@media (max-width: 480px) {
+    .billing-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .upgrade-option-price {
+        font-size: 20px;
+    }
+
+    .payment-card-type {
+        flex-wrap: wrap;
+    }
+}

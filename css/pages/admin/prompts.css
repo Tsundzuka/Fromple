@@ -1,0 +1,34 @@
+/* ============================================================
+   PROMPT CATEGORIES
+   ============================================================ */
+
+.admin-prompt-categories {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    padding: 6px 16px;
+    border: 1px solid var(--gray-200);
+    border-radius: 20px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-600);
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.category-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.category-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}

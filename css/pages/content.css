@@ -1,0 +1,516 @@
+/* ============================================================
+   CONTENT MANAGER - Admin Content Page Styles
+   ============================================================ */
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.content-manager {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.content-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--gray-50);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid var(--gray-200);
+    position: sticky;
+    top: 80px;
+}
+
+.content-sidebar h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray-500);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.content-type-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--gray-700);
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.content-type-btn:hover {
+    background: var(--gray-100);
+}
+
+.content-type-btn.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 2px 8px rgba(20, 184, 166, 0.3);
+}
+
+.content-type-btn .icon {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+
+.content-type-btn .badge {
+    margin-left: auto;
+    font-size: 11px;
+    background: var(--gray-200);
+    padding: 2px 8px;
+    border-radius: 12px;
+    color: var(--gray-600);
+    min-width: 20px;
+    text-align: center;
+}
+
+.content-type-btn.active .badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+}
+
+/* ============================================================
+   MAIN CONTENT AREA
+   ============================================================ */
+.content-main {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ============================================================
+   FORM CONTAINER
+   ============================================================ */
+.form-container {
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    border: 1px solid var(--gray-200);
+    margin-bottom: 24px;
+}
+
+.form-container h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--gray-900);
+}
+
+.form-container .form-subtitle {
+    color: var(--gray-500);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* ============================================================
+   FORM LOADING STATE
+   ============================================================ */
+.form-loading {
+    text-align: center;
+    padding: 60px 0;
+    color: var(--gray-500);
+}
+
+.form-loading .spinner {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--gray-200);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 12px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================================
+   FORM ERROR STATE
+   ============================================================ */
+.form-error {
+    text-align: center;
+    padding: 40px 0;
+    color: #EF4444;
+}
+
+.form-error p {
+    margin-bottom: 8px;
+}
+
+/* ============================================================
+   ADMIN FORM STYLES
+   ============================================================ */
+.admin-form .form-group {
+    margin-bottom: 16px;
+}
+
+.admin-form .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 4px;
+}
+
+.admin-form .form-group .form-hint {
+    font-size: 12px;
+    color: var(--gray-500);
+    margin-top: 4px;
+}
+
+.admin-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.admin-form .form-input,
+.admin-form .form-select,
+.admin-form .form-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--gray-800);
+    background: white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-form .form-input:focus,
+.admin-form .form-select:focus,
+.admin-form .form-textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+}
+
+.admin-form .form-textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.admin-form .form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+.admin-form .btn-full {
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+    font-size: 15px;
+}
+
+/* ============================================================
+   CONTENT LIST / TABLE
+   ============================================================ */
+.content-list {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--gray-200);
+}
+
+.content-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.content-list-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.content-list-header .count {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+.content-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.content-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--gray-50);
+    font-weight: 600;
+    color: var(--gray-600);
+    border-bottom: 2px solid var(--gray-200);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.content-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--gray-100);
+    vertical-align: middle;
+}
+
+.content-table tr:hover td {
+    background: var(--gray-50);
+}
+
+.content-table .status-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.content-table .status-badge.published,
+.content-table .status-badge.active {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.content-table .status-badge.draft {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.content-table .status-badge.closed {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.content-table .status-badge.processing {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.content-table .actions {
+    display: flex;
+    gap: 4px;
+}
+
+.content-table .actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.content-table .actions button:hover {
+    background: var(--gray-100);
+}
+
+.content-table .actions .btn-delete:hover {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+    text-align: center;
+    padding: 48px 0;
+    color: var(--gray-500);
+}
+
+.empty-state .empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.empty-state p {
+    font-size: 15px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 992px) {
+    .content-manager {
+        flex-direction: column;
+    }
+
+    .content-sidebar {
+        width: 100%;
+        position: static;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 12px;
+    }
+
+    .content-sidebar h3 {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .content-type-btn {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .content-type-btn .badge {
+        margin-left: 6px;
+    }
+
+    .admin-form .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .content-table {
+        font-size: 13px;
+    }
+
+    .content-table th,
+    .content-table td {
+        padding: 6px 8px;
+    }
+
+    /* Stack table on mobile */
+    .content-table thead {
+        display: none;
+    }
+
+    .content-table tbody tr {
+        display: block;
+        padding: 12px 0;
+        border-bottom: 2px solid var(--gray-200);
+    }
+
+    .content-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+        border: none;
+    }
+
+    .content-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--gray-600);
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    .content-table tbody td.actions {
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 4px;
+    }
+
+    .content-table tbody td.actions::before {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 16px;
+    }
+
+    .content-list {
+        padding: 16px;
+    }
+
+    .content-type-btn {
+        min-width: 80px;
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .content-type-btn .icon {
+        font-size: 14px;
+        width: 18px;
+    }
+}
+
+/* ============================================================
+   NOTIFICATION OVERRIDE
+   ============================================================ */
+.dashboard-notification {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: white;
+    padding: 14px 20px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 1000;
+    max-width: 400px;
+    font-size: 14px;
+    color: var(--gray-800);
+    border-left: 4px solid var(--primary);
+    animation: slideUp 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.dashboard-notification.success {
+    border-left-color: #10B981;
+}
+
+.dashboard-notification.error {
+    border-left-color: #EF4444;
+}
+
+.dashboard-notification.warning {
+    border-left-color: #F59E0B;
+}
+
+.dashboard-notification .notification-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--gray-400);
+    padding: 0 4px;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

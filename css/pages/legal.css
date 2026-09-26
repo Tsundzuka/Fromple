@@ -1,0 +1,137 @@
+/* ========================================
+   LEGAL CONTENT (Terms & Policies)
+   ======================================== */
+
+.legal-content {
+    padding: 40px 0 60px;
+}
+
+.legal-content .last-updated {
+    color: var(--gray-500);
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.table-of-contents {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 24px 32px;
+    margin-bottom: 40px;
+}
+
+.table-of-contents h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 12px;
+}
+
+.table-of-contents ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.table-of-contents ul li {
+    padding: 3px 0;
+    font-size: 14px;
+    color: var(--gray-600);
+}
+
+.table-of-contents ul li a {
+    color: var(--gray-600);
+    transition: var(--transition);
+}
+
+.table-of-contents ul li a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.table-of-contents ul ul {
+    padding-left: 20px;
+}
+
+.table-of-contents ul ul li {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+.legal-content h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-top: 40px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.legal-content h2:first-of-type {
+    margin-top: 0;
+}
+
+.legal-content h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-top: 24px;
+    margin-bottom: 8px;
+}
+
+.legal-content p {
+    font-size: 15px;
+    color: var(--gray-700);
+    line-height: 1.8;
+    margin-bottom: 12px;
+}
+
+.legal-content ul,
+.legal-content ol {
+    padding-left: 24px;
+    margin-bottom: 16px;
+}
+
+.legal-content ul li,
+.legal-content ol li {
+    font-size: 15px;
+    color: var(--gray-700);
+    line-height: 1.8;
+    margin-bottom: 4px;
+}
+
+.legal-content ul li strong,
+.legal-content ol li strong {
+    color: var(--gray-800);
+}
+
+.legal-content a {
+    color: var(--primary);
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.legal-content a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+.highlight-box {
+    background: var(--primary-light);
+    border-left: 4px solid var(--primary);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 20px 0;
+}
+
+.highlight-box p {
+    font-size: 15px;
+    color: var(--gray-700);
+    margin: 0;
+    line-height: 1.7;
+}
+
+.highlight-box strong {
+    color: var(--gray-800);
+}

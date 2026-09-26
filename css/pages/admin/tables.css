@@ -1,0 +1,108 @@
+/* ============================================================
+   ADMIN TABLES
+   ============================================================ */
+
+.admin-table-container {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.admin-table thead {
+    background: var(--gray-50);
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.admin-table thead th {
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--gray-500);
+    white-space: nowrap;
+}
+
+.admin-table tbody tr {
+    border-bottom: 1px solid var(--gray-100);
+    transition: var(--transition);
+}
+
+.admin-table tbody tr:hover {
+    background: var(--gray-50);
+}
+
+.admin-table tbody td {
+    padding: 10px 14px;
+    vertical-align: middle;
+    color: var(--gray-700);
+}
+
+.admin-table .loading-text {
+    text-align: center;
+    color: var(--gray-400);
+    padding: 40px 0;
+}
+
+.admin-table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    margin-top: 12px;
+    border-top: 1px solid var(--gray-200);
+}
+
+.table-info {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+.table-pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pagination-btn {
+    padding: 4px 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+.pagination-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.page-info {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+/* ============================================================
+   ACTION BUTTONS
+   ============================================================ */
+
+.action-btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 6px;
+    font-size: 16px;
+    transition: var(--transition);
+    border-radius: var(--radius);
+}
+
+.action-btn-icon:hover {
+    background: var(--gray-100);
+}

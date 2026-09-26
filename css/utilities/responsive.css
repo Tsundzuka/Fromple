@@ -1,0 +1,1163 @@
+/* ========================================
+   RESPONSIVE BREAKPOINTS
+   ======================================== */
+
+/* ---------- TABLET (1024px) ---------- */
+@media (max-width: 1024px) {
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .pricing-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .pricing-card:last-child {
+        grid-column: 1 / -1;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .platform-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .testimonial-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .service-detail-grid {
+        grid-template-columns: 1fr;
+    }
+    .blog-grid {
+        grid-template-columns: 1fr;
+    }
+    .get-started-grid,
+    .contact-us-grid {
+        grid-template-columns: 1fr;
+    }
+    .careers-perks-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .billing-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-areas: "main" "footer";
+    }
+
+    .sidebar {
+        position: fixed;
+        height: 100vh;
+        width: 220px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        border-right: 1px solid var(--gray-200);
+        z-index: 1000;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+        min-height: auto;
+        padding: 16px;
+    }
+
+    .dashboard-wrapper .footer {
+        margin-left: 0;
+        padding: 40px 0 20px;
+        width: 100%;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ---------- MOBILE (768px) ---------- */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .hero {
+        padding: 32px 0 48px;
+    }
+
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .hero-content {
+        order: 2;
+    }
+
+    .hero-content h1 {
+        font-size: 32px;
+        line-height: 1.15;
+    }
+
+    .hero-subtitle {
+        font-size: 16px;
+    }
+
+    .hero-visual {
+        order: 1;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .hero-dashboard-preview {
+        padding: 16px;
+    }
+
+    .preview-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .stat-number {
+        font-size: 22px;
+    }
+
+    .hero-trust {
+        flex-wrap: wrap;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-actions .btn-primary,
+    .hero-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+        padding: 14px;
+    }
+
+    .features {
+        padding: 48px 0;
+    }
+
+    .section-header h2 {
+        font-size: 28px;
+    }
+
+    .section-header p {
+        font-size: 16px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .feature-card {
+        padding: 24px;
+    }
+
+    .how-it-works {
+        padding: 40px 0;
+    }
+
+    .steps {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        padding-top: 8px;
+    }
+
+    .step-wrapper {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .step {
+        padding: 28px 20px 24px;
+        min-height: auto;
+        border-radius: var(--radius);
+    }
+
+    .step-icon {
+        min-height: 70px;
+    }
+
+    .step-icon img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .step h3 {
+        font-size: 18px;
+    }
+
+    .step p {
+        font-size: 14px;
+        max-width: 100%;
+    }
+
+    .step-number {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .step-arrow {
+        transform: rotate(90deg);
+        padding: 8px 0;
+        font-size: 20px;
+        margin-top: 0;
+    }
+
+    .platforms {
+        padding: 40px 0;
+    }
+
+    .platform-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .platform-item {
+        padding: 10px 12px;
+        font-size: 13px;
+        justify-content: center;
+    }
+
+    .platform-item img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .testimonials {
+        padding: 40px 0;
+    }
+
+    .testimonial-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .testimonial-card {
+        padding: 20px;
+    }
+
+    .cta-section {
+        padding: 40px 0;
+    }
+
+    .cta-content h2 {
+        font-size: 28px;
+    }
+
+    .cta-content p {
+        font-size: 16px;
+    }
+
+    .cta-actions {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .cta-actions .btn-primary,
+    .cta-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+        padding: 14px;
+    }
+
+    .footer {
+        padding: 40px 0 20px;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding-bottom: 24px;
+    }
+
+    .footer-brand .brand-description {
+        max-width: 100%;
+    }
+
+    .footer-social {
+        justify-content: flex-start;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+        padding-top: 16px;
+        font-size: 13px;
+    }
+
+    .grid-2col {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .card-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 14px;
+        gap: 10px;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .campaign-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .campaign-info {
+        width: 100%;
+    }
+
+    .campaign-name {
+        font-size: 14px;
+    }
+
+    .activity-table thead {
+        display: none;
+    }
+
+    .activity-table tbody tr {
+        display: block;
+        padding: 16px;
+        border-bottom: 1px solid var(--gray-200);
+    }
+
+    .activity-table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .activity-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border: none;
+    }
+
+    .activity-table td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--gray-500);
+        font-size: 12px;
+    }
+
+    .activity-type {
+        font-size: 14px;
+    }
+
+    .activity-description {
+        max-width: 100%;
+    }
+
+    .activity-summary {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .activity-filters {
+        padding: 8px 16px;
+        gap: 6px;
+    }
+
+    .filter-btn {
+        font-size: 11px;
+        padding: 3px 10px;
+    }
+
+    .queue-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 12px;
+    }
+
+    .queue-status {
+        font-size: 12px;
+        gap: 6px;
+    }
+
+    .upload-card {
+        padding: 20px;
+    }
+
+    .upload-dropzone {
+        padding: 24px 16px;
+    }
+
+    .upload-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .upload-actions .btn-primary,
+    .upload-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .review-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .review-actions {
+        flex-wrap: wrap;
+    }
+
+    .review-actions .btn-primary,
+    .review-actions .btn-secondary {
+        flex: 1;
+        min-width: 80px;
+        justify-content: center;
+    }
+
+    .planner-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+
+    .planner-day {
+        padding: 12px 8px;
+    }
+
+    .planner-day-number {
+        font-size: 18px;
+    }
+
+    .planner-post {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        padding: 10px 14px;
+    }
+
+    .brand-voice-card {
+        padding: 16px;
+    }
+
+    .brand-voice-tags {
+        gap: 8px;
+    }
+
+    .brand-voice-keywords {
+        gap: 6px;
+    }
+
+    .platform-pill {
+        font-size: 12px;
+        padding: 3px 12px;
+    }
+
+    .settings-container {
+        gap: 12px;
+    }
+
+    .settings-card {
+        padding: 16px;
+    }
+
+    .settings-form {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .settings-plan {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .settings-plan-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .settings-plan-actions .btn-primary,
+    .settings-plan-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .page-hero {
+        padding: 40px 0 24px;
+    }
+
+    .page-hero h1 {
+        font-size: 30px;
+    }
+
+    .page-hero p {
+        font-size: 16px;
+    }
+
+    .service-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .service-detail {
+        padding: 32px 0;
+    }
+
+    .service-detail-main h2 {
+        font-size: 20px;
+        margin-top: 24px;
+    }
+
+    .detail-step {
+        gap: 12px;
+    }
+
+    .step-num {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+
+    .sidebar-card {
+        padding: 16px;
+    }
+
+    .pricing {
+        padding: 40px 0;
+    }
+
+    .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .pricing-card {
+        padding: 24px;
+        max-width: 400px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .pricing-card.popular {
+        order: -1;
+    }
+
+    .pricing-card:last-child {
+        max-width: 400px;
+    }
+
+    .currency {
+        font-size: 30px;
+    }
+
+    .pricing-features li {
+        font-size: 14px;
+    }
+
+    .pricing-faq {
+        padding: 40px 0;
+    }
+
+    .faq-grid-pricing {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .faq-item-pricing {
+        padding: 16px;
+    }
+
+    .services-page {
+        padding: 40px 0;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .service-card {
+        padding: 24px;
+    }
+
+    .service-card h2 {
+        font-size: 18px;
+    }
+
+    .team {
+        padding: 40px 0;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .team-card {
+        padding: 20px;
+    }
+
+    .team-avatar {
+        width: 64px;
+        height: 64px;
+        font-size: 24px;
+    }
+
+    .team-card h3 {
+        font-size: 16px;
+    }
+
+    .team-detail {
+        padding: 32px 0;
+    }
+
+    .team-detail-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 24px;
+        gap: 20px;
+    }
+
+    .team-detail-avatar {
+        width: 100px;
+        height: 100px;
+        font-size: 32px;
+    }
+
+    .team-detail-info h1 {
+        font-size: 28px;
+    }
+
+    .team-detail-social {
+        align-items: center;
+    }
+
+    .social-link-item {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .get-started-page {
+        padding: 40px 0;
+    }
+
+    .get-started-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .get-started-form {
+        padding: 20px;
+    }
+
+    .get-started-form h2 {
+        font-size: 20px;
+    }
+
+    .get-started-info .info-card {
+        padding: 16px;
+    }
+
+    .contact-us-page {
+        padding: 40px 0;
+    }
+
+    .contact-us-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .contact-us-form {
+        padding: 20px;
+    }
+
+    .contact-us-form h2 {
+        font-size: 20px;
+    }
+
+    .contact-us-info .info-card {
+        padding: 16px;
+    }
+
+    .blog-page {
+        padding: 40px 0;
+    }
+
+    .blog-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .blog-card.featured {
+        grid-column: 1;
+    }
+
+    .blog-card h2 {
+        font-size: 20px;
+    }
+
+    .blog-card h3 {
+        font-size: 17px;
+    }
+
+    .faq-page {
+        padding: 40px 0;
+    }
+
+    .faq-search {
+        margin-bottom: 32px;
+    }
+
+    .faq-search input {
+        padding: 10px 14px 10px 40px;
+        font-size: 14px;
+    }
+
+    .faq-grid {
+        gap: 28px;
+    }
+
+    .faq-category h2 {
+        font-size: 19px;
+    }
+
+    .faq-question {
+        font-size: 14px;
+        padding: 14px 16px;
+    }
+
+    .faq-answer {
+        padding: 0 16px 14px;
+        font-size: 14px;
+    }
+
+    .faq-cta {
+        padding: 24px 20px;
+    }
+
+    .faq-cta h3 {
+        font-size: 19px;
+    }
+
+    .faq-cta p {
+        font-size: 14px;
+    }
+
+    .legal-content {
+        padding: 24px 0 40px;
+    }
+
+    .legal-content h2 {
+        font-size: 20px;
+        margin-top: 32px;
+    }
+
+    .legal-content h3 {
+        font-size: 16px;
+        margin-top: 20px;
+    }
+
+    .legal-content p,
+    .legal-content ul li,
+    .legal-content ol li {
+        font-size: 14px;
+    }
+
+    .table-of-contents {
+        padding: 16px 20px;
+    }
+
+    .table-of-contents ul li {
+        font-size: 13px;
+    }
+
+    .table-of-contents ul ul li {
+        font-size: 12px;
+    }
+
+    .highlight-box {
+        padding: 12px 16px;
+    }
+
+    .highlight-box p {
+        font-size: 14px;
+    }
+
+    .auth-card {
+        padding: 28px 20px;
+    }
+
+    .auth-card h1 {
+        font-size: 24px;
+    }
+
+    .auth-options {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .auth-container {
+        padding: 16px;
+        margin: 20px auto;
+    }
+
+    .careers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .careers-perks-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .careers-role-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        padding: 20px;
+    }
+
+    .billing-summary {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .subscription-features {
+        grid-template-columns: 1fr;
+    }
+
+    .subscription-meta {
+        grid-template-columns: 1fr;
+    }
+
+    .subscription-actions {
+        flex-direction: column;
+    }
+
+    .subscription-actions .btn-primary,
+    .subscription-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .payment-actions {
+        flex-direction: column;
+    }
+
+    .payment-actions .btn-primary,
+    .payment-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .upgrade-option {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .upgrade-option-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .upgrade-option-features {
+        justify-content: center;
+    }
+
+    .invoice-table thead {
+        display: none;
+    }
+
+    .invoice-table tbody tr {
+        display: block;
+        padding: 12px;
+        border-bottom: 1px solid var(--gray-200);
+    }
+
+    .invoice-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border: none;
+    }
+
+    .invoice-table tbody td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--gray-500);
+        font-size: 12px;
+    }
+
+    .invoice-table tbody td:last-child {
+        text-align: left;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+        font-size: 16px;
+        padding: 12px 14px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+
+    .btn-primary.btn-lg,
+    .btn-secondary.btn-lg {
+        padding: 14px 24px;
+        font-size: 15px;
+    }
+
+    .btn-sm {
+        padding: 6px 14px;
+        font-size: 12px;
+    }
+
+    .dashboard-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-areas: "main" "footer";
+    }
+
+    .main-content {
+        padding: 12px 12px 80px;
+        min-height: auto;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 280px;
+        height: 100vh;
+        background: #fff;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        padding: 16px 0;
+        box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 20px;
+    }
+
+    .dashboard-header .btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .dashboard-wrapper .footer {
+        padding: 30px 0 16px;
+        margin: 0;
+        width: 100%;
+    }
+}
+
+/* ---------- SMALL PHONE (480px) ---------- */
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 28px;
+    }
+
+    .platform-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .planner-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        padding: 12px;
+    }
+
+    .stat-value {
+        font-size: 18px;
+    }
+
+    .preview-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .upload-card {
+        padding: 16px;
+    }
+
+    .upload-dropzone {
+        padding: 16px;
+    }
+
+    .dropzone-text {
+        font-size: 14px;
+    }
+
+    .section-header h2 {
+        font-size: 24px;
+    }
+
+    .section-header p {
+        font-size: 14px;
+    }
+
+    .auth-card {
+        padding: 28px 20px;
+    }
+
+    .auth-card h1 {
+        font-size: 24px;
+    }
+
+    .faq-search input {
+        font-size: 13px;
+        padding: 8px 10px 8px 34px;
+    }
+
+    .faq-question {
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+
+    .faq-answer {
+        font-size: 13px;
+        padding: 0 12px 12px;
+    }
+
+    .faq-cta {
+        padding: 20px 16px;
+    }
+
+    .faq-cta h3 {
+        font-size: 17px;
+    }
+
+    .legal-content h2 {
+        font-size: 18px;
+    }
+
+    .legal-content h3 {
+        font-size: 15px;
+    }
+
+    .legal-content p,
+    .legal-content ul li,
+    .legal-content ol li {
+        font-size: 13px;
+    }
+
+    .table-of-contents {
+        padding: 12px 16px;
+    }
+
+    .table-of-contents ul li {
+        font-size: 12px;
+    }
+
+    .highlight-box {
+        padding: 10px 12px;
+    }
+
+    .highlight-box p {
+        font-size: 13px;
+    }
+
+    .careers-perks-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .social-link-item {
+        font-size: 13px;
+        padding: 4px 10px;
+    }
+
+    .social-link-item .social-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .billing-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .upgrade-option-price {
+        font-size: 20px;
+    }
+
+    .payment-card-type {
+        flex-wrap: wrap;
+    }
+
+    .payment-container {
+        padding: 32px 20px;
+    }
+
+    .payment-title {
+        font-size: 20px;
+    }
+
+    .payment-details {
+        padding: 12px 16px;
+    }
+
+    .payment-total {
+        font-size: 18px;
+    }
+}

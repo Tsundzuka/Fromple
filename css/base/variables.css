@@ -1,0 +1,40 @@
+/* variables.css */
+/* ========================================
+   ROOT VARIABLES
+   ======================================== */
+
+:root {
+    --primary: #14B8A6;
+    --primary-hover: #0D9488;
+    --primary-light: #F0FDFA;
+    --secondary: #F97316;
+    --secondary-hover: #EA580C;
+    --accent: #FDD9D0;
+    --accent-hover: #FCC4B8;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --info: #3B82F6;
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-300: #CBD5E1;
+    --gray-400: #94A3B8;
+    --gray-500: #64748B;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1E293B;
+    --gray-900: #0F172A;
+    --sidebar-width: 220px;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(20, 184, 166, 0.15);
+    --shadow-lg: 0 8px 30px rgba(20, 184, 166, 0.2);
+    --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.15);
+    --transition: all 0.2s ease;
+    --gradient-primary: linear-gradient(135deg, #14B8A6, #F97316);
+    --gradient-hero: linear-gradient(135deg, #F0FDFA 0%, #FFFFFF 50%, #FFF7ED 100%);
+    --gradient-cta: linear-gradient(135deg, #14B8A6, #F97316);
+    --header-height: 72px;
+}

@@ -1,0 +1,262 @@
+/* ========================================
+   APPLY PAGE
+   ======================================== */
+
+.apply-page {
+    padding: 60px 0 80px;
+}
+
+.apply-container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.apply-container .apply-job-details {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+}
+
+.apply-container .apply-job-details .job-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.apply-container .apply-job-details .job-meta-item {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-500);
+    background: #fff;
+    padding: 2px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--gray-200);
+}
+
+.apply-container .apply-job-details .job-description-text {
+    font-size: 15px;
+    color: var(--gray-600);
+    line-height: 1.7;
+    margin: 0;
+}
+
+.apply-form {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+}
+
+.apply-form h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.apply-form .form-subtitle {
+    color: var(--gray-500);
+    margin-bottom: 24px;
+}
+
+.apply-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* ---------- FILE UPLOAD ---------- */
+.file-upload-wrapper {
+    position: relative;
+}
+
+.file-upload-area {
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--radius);
+    padding: 32px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--gray-50);
+}
+
+.file-upload-area:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.file-upload-icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.file-upload-text {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-700);
+}
+
+.file-upload-hint {
+    display: block;
+    font-size: 13px;
+    color: var(--gray-400);
+    margin-top: 4px;
+}
+
+.file-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-upload-filename {
+    display: block;
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-top: 8px;
+    text-align: center;
+}
+
+/* ---------- SUCCESS STATE ---------- */
+.apply-success {
+    text-align: center;
+    padding: 60px 40px;
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+}
+
+.apply-success .success-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.apply-success h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--gray-900);
+}
+
+.apply-success p {
+    font-size: 16px;
+    color: var(--gray-500);
+    max-width: 400px;
+    margin: 0 auto 24px;
+}
+
+/* ---------- ERROR STATE ---------- */
+.apply-error {
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #DC2626;
+    font-size: 14px;
+}
+
+.apply-error a {
+    color: #DC2626;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.apply-error a:hover {
+    color: #B91C1C;
+}
+
+/* ---------- RESPONSIVE - APPLY ---------- */
+@media (max-width: 768px) {
+    .apply-page {
+        padding: 40px 0 60px;
+    }
+
+    .apply-form {
+        padding: 20px;
+    }
+
+    .apply-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .apply-form h2 {
+        font-size: 20px;
+    }
+
+    .apply-container .apply-job-details {
+        padding: 16px 18px;
+    }
+
+    .apply-container .apply-job-details .job-meta {
+        gap: 8px;
+    }
+
+    .apply-container .apply-job-details .job-meta-item {
+        font-size: 12px;
+        padding: 2px 10px;
+    }
+
+    .apply-container .apply-job-details .job-description-text {
+        font-size: 14px;
+    }
+
+    .file-upload-area {
+        padding: 24px 16px;
+    }
+
+    .file-upload-text {
+        font-size: 13px;
+    }
+
+    .file-upload-icon {
+        font-size: 28px;
+    }
+
+    .apply-success {
+        padding: 40px 24px;
+    }
+
+    .apply-success h2 {
+        font-size: 24px;
+    }
+
+    .apply-success p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .apply-form {
+        padding: 16px;
+    }
+
+    .apply-success {
+        padding: 32px 16px;
+    }
+
+    .apply-success .success-icon {
+        font-size: 48px;
+    }
+
+    .apply-success h2 {
+        font-size: 20px;
+    }
+
+    .file-upload-area {
+        padding: 20px 12px;
+    }
+
+    .file-upload-text {
+        font-size: 12px;
+    }
+}

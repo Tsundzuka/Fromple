@@ -1,0 +1,68 @@
+/* ============================================================
+   ADMIN SIDEBAR TOGGLE - With Menu text, green styling
+   ============================================================ */
+
+.admin-sidebar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+    position: relative;
+}
+
+.admin-sidebar-toggle .trigger-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 16px;
+    gap: 3px;
+}
+
+.admin-sidebar-toggle .trigger-line {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--primary);
+    border-radius: 2px;
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.admin-sidebar-toggle .trigger-line::before,
+.admin-sidebar-toggle .trigger-line::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--primary);
+    border-radius: 2px;
+    transition: all 0.25s ease;
+    position: absolute;
+    left: 0;
+}
+
+.admin-sidebar-toggle .trigger-line::before {
+    top: -5px;
+}
+
+.admin-sidebar-toggle .trigger-line::after {
+    top: 5px;
+}
+
+.admin-sidebar-toggle.open .trigger-line {
+    background: transparent;
+}
+
+.admin-sidebar-toggle.open .trigger-line::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.admin-sidebar-toggle.open .trigger-line::after {
+    transform: rotate(-45deg);
+    top: 0;
+}
