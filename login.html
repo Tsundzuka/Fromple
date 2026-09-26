@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Login / Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <!-- Main style.css -->
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- Font Awesome 6 (Free) for social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body class="auth-page">
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Logo -->
+            <a href="index.html" class="auth-logo">
+                <span class="brand-logo-wrapper">
+                    <img src="assets/icons/logo.png" alt="Fromple" class="brand-logo" />
+                    <img src="assets/icons/brand.png" alt="Fromple" class="brand-text-image" />
+                </span>
+            </a>
+
+            <!-- Tabs: Login / Register (UI only) -->
+            <div class="auth-tabs" role="tablist">
+                <span class="auth-tab active" data-tab="login" role="tab">Log In</span>
+                <span class="auth-tab" data-tab="register" role="tab">Register</span>
+            </div>
+
+            <!-- ========== LOGIN FORM ========== -->
+            <div id="loginFormContainer" class="auth-form-container">
+                <form class="auth-form" id="supabaseLoginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" class="form-input" placeholder="john@example.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required />
+                    </div>
+                    <div class="auth-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked />
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Log In</button>
+                </form>
+
+                <div class="auth-divider"><span>or continue with</span></div>
+                <div class="social-auth-grid">
+                    <button class="social-btn google" aria-label="Sign in with Google">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button class="social-btn facebook" aria-label="Sign in with Facebook">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </button>
+                    <button class="social-btn twitter" aria-label="Sign in with Twitter">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </button>
+                    <button class="social-btn linkedin" aria-label="Sign in with LinkedIn">
+                        <i class="fab fa-linkedin-in"></i> LinkedIn
+                    </button>
+                    <button class="social-btn github" aria-label="Sign in with GitHub">
+                        <i class="fab fa-github"></i> GitHub
+                    </button>
+                    <button class="social-btn instagram" aria-label="Sign in with Instagram">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </button>
+                </div>
+                <p class="auth-footer-switch">
+                    Don't have an account? <a href="#" id="switchToRegister">Register now</a>
+                </p>
+            </div>
+
+            <!-- ========== REGISTER FORM ========== -->
+            <div id="registerFormContainer" class="auth-form-container hidden">
+                <form class="auth-form" id="supabaseRegisterForm">
+                    <div class="form-group">
+                        <label for="regFullName">Full Name</label>
+                        <input type="text" id="regFullName" class="form-input" placeholder="John Doe" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email Address</label>
+                        <input type="email" id="regEmail" class="form-input" placeholder="john@example.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Password</label>
+                        <input type="password" id="regPassword" class="form-input" placeholder="••••••••" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="regConfirmPassword">Confirm Password</label>
+                        <input type="password" id="regConfirmPassword" class="form-input" placeholder="••••••••" required />
+                    </div>
+                    <div class="auth-options-inline">
+                        <label class="checkbox-label">
+                            <input type="checkbox" required />
+                            I agree to the <a href="terms.html">Terms</a> &amp; <a href="policies.html">Privacy Policy</a>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Create Account</button>
+                </form>
+
+                <div class="auth-divider"><span>or sign up with</span></div>
+                <div class="social-auth-grid">
+                    <button class="social-btn google" aria-label="Sign up with Google">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button class="social-btn facebook" aria-label="Sign up with Facebook">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </button>
+                    <button class="social-btn twitter" aria-label="Sign up with Twitter">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </button>
+                    <button class="social-btn linkedin" aria-label="Sign up with LinkedIn">
+                        <i class="fab fa-linkedin-in"></i> LinkedIn
+                    </button>
+                    <button class="social-btn github" aria-label="Sign up with GitHub">
+                        <i class="fab fa-github"></i> GitHub
+                    </button>
+                    <button class="social-btn instagram" aria-label="Sign up with Instagram">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </button>
+                </div>
+                <p class="auth-footer-switch">
+                    Already have an account? <a href="#" id="switchToLogin">Log in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase is loaded via npm module, not a script tag -->
+    <!-- The auth.js file is now a module that imports supabase-client.js -->
+    <script type="module" src="js/auth.js"></script>
+    
+    <!-- Global Static Design Core Engine (non-module scripts) -->
+    <script src="js/main.js"></script>
+</body>
+</html>

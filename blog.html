@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/home.css" />
+    <link rel="stylesheet" href="css/blog.css" />
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <main>
+
+        <!-- ========== BLOG HERO ========== -->
+        <section class="blog-hero">
+            <div class="container">
+                <header class="blog-hero-head">
+                    <span class="eyebrow">
+                        <span class="eyebrow-dot"></span>
+                        Insights
+                    </span>
+                    <h1>Ideas for the <span class="accent">AI-first</span> web.</h1>
+                    <p>Long-form thinking on AI visibility, content strategy, and the shift from search to recommendations.</p>
+                </header>
+            </div>
+        </section>
+
+        <!-- ========== BLOG GRID ========== -->
+        <section class="blog-page">
+            <div class="container">
+                <div class="blog-grid" id="blogGrid">
+                    <!-- Cards rendered by js/blog.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== DARK CTA ========== -->
+        <section class="cta-dark">
+            <div class="container">
+                <div class="cta-dark-inner">
+                    <h2>
+                        Ready to <span class="cta-dark-accent">Fromple</span> your content<br />
+                        strategy?
+                    </h2>
+                    <p>Join 2,000+ professionals who are already saving hours every week.</p>
+                    <div class="cta-dark-actions">
+                        <a href="get-started.html" class="btn-dark-primary">
+                            Start Free Trial
+                            <svg class="btn-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                        <a href="services.html" class="btn-dark-ghost">View Services</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="footer"></div>
+
+    <script src="js/main.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    <script src="js/blog.js"></script>
+</body>
+</html>

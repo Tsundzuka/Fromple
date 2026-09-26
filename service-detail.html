@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Service Detail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <div id="header"></div>
+
+    <!-- ============================================================ -->
+    <!-- LOADING STATE - Shown while data is being fetched           -->
+    <!-- ============================================================ -->
+    <div id="loadingState">
+        <div class="spinner"></div>
+        <h3>Loading Service Details...</h3>
+        <p>Please wait while we fetch the latest information.</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 01 - HERO SECTION                                            -->
+    <!-- ============================================================ -->
+    <section class="detail-hero-modern" id="heroSection">
+        <div class="container">
+            <div class="detail-hero-grid">
+                <div class="detail-hero-text">
+                    <div class="pillar-tag" id="pillarTag"></div>
+                    <h1 id="moduleTitle"></h1>
+                    <div class="hero-meta">
+                        <span class="feature-count-badge" id="moduleCount"></span>
+                        <span class="module-tag" id="moduleTag"></span>
+                    </div>
+                    <p id="moduleDescription"></p>
+                    <div class="hero-actions">
+                        <a href="#packages" class="btn-primary btn-lg">🚀 Start Free Visibility Check</a>
+                        <a href="#features" class="btn-secondary-outline btn-lg">📊 Explore Features</a>
+                    </div>
+                    <div class="hero-trust">
+                        <span>✅ 14-day free trial</span>
+                        <span>⭐ 4.9/5 from 200+ reviews</span>
+                        <span>🔒 No credit card required</span>
+                    </div>
+                </div>
+                <div class="detail-hero-visual">
+                    <div class="hero-stats-grid">
+                        <div class="hero-stat">
+                            <span class="hero-stat-number" id="statFeatures"></span>
+                            <span class="hero-stat-label">Features</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="hero-stat-number" id="statPlatforms"></span>
+                            <span class="hero-stat-label">Platforms</span>
+                        </div>
+                        <div class="hero-stat highlight-stat">
+                            <span class="hero-stat-number" id="statUseCase"></span>
+                            <span class="hero-stat-label">Primary Use Case</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="hero-stat-number">⭐ 4.9</span>
+                            <span class="hero-stat-label">User Rating</span>
+                        </div>
+                    </div>
+                    <div class="hero-platforms" id="platformPills"></div>
+                    <div class="hero-cta-mini">
+                        <span>🚀 Used by 2,000+ businesses</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 02 - VALUE BADGES                                            -->
+    <!-- ============================================================ -->
+    <section class="value-badges-modern">
+        <div class="container">
+            <div class="badges-scroll" id="valueBadges"></div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 03 - OVERVIEW                                                -->
+    <!-- ============================================================ -->
+    <section class="overview-modern">
+        <div class="container">
+            <div class="overview-wrapper">
+                <div class="overview-left">
+                    <span class="section-label-modern">Overview</span>
+                    <h2>What This Service Does</h2>
+                    <p id="overviewText"></p>
+                    <div class="overview-key-points">
+                        <div class="key-point">
+                            <span class="key-icon"></span>
+                            <span></span>
+                        </div>
+                        <div class="key-point">
+                            <span class="key-icon"></span>
+                            <span></span>
+                        </div>
+                        <div class="key-point">
+                            <span class="key-icon"></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="overview-right">
+                    <div class="overview-card">
+                        <div class="overview-card-icon"></div>
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                    <div class="overview-card">
+                        <div class="overview-card-icon"></div>
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                    <div class="overview-card">
+                        <div class="overview-card-icon"></div>
+                        <h3></h3>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 04 - FEATURES                                                -->
+    <!-- ============================================================ -->
+    <section class="features-modern">
+        <div class="container">
+            <div class="section-header-modern">
+                <span class="section-tag-modern">Features</span>
+                <h2>Everything Included in This Service</h2>
+                <p>Choose the features that matter most to your business.</p>
+            </div>
+            <div class="features-grid-modern" id="featureGrid"></div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 05 - HOW IT WORKS                                            -->
+    <!-- ============================================================ -->
+    <section class="steps-modern">
+        <div class="container">
+            <div class="section-header-modern">
+                <span class="section-tag-modern">Process</span>
+                <h2>How It Works</h2>
+                <p>Four simple steps to get started with AI visibility intelligence.</p>
+            </div>
+            <div class="steps-timeline" id="stepsGrid"></div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 06 - PRICING PACKAGES                                        -->
+    <!-- ============================================================ -->
+    <section class="packages-modern" id="packages">
+        <div class="container">
+            <div class="section-header-modern">
+                <span class="section-tag-modern">Packages</span>
+                <h2>Choose Your Plan</h2>
+                <p>Select the package that fits your needs. All plans include a 14-day free trial.</p>
+            </div>
+            <div class="packages-grid-modern" id="packagesGrid"></div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 07 - FREE TOOLS + GUARANTEES                                 -->
+    <!-- ============================================================ -->
+    <section class="value-guarantee-section">
+        <div class="container">
+            <div class="section-header-modern">
+                <span class="section-tag-modern">Free Tools & Guarantees</span>
+                <h2>Try Before You Buy — <span class="highlight-text">With Zero Risk</span></h2>
+                <p>Get started with our free tools. No account required. Plus, we stand behind every claim we make.</p>
+            </div>
+            <div class="value-guarantee-grid">
+                <div id="freeToolsGrid"></div>
+                <div id="guaranteesGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 08 - FINAL CTA                                               -->
+    <!-- ============================================================ -->
+    <section class="cta-modern">
+        <div class="container">
+            <div class="cta-modern-content">
+                <div class="cta-badge">🚀 Join 2,000+ businesses</div>
+                <h2>Ready to <span class="highlight">Find, Diagnose, Optimize,</span> and <span class="highlight">Monitor</span> Your AI Visibility?</h2>
+                <p>Start your 14-day free trial today. No credit card required. Cancel anytime.</p>
+                <div class="cta-modern-actions">
+                    <a href="get-started.html" class="btn-primary btn-lg">
+                        Start Free Trial
+                        <img src="assets/icons/arrow-right.svg" alt="" class="arrow-icon" role="presentation" />
+                    </a>
+                    <a href="services.html" class="btn-secondary btn-lg">View All Services</a>
+                </div>
+                <div class="cta-trust">
+                    <span>✅ 14-day free trial</span>
+                    <span>⭐ 4.9/5 rating</span>
+                    <span>🔒 No credit card required</span>
+                    <span>🔄 Cancel anytime</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <div id="footer"></div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script type="module" src="js/service-detail.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

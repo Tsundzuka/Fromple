@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Contact Us</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+    <!-- ========== HEADER - Loaded from js/header.js ========== -->
+    <div id="header"></div>
+
+    <!-- ========== PAGE HERO ========== -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>We'd love to hear from you. Get in touch with our team.</p>
+        </div>
+    </section>
+
+    <!-- ========== CONTACT SECTION ========== -->
+    <section class="contact-us-page">
+        <div class="container">
+            <div class="contact-us-grid">
+                <!-- Contact Form -->
+                <div class="contact-us-form">
+                    <h2>📧 Send Us a Message</h2>
+                    <p class="form-subtitle">We'll get back to you within 24 hours.</p>
+                    
+                    <form id="contactUsForm" action="/api/contact" method="POST">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" class="form-input" placeholder="John Doe" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-input" placeholder="john@example.com" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <select id="subject" class="form-select">
+                                <option>General Inquiry</option>
+                                <option>Support Question</option>
+                                <option>Partnership Opportunity</option>
+                                <option>Media & Press</option>
+                                <option>Billing Question</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" class="form-textarea" rows="5" placeholder="Tell us how we can help..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary btn-full">
+                            Send Message
+                            <img src="assets/icons/arrow-right.svg" alt="" class="arrow-icon" role="presentation" />
+                        </button>
+                        <p class="form-disclaimer">✅ We'll respond within 24 hours.</p>
+                    </form>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="contact-us-info">
+                    <div class="info-card">
+                        <h3>📍 Visit Us</h3>
+                        <p>Cape Town, South Africa</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>📧 Email Us</h3>
+                        <p><a href="mailto:hello@fromple.ai">hello@fromple.ai</a></p>
+                        <p><a href="mailto:support@fromple.ai">support@fromple.ai</a></p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>📞 Call Us</h3>
+                        <p>+27 (0) 82 123 4567</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>💬 Schedule a Call</h3>
+                        <p>Book a 15-min consultation with our team.</p>
+                        <a href="mailto:hello@fromple.ai?subject=Book%20a%20Call" class="btn-secondary btn-sm">Book Now</a>
+                    </div>
+
+                    <div class="info-card social">
+                        <h3>Follow Us</h3>
+                        <div class="social-links">
+                            <a href="https://linkedin.com/company/fromple" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><img src="assets/icons/linkedin.svg" alt="LinkedIn" /></a>
+                            <a href="https://twitter.com/fromple" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><img src="assets/icons/twitter.svg" alt="X" /></a>
+                            <a href="https://facebook.com/fromple" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><img src="assets/icons/facebook.svg" alt="Facebook" /></a>
+                            <a href="https://youtube.com/@fromple" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><img src="assets/icons/youtube.svg" alt="YouTube" /></a>
+                            <a href="https://github.com/fromple" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><img src="assets/icons/github.svg" alt="GitHub" /></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CTA SECTION ========== -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to <span class="highlight">Fromple</span> Your Content Strategy?</h2>
+                <p>Join 2,000+ professionals who are already saving hours every week.</p>
+                <div class="cta-actions">
+                    <a href="get-started.html" class="btn-primary btn-lg">
+                        Start Free Trial
+                        <img src="assets/icons/arrow-right.svg" alt="" class="arrow-icon" role="presentation" />
+                    </a>
+                    <a href="services.html" class="btn-secondary btn-lg">View Services</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER - Loaded from js/footer.js ========== -->
+    <div id="footer"></div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="js/main.js"></script>
+    <script src="js/contact.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+</body>
+</html>

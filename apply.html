@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Apply Now</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script type="module">
+        import { requireAuth } from './js/auth-guard.js';
+        await requireAuth();
+    </script>
+</head>
+<body>
+
+    <!-- ========== HEADER - Loaded from js/header.js ========== -->
+    <div id="header"></div>
+
+    <!-- ========== PAGE HERO ========== -->
+    <section class="page-hero">
+        <div class="container">
+            <a href="careers.html" class="back-link">
+                <img src="assets/icons/arrow-left.svg" alt="Back" class="back-icon" />
+                Back to Careers
+            </a>
+            <h1>Apply Now</h1>
+            <p id="jobTitleDisplay">Senior Full Stack Developer</p>
+        </div>
+    </section>
+
+    <!-- ========== APPLICATION FORM ========== -->
+    <section class="apply-page">
+        <div class="container">
+            <div class="apply-container">
+
+                <!-- Job Details -->
+                <div class="apply-job-details" id="jobDetails">
+                    <div class="job-meta">
+                        <span class="job-meta-item">📍 Remote</span>
+                        <span class="job-meta-item">💼 Full-time</span>
+                        <span class="job-meta-item">🏢 Engineering</span>
+                    </div>
+                    <p class="job-description-text">
+                        We're looking for a passionate developer to join our team and help build the future of AI-powered content creation.
+                    </p>
+                </div>
+
+                <!-- Application Form -->
+                <form class="apply-form" id="applyForm" action="/api/contact" method="POST">
+                    <h2>Submit Your Application</h2>
+                    <p class="form-subtitle">We'll review your application and get back to you within 48 hours.</p>
+
+                    <!-- Hidden field for job position -->
+                    <input type="hidden" id="jobPosition" name="subject" value="Job Application" />
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" name="name" class="form-input" placeholder="John Doe" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="john@example.com" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="form-input" placeholder="+27 82 123 4567" />
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" name="location" class="form-input" placeholder="Cape Town, South Africa" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="linkedin">LinkedIn Profile URL</label>
+                        <input type="url" id="linkedin" name="linkedin" class="form-input" placeholder="https://linkedin.com/in/yourprofile" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="portfolio">Portfolio / GitHub URL</label>
+                        <input type="url" id="portfolio" name="portfolio" class="form-input" placeholder="https://github.com/yourusername" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="coverLetter">Cover Letter / Why do you want to join Fromple? *</label>
+                        <textarea id="coverLetter" name="message" class="form-textarea" rows="6" placeholder="Tell us about yourself, your experience, and why you're excited about Fromple..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="resume">Upload Resume / CV</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="resume" name="resume" class="file-input" accept=".pdf,.doc,.docx" />
+                            <div class="file-upload-area">
+                                <span class="file-upload-icon">📄</span>
+                                <span class="file-upload-text">Drop your resume here or click to browse</span>
+                                <span class="file-upload-hint">PDF, DOC, DOCX (Max 5MB)</span>
+                            </div>
+                            <span class="file-upload-filename" id="fileName">No file selected</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" required />
+                            I confirm that the information provided is accurate and complete.
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" required />
+                            I agree to the <a href="policies.html">Privacy Policy</a> and <a href="terms.html">Terms of Service</a>.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary btn-full">
+                        Submit Application
+                        <img src="assets/icons/arrow-right.svg" alt="" class="arrow-icon" role="presentation" />
+                    </button>
+
+                    <p class="form-disclaimer">✅ We'll review your application within 48 hours.</p>
+                </form>
+
+                <!-- Success Message -->
+                <div class="apply-success" id="applySuccess" style="display: none;">
+                    <div class="success-icon">🎉</div>
+                    <h2>Application Submitted!</h2>
+                    <p>Thank you for applying to Fromple. We'll review your application and get back to you within 48 hours.</p>
+                    <a href="careers.html" class="btn-primary">View Other Positions</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CTA SECTION ========== -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to <span class="highlight">Fromple</span> Your Career?</h2>
+                <p>Join a team that's building the future of AI-powered content.</p>
+                <div class="cta-actions">
+                    <a href="careers.html" class="btn-primary btn-lg">View All Positions</a>
+                    <a href="contact.html" class="btn-secondary btn-lg">Get in Touch</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER - Loaded from js/footer.js ========== -->
+    <div id="footer"></div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="js/main.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    <script src="js/apply.js"></script>
+</body>
+</html>

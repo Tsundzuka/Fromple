@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Get Started</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/get-started.css" />
+</head>
+<body>
+
+    <!-- ========== HEADER - Loaded from js/header.js ========== -->
+    <div id="header"></div>
+
+    <!-- ========== PAGE HERO ========== -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>Get Started with Fromple</h1>
+            <p>Start your free trial today and transform your content strategy.</p>
+        </div>
+    </section>
+
+    <!-- ========== GET STARTED SECTION ========== -->
+    <section class="get-started-page">
+        <div class="container">
+            <div class="get-started-grid">
+                <div class="get-started-form">
+                    <h2>Start Your Free Trial</h2>
+                    <p class="form-subtitle">No credit card required. 1 campaign free.</p>
+                    <form id="contactForm" action="/api/signup" method="POST">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" class="form-input" placeholder="John Doe" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-input" placeholder="john@example.com" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Company</label>
+                            <input type="text" id="company" class="form-input" placeholder="Your Company" />
+                        </div>
+                        <div class="form-group">
+                            <label for="contentType">What type of content do you create?</label>
+                            <select id="contentType" class="form-select">
+                                <option value="">Select an option...</option>
+                                <option>Podcast</option>
+                                <option>Webinar</option>
+                                <option>Zoom Meetings</option>
+                                <option>Interviews</option>
+                                <option>Presentations</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hearAbout">How did you hear about us?</label>
+                            <select id="hearAbout" class="form-select">
+                                <option value="">Select an option...</option>
+                                <option>Social Media</option>
+                                <option>Google Search</option>
+                                <option>Word of Mouth</option>
+                                <option>Podcast</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message (Optional)</label>
+                            <textarea id="message" class="form-textarea" rows="4" placeholder="Tell us about your content needs..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary btn-full">
+                            Start Free Trial
+                            <img src="assets/icons/arrow-right.svg" alt="" class="arrow-icon" role="presentation" />
+                        </button>
+                        <p class="form-disclaimer">✅ No credit card required. 1 campaign free.</p>
+                    </form>
+                </div>
+
+                <div class="get-started-info">
+                    <div class="info-card">
+                        <h3>📧 Email Us</h3>
+                        <p><a href="mailto:hello@fromple.ai">hello@fromple.ai</a></p>
+                    </div>
+                    <div class="info-card">
+                        <h3>📍 Visit Us</h3>
+                        <p>Cape Town, South Africa</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>💬 Schedule a Call</h3>
+                        <p>Book a 15-min consultation</p>
+                        <a href="mailto:hello@fromple.ai?subject=Book%20a%20Call" class="btn-secondary btn-sm">Book Now</a>
+                    </div>
+                    <div class="info-card">
+                        <h3>Follow Us</h3>
+                        <div class="social-links">
+                            <a href="https://linkedin.com/company/fromple" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><img src="assets/icons/linkedin.svg" alt="" role="presentation" /></a>
+                            <a href="https://twitter.com/fromple" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><img src="assets/icons/twitter.svg" alt="" role="presentation" /></a>
+                            <a href="https://facebook.com/fromple" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><img src="assets/icons/facebook.svg" alt="" role="presentation" /></a>
+                            <a href="https://youtube.com/@fromple" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><img src="assets/icons/youtube.svg" alt="" role="presentation" /></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CTA SECTION ========== -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to <span class="highlight">Fromple</span> Your Content Strategy?</h2>
+                <p>Join 2,000+ professionals who are already saving hours every week.</p>
+                <div class="cta-actions">
+                    <a href="get-started.html" class="btn-primary btn-lg">
+                        Start Free Trial
+                        <img src="assets/icons/arrow-right.svg" alt="" class="arrow-icon" role="presentation" />
+                    </a>
+                    <a href="services.html" class="btn-secondary btn-lg">View Services</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER - Loaded from js/footer.js ========== -->
+    <div id="footer"></div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="js/main.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+</body>
+</html>

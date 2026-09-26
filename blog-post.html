@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Blog Post</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+    <!-- ========== HEADER - Loaded from js/header.js ========== -->
+    <div id="header"></div>
+
+    <!-- ========== BLOG POST CONTENT ========== -->
+    <section class="blog-post-content">
+        <div class="container">
+
+            <!-- Back Link -->
+            <a href="blog.html" class="back-link">
+                <img src="assets/icons/arrow-left.svg" alt="Back" class="back-icon" />
+                Back to Blog
+            </a>
+
+            <!-- Loading State -->
+            <div id="postLoading" class="blog-post-loading">
+                <div class="spinner"></div>
+                <p>Loading article...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="postError" class="blog-post-error" style="display: none;">
+                <span class="error-icon">⚠️</span>
+                <h2>Post Not Found</h2>
+                <p>The article you're looking for doesn't exist or has been removed.</p>
+                <a href="blog.html" class="btn-primary">View All Articles</a>
+            </div>
+
+            <!-- Post Content -->
+            <article id="postContent" class="blog-post-article" style="display: none;">
+                
+                <!-- Featured Image -->
+                <div id="postFeaturedImage" class="blog-post-featured-image"></div>
+
+                <!-- Header -->
+                <header class="blog-post-header">
+                    <span class="blog-category" id="postCategory">Category</span>
+                    <h1 id="postTitle">Blog Post Title</h1>
+                    <div class="blog-post-meta">
+                        <span class="post-author" id="postAuthor">By Fromple Team</span>
+                        <span class="post-date" id="postDate">January 1, 2026</span>
+                        <span class="post-read-time" id="postReadTime">5 min read</span>
+                    </div>
+                </header>
+
+                <!-- Body -->
+                <div class="blog-post-body" id="postBody">
+                    <p>Loading content...</p>
+                </div>
+
+                <!-- Tags -->
+                <div class="blog-post-tags" id="postTags">
+                    <span class="tag-label">Tags:</span>
+                    <span class="tag-pill">Content Strategy</span>
+                    <span class="tag-pill">AI</span>
+                </div>
+
+                <!-- Share Section -->
+                <div class="blog-post-share">
+                    <span class="share-label">Share this article:</span>
+                    <div class="share-buttons">
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="share-btn linkedin" onclick="shareOnLinkedIn()">
+                            <img src="assets/icons/linkedin.svg" alt="LinkedIn" />
+                        </a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="share-btn twitter" onclick="shareOnTwitter()">
+                            <img src="assets/icons/twitter.svg" alt="Twitter" />
+                        </a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="share-btn facebook" onclick="shareOnFacebook()">
+                            <img src="assets/icons/facebook.svg" alt="Facebook" />
+                        </a>
+                        <button class="share-btn copy" onclick="copyLink()">
+                            📋
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Related Posts -->
+            <section id="relatedPosts" class="related-posts" style="display: none;">
+                <h2>Related Articles</h2>
+                <div class="related-posts-grid" id="relatedPostsGrid">
+                    <!-- Related posts loaded dynamically -->
+                </div>
+            </section>
+
+        </div>
+    </section>
+
+    <!-- ========== CTA SECTION ========== -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to <span class="highlight">Fromple</span> Your Content Strategy?</h2>
+                <p>Join 2,000+ professionals who are already saving hours every week.</p>
+                <div class="cta-actions">
+                    <a href="get-started.html" class="btn-primary btn-lg">
+                        Start Free Trial
+                        <img src="assets/icons/arrow-right.svg" alt="" class="arrow-icon" role="presentation" />
+                    </a>
+                    <a href="services.html" class="btn-secondary btn-lg">View Services</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER - Loaded from js/footer.js ========== -->
+    <div id="footer"></div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="js/main.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/footer.js"></script>
+    <script src="js/blog-post.js"></script>
+</body>
+</html>

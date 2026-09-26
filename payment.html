@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Secure Checkout</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script type="module">
+        import { requireAuth } from './js/auth-guard.js';
+        await requireAuth();
+    </script>
+</head>
+<body>
+
+    <!-- ========== PAYMENT PAGE ========== -->
+    <div class="payment-page">
+        <div class="payment-container">
+
+            <!-- Logo -->
+            <div class="payment-logo">
+                <a href="index.html">
+                    <span class="brand-logo-wrapper">
+                        <img src="assets/icons/logo.png" alt="Fromple" class="brand-logo" />
+                        <img src="assets/icons/brand.png" alt="Fromple" class="brand-text-image" />
+                    </span>
+                </a>
+            </div>
+
+            <!-- Spinner -->
+            <div class="payment-spinner" role="status" aria-label="Loading"></div>
+
+            <!-- Title -->
+            <h1 class="payment-title">Redirecting to Secure Checkout</h1>
+            <p class="payment-subtitle">Please wait while we prepare your payment.</p>
+
+            <!-- Plan Badge -->
+            <div class="payment-plan" id="paymentPlan">Professional Plan</div>
+
+            <!-- Order Summary -->
+            <div class="payment-details">
+                <div class="payment-details-row">
+                    <span class="label">Plan</span>
+                    <span class="value" id="planName">Professional Plan</span>
+                </div>
+                <div class="payment-details-row">
+                    <span class="label">Billing Cycle</span>
+                    <span class="value">Monthly</span>
+                </div>
+                <div class="payment-details-row">
+                    <span class="label">Price</span>
+                    <span class="value" id="planPrice">R299.00</span>
+                </div>
+                <div class="payment-details-row payment-total">
+                    <span class="label">Total Due Today</span>
+                    <span class="value" id="totalPrice">R299.00</span>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="payment-error" id="paymentError">
+                <span>⚠️</span>
+                <span id="errorMessage">Something went wrong. Please try again.</span>
+            </div>
+
+            <!-- Secure Badge -->
+            <div class="payment-secure">
+                <img src="assets/icons/lock.svg" alt="" role="presentation" />
+                <span>Secured by Stripe. Your payment information is safe.</span>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/payment.js"></script>
+</body>
+</html>
