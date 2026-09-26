@@ -1,0 +1,15 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="url(#gradSmart)"/>
+    <rect x="17" y="17" width="14" height="14" rx="2" stroke="white" stroke-width="2"/>
+    <rect x="21" y="21" width="6" height="6" rx="1" stroke="white" stroke-width="1.5"/>
+    <line x1="17" y1="14" x2="17" y2="17" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="31" y1="14" x2="31" y2="17" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="17" y1="34" x2="17" y2="31" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="31" y1="34" x2="31" y2="31" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <defs>
+        <linearGradient id="gradSmart" x1="0" y1="0" x2="48" y2="48">
+            <stop offset="0%" stop-color="#14B8A6"/>
+            <stop offset="100%" stop-color="#0D9488"/>
+        </linearGradient>
+    </defs>
+</svg>

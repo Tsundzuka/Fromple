@@ -1,0 +1,12 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="12" fill="url(#gradAuthority)"/>
+    <path d="M16 14h16v18a2 2 0 0 1-2 2H18a2 2 0 0 1-2-2V14z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20 20h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <path d="M20 25h6" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <defs>
+        <linearGradient id="gradAuthority" x1="0" y1="0" x2="48" y2="48">
+            <stop offset="0%" stop-color="#14B8A6"/>
+            <stop offset="100%" stop-color="#0D9488"/>
+        </linearGradient>
+    </defs>
+</svg>
