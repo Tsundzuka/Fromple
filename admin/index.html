@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+    <script type="module">
+        import { requireAdmin } from '../js/auth-guard.js';
+        await requireAdmin();
+    </script>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <div id="header"></div>
+
+    <!-- ========== ADMIN WRAPPER ========== -->
+    <div class="admin-wrapper">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <nav class="admin-nav">
+                <a href="#" data-tab="overview" class="admin-nav-item active">
+                    <span class="nav-icon">📊</span>
+                    <span>Overview</span>
+                </a>
+                <a href="#" data-tab="users" class="admin-nav-item">
+                    <span class="nav-icon">👥</span>
+                    <span>Users</span>
+                    <span class="nav-badge" id="userCount">0</span>
+                </a>
+                <a href="#" data-tab="scans" class="admin-nav-item">
+                    <span class="nav-icon">🔍</span>
+                    <span>Scans</span>
+                    <span class="nav-badge" id="scanCount">0</span>
+                </a>
+                <a href="#" data-tab="subscriptions" class="admin-nav-item">
+                    <span class="nav-icon">💳</span>
+                    <span>Subscriptions</span>
+                </a>
+                <a href="#" data-tab="billing" class="admin-nav-item">
+                    <span class="nav-icon">💰</span>
+                    <span>Billing</span>
+                </a>
+                <a href="#" data-tab="ai-usage" class="admin-nav-item">
+                    <span class="nav-icon">🤖</span>
+                    <span>AI Usage</span>
+                </a>
+                <a href="#" data-tab="prompts" class="admin-nav-item">
+                    <span class="nav-icon">📄</span>
+                    <span>Prompts</span>
+                </a>
+                <a href="#" data-tab="settings" class="admin-nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="#" data-tab="logs" class="admin-nav-item">
+                    <span class="nav-icon">📋</span>
+                    <span>Activity Logs</span>
+                </a>
+                <a href="#" data-tab="analytics" class="admin-nav-item">
+                    <span class="nav-icon">📈</span>
+                    <span>Analytics</span>
+                </a>
+            </nav>
+
+            <div class="admin-sidebar-footer">
+                <div class="admin-user">
+                    <div class="admin-avatar">A</div>
+                    <div>
+                        <span class="admin-name">Admin</span>
+                        <span class="admin-role">Super Admin</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+
+            <!-- ============================================================ -->
+            <!-- TAB: OVERVIEW                                                -->
+            <!-- ============================================================ -->
+            <section class="tab-content active" id="tab-overview">
+
+                <header class="admin-page-header">
+                    <div>
+                        <button class="admin-sidebar-toggle" id="adminSidebarToggle" aria-label="Toggle navigation">
+                            <span class="trigger-box">
+                                <span class="trigger-line"></span>
+                            </span>
+                            <span class="menu-text">Menu</span>
+                        </button>
+                        <h1>Overview</h1>
+                        <p class="page-subtitle">Platform activity, usage, and user tracking.</p>
+                    </div>
+                    <div class="admin-header-actions">
+                        <span class="admin-last-updated">Last updated: <span id="lastUpdated">Just now</span></span>
+                        <button class="btn-secondary btn-sm" onclick="refreshData()">🔄 Refresh</button>
+                    </div>
+                </header>
+
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                        <div class="stat-icon users">👥</div>
+                        <div>
+                            <span class="stat-value" id="totalUsers">0</span>
+                            <span class="stat-label">Total Users</span>
+                            <span class="stat-change positive" id="userGrowth">+0% this month</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="stat-icon revenue">🏢</div>
+                        <div>
+                            <span class="stat-value" id="totalOrgs">0</span>
+                            <span class="stat-label">Organizations</span>
+                            <span class="stat-change positive" id="orgGrowth">+0% this month</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="stat-icon campaigns">💳</div>
+                        <div>
+                            <span class="stat-value" id="activeSubs">0</span>
+                            <span class="stat-label">Active Subscriptions</span>
+                            <span class="stat-change neutral" id="subBreakdown">0 paid · 0 free</span>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="stat-icon revenue">💰</div>
+                        <div>
+                            <span class="stat-value" id="mrr">$0</span>
+                            <span class="stat-label">MRR</span>
+                            <span class="stat-change positive" id="mrrGrowth">+0% this month</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-quick-stats">
+                    <div class="quick-stat">
+                        <span class="quick-label">Total Scans</span>
+                        <span class="quick-value" id="totalScans">0</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="quick-label">Scans This Month</span>
+                        <span class="quick-value" id="scansThisMonth">0</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="quick-label">Active Schedules</span>
+                        <span class="quick-value" id="activeSchedules">0</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="quick-label">Unread Alerts</span>
+                        <span class="quick-value" id="unreadAlerts">0</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="quick-label">Failed Diagnoses</span>
+                        <span class="quick-value negative" id="failedDiagnoses">0</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="quick-label">System Status</span>
+                        <span class="quick-value status-ok" id="systemStatus">✅ Operational</span>
+                    </div>
+                </div>
+
+                <div class="admin-grid-2col">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3>Recent Activity</h3>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <select class="filter-select" id="activityFilter" style="font-size:12px;">
+                                    <option value="all">All Events</option>
+                                    <option value="signup">Signups</option>
+                                    <option value="scan">Scans</option>
+                                    <option value="subscription">Subscriptions</option>
+                                    <option value="alert">Alerts</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="admin-activity-list" id="recentActivity">
+                            <div class="activity-item">
+                                <span class="activity-icon">⏳</span>
+                                <span>Loading activity...</span>
+                                <span class="activity-time"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3>Top Active Users</h3>
+                            <select class="filter-select" id="topUsersRange" style="font-size:12px;">
+                                <option value="30">Last 30 days</option>
+                                <option value="7">Last 7 days</option>
+                                <option value="90">Last 90 days</option>
+                            </select>
+                        </div>
+                        <div class="admin-table-container">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Scans</th>
+                                        <th>Queries</th>
+                                        <th>Last Active</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="topUsersBody">
+                                    <tr>
+                                        <td colspan="4" class="loading-text">Loading users...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-grid-2col">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3>User Growth</h3>
+                            <select class="filter-select" id="userGrowthRange" style="font-size:12px;">
+                                <option value="30">Last 30 days</option>
+                                <option value="90" selected>Last 90 days</option>
+                                <option value="365">Last 12 months</option>
+                            </select>
+                        </div>
+                        <div class="chart-placeholder" id="userGrowthChart" style="height:220px;position:relative;">
+                            <canvas id="userGrowthCanvas" style="width:100%;height:100%;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3>Scan Volume</h3>
+                            <select class="filter-select" id="scanVolumeRange" style="font-size:12px;">
+                                <option value="30">Last 30 days</option>
+                                <option value="90" selected>Last 90 days</option>
+                                <option value="365">Last 12 months</option>
+                            </select>
+                        </div>
+                        <div class="chart-placeholder" id="scanVolumeChart" style="height:220px;position:relative;">
+                            <canvas id="scanVolumeCanvas" style="width:100%;height:100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>Recent Scans</h3>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Business</th>
+                                    <th>User</th>
+                                    <th>Queries</th>
+                                    <th>Score</th>
+                                    <th>Diagnosis</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentScansBody">
+                                <tr>
+                                    <td colspan="7" class="loading-text">Loading scans...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <div class="admin-quick-actions">
+                        <button class="quick-action-btn" onclick="switchTab('users')">
+                            <span class="action-icon">👥</span>
+                            Manage Users
+                        </button>
+                        <button class="quick-action-btn" onclick="switchTab('scans')">
+                            <span class="action-icon">🔍</span>
+                            View Scans
+                        </button>
+                        <button class="quick-action-btn" onclick="switchTab('subscriptions')">
+                            <span class="action-icon">💳</span>
+                            Subscriptions
+                        </button>
+                        <button class="quick-action-btn" onclick="switchTab('ai-usage')">
+                            <span class="action-icon">🤖</span>
+                            AI Usage
+                        </button>
+                        <button class="quick-action-btn" onclick="switchTab('prompts')">
+                            <span class="action-icon">📄</span>
+                            Prompt Templates
+                        </button>
+                        <button class="quick-action-btn" onclick="switchTab('settings')">
+                            <span class="action-icon">⚙️</span>
+                            Settings
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TAB: USERS                                                   -->
+            <!-- ============================================================ -->
+            <section class="tab-content" id="tab-users">
+                <header class="admin-page-header">
+                    <div>
+                        <button class="admin-sidebar-toggle" aria-label="Toggle navigation">
+                            <span class="trigger-box"><span class="trigger-line"></span></span>
+                            <span class="menu-text">Menu</span>
+                        </button>
+                        <h1>User Management</h1>
+                        <p class="page-subtitle">Manage all users on the platform.</p>
+                    </div>
+                    <div class="admin-header-actions">
+                        <button class="btn-secondary btn-sm" onclick="exportUsers()">📥 Export</button>
+                    </div>
+                </header>
+
+                <div class="admin-filters">
+                    <div class="filter-group">
+                        <input type="text" class="filter-input" id="userSearch" placeholder="Search users..." />
+                        <select class="filter-select" id="userRoleFilter">
+                            <option value="all">All Roles</option>
+                            <option value="super_admin">Super Admin</option>
+                            <option value="admin">Admin</option>
+                            <option value="viewer">Viewer</option>
+                            <option value="owner">Owner</option>
+                            <option value="member">Member</option>
+                        </select>
+                        <select class="filter-select" id="userPlanFilter">
+                            <option value="all">All Plans</option>
+                            <option value="starter">Starter</option>
+                            <option value="pro_agency">Pro Agency</option>
+                            <option value="growth">Growth</option>
+                            <option value="enterprise">Enterprise</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Plan</th>
+                                    <th>Role</th>
+                                    <th>Scans</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr><td colspan="7" class="loading-text">Loading users...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="admin-table-footer">
+                        <span class="table-info" id="userTableInfo">Showing 0 users</span>
+                        <div class="table-pagination">
+                            <button class="pagination-btn" onclick="prevPage()">←</button>
+                            <span class="page-info" id="pageInfo">Page 1</span>
+                            <button class="pagination-btn" onclick="nextPage()">→</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TAB: SCANS                                                   -->
+            <!-- ============================================================ -->
+            <section class="tab-content" id="tab-scans">
+                <header class="admin-page-header">
+                    <div>
+                        <button class="admin-sidebar-toggle" aria-label="Toggle navigation">
+                            <span class="trigger-box"><span class="trigger-line"></span></span>
+                            <span class="menu-text">Menu</span>
+                        </button>
+                        <h1>Scans</h1>
+                        <p class="page-subtitle">All AI visibility scans across the platform.</p>
+                    </div>
+                </header>
+
+                <div class="admin-filters">
+                    <div class="filter-group">
+                        <input type="text" class="filter-input" id="scanSearch" placeholder="Search business..." />
+                        <select class="filter-select" id="scanStatusFilter">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="scanning">Scanning</option>
+                            <option value="complete">Complete</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                        <select class="filter-select" id="scanDiagnosisFilter">
+                            <option value="all">All Diagnosis</option>
+                            <option value="pending">Pending</option>
+                            <option value="running">Running</option>
+                            <option value="complete">Complete</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Business</th>
+                                    <th>User</th>
+                                    <th>Queries</th>
+                                    <th>Score</th>
+                                    <th>Diagnosis</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scansTableBody">
+                                <tr><td colspan="7" class="loading-text">Loading scans...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="admin-table-footer">
+                        <span class="table-info" id="scanTableInfo">Showing 0 scans</span>
+                        <div class="table-pagination">
+                            <button class="pagination-btn" onclick="prevPage()">←</button>
+                            <span class="page-info" id="scanPageInfo">Page 1</span>
+                            <button class="pagination-btn" onclick="nextPage()">→</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TAB: SUBSCRIPTIONS                                           -->
+            <!-- ============================================================ -->
+            <section class="tab-content" id="tab-subscriptions">
+                <header class="admin-page-header">
+                    <div>
+                        <button class="admin-sidebar-toggle" aria-label="Toggle navigation">
+                            <span class="trigger-box"><span class="trigger-line"></span></span>
+                            <span class="menu-text">Menu</span>
+                        </button>
+                        <h1>Subscriptions</h1>
+                        <p class="page-subtitle">Manage user subscriptions and plans.</p>
+                    </div>
+                    <div class="admin-header-actions">
+                        <span class="revenue-summary">MRR: <strong id="totalMRR">$0</strong></span>
+                    </div>
+                </header>
+
+                <div class="admin-stats-mini">
+                    <div class="mini-stat"><span class="mini-label">Active</span><span class="mini-value" id="subActive">0</span></div>
+                    <div class="mini-stat"><span class="mini-label">Trial</span><span class="mini-value" id="subTrial">0</span></div>
+                    <div class="mini-stat"><span class="mini-label">Cancelled</span><span class="mini-value" id="subCancelled">0</span></div>
+                    <div class="mini-stat"><span class="mini-label">Expired</span><span class="mini-value" id="subExpired">0</span></div>
+                </div>
+
+                <div class="admin-filters">
+                    <div class="filter-group">
+                        <input type="text" class="filter-input" id="subSearch" placeholder="Search subscriptions..." oninput="filterSubscriptions()" />
+                        <select class="filter-select" id="subPlanFilter" onchange="filterSubscriptions()">
+                            <option value="all">All Plans</option>
+                            <option value="starter">Starter</option>
+                            <option value="pro_agency">Pro Agency</option>
+                            <option value="growth">Growth</option>
+                            <option value="enterprise">Enterprise</option>
+                        </select>
+                        <select class="filter-select" id="subStatusFilter" onchange="filterSubscriptions()">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="trialing">Trial</option>
+                            <option value="canceled">Cancelled</option>
+                            <option value="past_due">Past Due</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Plan</th>
+                                    <th>Status</th>
+                                    <th>Price</th>
+                                    <th>Started</th>
+                                    <th>Renews</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subscriptionsTableBody">
+                                <tr><td colspan="7" class="loading-text">Loading subscriptions...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="admin-table-footer">
+                        <span class="table-info" id="subTableInfo">Showing 0 subscriptions</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TAB: BILLING                                                 -->
+            <!-- ============================================================ -->
+            <section class="tab-content" id="tab-billing">
+                <header class="admin-page-header">
+                    <div>
+                        <button class="admin-sidebar-toggle" aria-label="Toggle navigation">
+                            <span class="trigger-box"><span class="trigger-line"></span></span>
+                            <span class="menu-text">Menu</span>
+                        </button>
+                        <h1>Billing & Invoices</h1>
+                        <p class="page-subtitle">Manage payments, invoices, and refunds.</p>
+                    </div>
+                    <div class="admin-header-actions">
+                        <button class="btn-secondary btn-sm" onclick="window.open('https://dashboard.stripe.com', '_blank')">
+                            ⚡ Open Stripe
+                        </button>
+                    </div>
+                </header>
+
+                <div class="admin-stats-mini">
+                    <div class="mini-stat"><span class="mini-label">Total Revenue</span><span class="mini-value" id="totalRevenue">$0</span></div>
+                    <div class="mini-stat"><span class="mini-label">This Month</span><span class="mini-value" id="monthlyRevenue">$0</span></div>
+                    <div class="mini-stat"><span class="mini-label">Invoices</span><span class="mini-value" id="totalInvoices">0</span></div>
+                    <div class="mini-stat"><span class="mini-label">Refunds</span><span class="mini-value" id="totalRefunds">$0</span></div>
+                </div>
+
+                <div class="admin-filters">
+                    <div class="filter-group">
+                        <input type="text" class="filter-input" id="invoiceSearch" placeholder="Search invoices..." oninput="filterInvoices()" />
+                        <select class="filter-select" id="invoiceStatusFilter" onchange="filterInvoices()">
+                            <option value="all">All Status</option>
+                            <option value="paid">Paid</option>
+                            <option value="open">Open</option>
+                            <option value="void">Void</option>
+                            <option value="uncollectible">Uncollectible</option>
+                        </select>
+                        <input type="date" class="filter-input" id="invoiceDateFrom" />
+                        <input type="date" class="filter-input" id="invoiceDateTo" />
+                        <button class="btn-secondary btn-sm" onclick="applyDateFilter()">Apply</button>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>User</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Due Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoicesTableBody">
+                                <tr><td colspan="7" class="loading-text">Loading invoices...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="admin-table-footer">
+                        <span class="table-info" id="invoiceTableInfo">Showing 0 invoices</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TAB: AI USAGE                                                -->
+            <!-- ============================================================ -->
+            <section class="tab-content" id="tab-ai-usage">
+                <header class="admin-page-header">
+                    <div>
+                        <button class="admin-sidebar-toggle" aria-label="Toggle navigation">
+                            <span class="trigger-box"><span class="trigger-line"></span></span>
+                            <span class="menu-text">Menu</span>
+                        </button>
+                        <h1>AI Usage</h1>
+                        <p class="page-subtitle">Provider usage, costs, and quota tracking.</p>
+                    </div>
+                    <div class="admin-header-actions">
+                        <span class="ai-cost-summary">Cost this month: <strong id="aiCostThisMonth">$0.00</strong></span>
+                    </div>
+                </header>
+
+                <div class="admin-stats-mini">
+                    <div class="mini-stat"><span class="mini-label">Total Tokens</span><span class="mini-value" id="aiTotalTokens">0</span></div>
+                    <div class="mini-stat"><span class="mini-label">Groq Tokens</span><span class="mini-value" id="aiGroqTokens">0</span></div>
+                    <div class="mini-stat"><span class="mini-label">Tavily Calls</span><span class="mini-value" id="aiTavilyCalls">0</span></div>
+                    <div class="mini-stat"><span class="mini-label">You.com Calls</span><span class="mini-value" id="aiYouCalls">0</span></div>
+                </div>
+
+                <div class="admin-grid-2col">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3>Provider Usage</h3>
+                        </div>
+                        <div id="providerUsageChart">
+                            <div class="chart-bar">
+                                <span class="chart-label">Tavily</span>
+                                <div class="chart-bar-track"><div class="chart-bar-fill" id="tavilyBarFill" style="width: 0%; background: var(--primary);"></div></div>
+                                <span class="chart-value" id="tavilyBarValue">0%</span>
+                            </div>
+                            <div class="chart-bar">
+                                <span class="chart-label">You.com</span>
+                                <div class="chart-bar-track"><div class="chart-bar-fill" id="youBarFill" style="width: 0%; background: var(--secondary);"></div></div>
+                                <span class="chart-value" id="youBarValue">0%</span>
+                            </div>
+                            <div class="chart-bar">
+                                <span class="chart-label">Groq</span>
+                                <div class="chart-bar-track"><div class="chart-bar-fill" id="groqBarFill" style="width: 0%; background: var(--accent);"></div></div>
+                                <span class="chart-value" id="groqBarValue">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3>Queue Status</h3>
+                        </div>
+                        <div class="queue-status-details">
+                            <div class="queue-stat"><span class="queue-stat-label">Waiting</span><span class="queue-stat-value" id="queueWaiting">0</span></div>
+                            <div class="queue-stat"><span class="queue-stat-label">Processing</span><span class="queue-stat-value" id="queueProcessing">0</span></div>
+                            <div class="queue-stat"><span class="queue-stat-label">Completed Today</span><span class="queue-stat-value" id="queueCompletedToday">0</span></div>
+                            <div class="queue-stat"><span class="queue-stat-label">Avg Wait Time</span><span class="queue-stat-value" id="queueAvgWait">0s</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>Usage by Organization</h3>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Organization</th>
+                                    <th>Scans</th>
+                                    <th>Queries</th>
+                                    <th>Tavily Calls</th>
+                                    <th>You.com Calls</th>
+                                    <th>Est. Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody id="aiUsageTableBody">
+                                <tr><td colspan="6" class="loading-text">Loading usage...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TAB: PROMPTS                                                 -->
+            <!-- ============================================================ -->
+            <section class="tab-content" id="tab-prompts">
+                <header class="admin-page-header">
+                    <div>
+                        <button class="admin-sidebar-toggle" aria-label="Toggle navigation">
+                            <span class="trigger-box"><span class="trigger-line"></span></span>
+                            <span class="menu-text">Menu</span>
+                        </button>
+                        <h1>Prompt Management</h1>
+                        <p class="page-subtitle">Manage AI prompt templates used by the four pillars.</p>
+                    </div>
+                    <div class="admin-header-actions">
+                        <button class="btn-primary btn-sm" onclick="showAddPromptModal()">➕ New Prompt</button>
+                    </div>
+                </header>
+
+                <div class="admin-prompt-categories">
+                    <button class="category-btn active" data-category="all" onclick="filterPrompts('all')">All</button>
+                    <button class="category-btn" data-category="diagnose" onclick="filterPrompts('diagnose')">Diagnose</button>
+                    <button class="category-btn" data-category="optimize" onclick="filterPrompts('optimize')">Optimize</button>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Module</th>
+                                    <th>Version</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="promptsTableBody">
+                                <tr><td colspan="6" class="loading-text">Loading prompts...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="admin-table-footer">
+                        <span class="table-info" id="promptTableInfo">Showing 0 prompts</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TAB: SETTINGS                                                -->
+            <!-- ============================================================ -->
+            <section class="tab-content" id="tab-settings">
+                <header class="admin-page-header">
+                    <div>
+                        <button class="admin-sidebar-toggle" aria-label="Toggle navigation">
+                            <span class="trigger-box"><span class="trigger-line"></span></span>
+                            <span class="menu-text">Menu</span>
+                        </button>
+                        <h1>System Settings</h1>
+                        <p class="page-subtitle">Configure platform settings and feature flags.</p>
+                    </div>
+                    <div class="admin-header-actions">
+                        <button class="btn-primary btn-sm" onclick="saveAllSettings()">💾 Save All</button>
+                    </div>
+                </header>
+
+                <div class="admin-settings-grid">
+
+                    <div class="admin-card">
+                        <h3>General Settings</h3>
+                        <div class="settings-group">
+                            <div class="settings-field">
+                                <label>Site Name</label>
+                                <input type="text" class="form-input" id="siteName" />
+                            </div>
+                            <div class="settings-field">
+                                <label>Contact Email</label>
+                                <input type="email" class="form-input" id="contactEmail" />
+                            </div>
+                            <div class="settings-field">
+                                <label>Support Email</label>
+                                <input type="email" class="form-input" id="supportEmail" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-card">
+                        <h3>Feature Flags</h3>
+                        <div class="settings-group">
+                            <div class="settings-toggle"><label class="toggle-label"><input type="checkbox" id="flagFind" /> FIND Pillar</label></div>
+                            <div class="settings-toggle"><label class="toggle-label"><input type="checkbox" id="flagDiagnose" /> DIAGNOSE Pillar</label></div>
+                            <div class="settings-toggle"><label class="toggle-label"><input type="checkbox" id="flagOptimize" /> OPTIMIZE Pillar</label></div>
+                            <div class="settings-toggle"><label class="toggle-label"><input type="checkbox" id="flagMonitor" /> MONITOR Pillar</label></div>
+                            <div class="settings-toggle"><label class="toggle-label"><input type="checkbox" id="maintenanceMode" /> Maintenance Mode</label></div>
+                        </div>
+                    </div>
+
+                    <div class="admin-card">
+                        <h3>AI Settings</h3>
+                        <div class="settings-group">
+                            <div class="settings-field">
+                                <label>Default Provider</label>
+                                <select class="form-select" id="aiProvider">
+                                    <option value="tavily">Tavily</option>
+                                    <option value="you">You.com</option>
+                                    <option value="groq">Groq</option>
+                                    <option value="auto">Auto (Smart Routing)</option>
+                                </select>
+                            </div>
+                            <div class="settings-field">
+                                <label>Max Tokens per Request</label>
+                                <input type="number" class="form-input" id="maxTokens" />
+                            </div>
+                            <div class="settings-field">
+                                <label>Temperature</label>
+                                <input type="range" class="form-range" id="temperature" min="0" max="1" step="0.1" />
+                                <span id="temperatureValue">0.7</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-card">
+                        <h3>Maintenance</h3>
+                        <div class="settings-group">
+                            <div class="settings-field">
+                                <label>Maintenance Message</label>
+                                <textarea class="form-textarea" id="maintenanceMessage" rows="3" placeholder="We're currently performing maintenance..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TAB: LOGS                                                    -->
+            <!-- ============================================================ -->
+            <section class="tab-content" id="tab-logs">
+                <header class="admin-page-header">
+                    <div>
+                        <button class="admin-sidebar-toggle" aria-label="Toggle navigation">
+                            <span class="trigger-box"><span class="trigger-line"></span></span>
+                            <span class="menu-text">Menu</span>
+                        </button>
+                        <h1>Activity Logs</h1>
+                        <p class="page-subtitle">System events and audit trail.</p>
+                    </div>
+                    <div class="admin-header-actions">
+                        <button class="btn-secondary btn-sm" onclick="exportLogs()">📥 Export</button>
+                        <button class="btn-secondary btn-sm" onclick="clearLogs()">🗑️ Clear</button>
+                    </div>
+                </header>
+
+                <div class="admin-filters">
+                    <div class="filter-group">
+                        <input type="text" class="filter-input" id="logSearch" placeholder="Search logs..." oninput="filterLogs()" />
+                        <select class="filter-select" id="logTypeFilter" onchange="filterLogs()">
+                            <option value="all">All Types</option>
+                            <option value="user">User</option>
+                            <option value="system">System</option>
+                            <option value="scan">Scan</option>
+                            <option value="payment">Payment</option>
+                            <option value="error">Error</option>
+                        </select>
+                        <select class="filter-select" id="logSeverityFilter" onchange="filterLogs()">
+                            <option value="all">All Severity</option>
+                            <option value="info">Info</option>
+                            <option value="warning">Warning</option>
+                            <option value="error">Error</option>
+                        </select>
+                        <input type="date" class="filter-input" id="logDateFrom" />
+                        <input type="date" class="filter-input" id="logDateTo" />
+                        <button class="btn-secondary btn-sm" onclick="applyLogDateFilter()">Apply</button>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-table-container">
+                        <table class="admin-table admin-table-logs">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Type</th>
+                                    <th>Severity</th>
+                                    <th>User</th>
+                                    <th>Message</th>
+                                    <th>IP</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logsTableBody">
+                                <tr><td colspan="6" class="loading-text">Loading logs...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="admin-table-footer">
+                        <span class="table-info" id="logTableInfo">Showing 0 logs</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TAB: ANALYTICS                                               -->
+            <!-- ============================================================ -->
+            <section class="tab-content" id="tab-analytics">
+                <header class="admin-page-header">
+                    <div>
+                        <button class="admin-sidebar-toggle" aria-label="Toggle navigation">
+                            <span class="trigger-box"><span class="trigger-line"></span></span>
+                            <span class="menu-text">Menu</span>
+                        </button>
+                        <h1>Analytics</h1>
+                        <p class="page-subtitle">Growth, revenue, and platform performance.</p>
+                    </div>
+                    <div class="admin-header-actions">
+                        <select class="filter-select" id="analyticsPeriod" onchange="updateAnalytics()">
+                            <option value="7d">Last 7 Days</option>
+                            <option value="30d" selected>Last 30 Days</option>
+                            <option value="90d">Last 90 Days</option>
+                            <option value="1y">Last Year</option>
+                        </select>
+                        <button class="btn-secondary btn-sm" onclick="exportAnalytics()">📥 Export</button>
+                    </div>
+                </header>
+
+                <div class="admin-stats-mini">
+                    <div class="mini-stat"><span class="mini-label">User Growth</span><span class="mini-value positive" id="userGrowthRate">+0%</span></div>
+                    <div class="mini-stat"><span class="mini-label">Revenue Growth</span><span class="mini-value positive" id="revenueGrowthRate">+0%</span></div>
+                    <div class="mini-stat"><span class="mini-label">Conversion Rate</span><span class="mini-value" id="conversionRate">0%</span></div>
+                    <div class="mini-stat"><span class="mini-label">Churn Rate</span><span class="mini-value negative" id="churnRate">0%</span></div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>User Breakdown by Plan</h3>
+                    </div>
+                    <div class="user-breakdown">
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Starter</span>
+                            <div class="breakdown-bar"><div class="breakdown-fill" id="breakdownStarterBar" style="width: 0%; background: var(--gray-400);"></div></div>
+                            <span class="breakdown-value" id="breakdownStarter">0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Pro Agency</span>
+                            <div class="breakdown-bar"><div class="breakdown-fill" id="breakdownProBar" style="width: 0%; background: var(--primary);"></div></div>
+                            <span class="breakdown-value" id="breakdownPro">0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Growth</span>
+                            <div class="breakdown-bar"><div class="breakdown-fill" id="breakdownGrowthBar" style="width: 0%; background: var(--secondary);"></div></div>
+                            <span class="breakdown-value" id="breakdownGrowth">0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Enterprise</span>
+                            <div class="breakdown-bar"><div class="breakdown-fill" id="breakdownEnterpriseBar" style="width: 0%; background: var(--accent);"></div></div>
+                            <span class="breakdown-value" id="breakdownEnterprise">0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <div id="footer"></div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="../js/main.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/admin-footer.js"></script>
+    <script type="module" src="../js/admin-tabs/index.js"></script>
+</body>
+</html>

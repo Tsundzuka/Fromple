@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Admin Settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+    <script type="module">
+        import { requireAdmin } from '../js/auth-guard.js';
+        await requireAdmin();
+    </script>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <div id="header"></div>
+
+    <!-- ========== ADMIN WRAPPER ========== -->
+    <div class="admin-wrapper">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <nav class="admin-nav">
+                <a href="index.html" class="admin-nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span>Overview</span>
+                </a>
+                <a href="users.html" class="admin-nav-item">
+                    <span class="nav-icon">👥</span>
+                    <span>Users</span>
+                    <span class="nav-badge" id="userCount">0</span>
+                </a>
+                <a href="campaigns.html" class="admin-nav-item">
+                    <span class="nav-icon">📝</span>
+                    <span>Campaigns</span>
+                    <span class="nav-badge" id="campaignCount">0</span>
+                </a>
+                <a href="subscriptions.html" class="admin-nav-item">
+                    <span class="nav-icon">💳</span>
+                    <span>Subscriptions</span>
+                </a>
+                <a href="billing.html" class="admin-nav-item">
+                    <span class="nav-icon">💰</span>
+                    <span>Billing</span>
+                </a>
+                <a href="ai-usage.html" class="admin-nav-item">
+                    <span class="nav-icon">🤖</span>
+                    <span>AI Usage</span>
+                </a>
+                <a href="prompts.html" class="admin-nav-item">
+                    <span class="nav-icon">📄</span>
+                    <span>Prompts</span>
+                </a>
+                <a href="settings.html" class="admin-nav-item active">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="logs.html" class="admin-nav-item">
+                    <span class="nav-icon">📋</span>
+                    <span>Logs</span>
+                </a>
+                <a href="analytics.html" class="admin-nav-item">
+                    <span class="nav-icon">📈</span>
+                    <span>Analytics</span>
+                </a>
+            </nav>
+
+            <div class="admin-sidebar-footer">
+                <div class="admin-user">
+                    <div class="admin-avatar">A</div>
+                    <div>
+                        <span class="admin-name">Admin</span>
+                        <span class="admin-role">Super Admin</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+
+            <!-- Page Header -->
+            <header class="admin-page-header">
+                <div>
+                    <!-- Toggle Button with Menu text -->
+                    <button class="admin-sidebar-toggle" id="adminSidebarToggle" aria-label="Toggle navigation">
+                        <span class="trigger-box">
+                            <span class="trigger-line"></span>
+                        </span>
+                        <span class="menu-text">Menu</span>
+                    </button>
+                    <h1>System Settings</h1>
+                    <p class="page-subtitle">Configure platform settings and feature flags.</p>
+                </div>
+                <div class="admin-header-actions">
+                    <button class="btn-primary btn-sm" onclick="saveAllSettings()">💾 Save All</button>
+                </div>
+            </header>
+
+            <!-- Settings Sections -->
+            <div class="admin-settings-grid">
+
+                <!-- General Settings -->
+                <div class="admin-card">
+                    <h3>General Settings</h3>
+                    <div class="settings-group">
+                        <div class="settings-field">
+                            <label>Site Name</label>
+                            <input type="text" class="form-input" id="siteName" value="Fromple" />
+                        </div>
+                        <div class="settings-field">
+                            <label>Contact Email</label>
+                            <input type="email" class="form-input" id="contactEmail" value="hello@fromple.ai" />
+                        </div>
+                        <div class="settings-field">
+                            <label>Support Email</label>
+                            <input type="email" class="form-input" id="supportEmail" value="support@fromple.ai" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature Flags -->
+                <div class="admin-card">
+                    <h3>Feature Flags</h3>
+                    <div class="settings-group">
+                        <div class="settings-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked id="flagCreator" />
+                                Creator Module
+                            </label>
+                        </div>
+                        <div class="settings-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked id="flagGrowth" />
+                                Business Growth Module
+                            </label>
+                        </div>
+                        <div class="settings-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked id="flagAuthority" />
+                                Authority Builder
+                            </label>
+                        </div>
+                        <div class="settings-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked id="flagBrandVoice" />
+                                Brand Voice Engine
+                            </label>
+                        </div>
+                        <div class="settings-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked id="flagCampaignPlanner" />
+                                Campaign Planner
+                            </label>
+                        </div>
+                        <div class="settings-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="flagMaintenance" />
+                                Maintenance Mode
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Settings -->
+                <div class="admin-card">
+                    <h3>AI Settings</h3>
+                    <div class="settings-group">
+                        <div class="settings-field">
+                            <label>Default Provider</label>
+                            <select class="form-select" id="aiProvider">
+                                <option value="groq">Groq</option>
+                                <option value="gemini">Gemini</option>
+                                <option value="auto">Auto (Smart Routing)</option>
+                            </select>
+                        </div>
+                        <div class="settings-field">
+                            <label>Max Tokens per Request</label>
+                            <input type="number" class="form-input" id="maxTokens" value="4000" />
+                        </div>
+                        <div class="settings-field">
+                            <label>Temperature</label>
+                            <input type="range" class="form-range" id="temperature" min="0" max="1" step="0.1" value="0.7" />
+                            <span id="temperatureValue">0.7</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rate Limits -->
+                <div class="admin-card">
+                    <h3>Rate Limits</h3>
+                    <div class="settings-group">
+                        <div class="settings-field">
+                            <label>Free Users - Requests per day</label>
+                            <input type="number" class="form-input" id="freeRateLimit" value="5" />
+                        </div>
+                        <div class="settings-field">
+                            <label>Professional - Requests per day</label>
+                            <input type="number" class="form-input" id="proRateLimit" value="50" />
+                        </div>
+                        <div class="settings-field">
+                            <label>Growth - Requests per day</label>
+                            <input type="number" class="form-input" id="growthRateLimit" value="200" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maintenance Mode Toggle -->
+                <div class="admin-card">
+                    <h3>Maintenance Mode</h3>
+                    <div class="settings-group">
+                        <div class="settings-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="maintenanceMode" />
+                                Enable Maintenance Mode
+                            </label>
+                        </div>
+                        <div class="settings-field">
+                            <label>Maintenance Message</label>
+                            <textarea class="form-textarea" id="maintenanceMessage" rows="3" placeholder="We're currently performing maintenance. Please check back soon."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <div id="footer"></div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="../js/main.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/admin-footer.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>

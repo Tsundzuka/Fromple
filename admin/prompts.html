@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Admin Prompts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+    <script type="module">
+        import { requireAdmin } from '../js/auth-guard.js';
+        await requireAdmin();
+    </script>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <div id="header"></div>
+
+    <!-- ========== ADMIN WRAPPER ========== -->
+    <div class="admin-wrapper">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <nav class="admin-nav">
+                <a href="index.html" class="admin-nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span>Overview</span>
+                </a>
+                <a href="users.html" class="admin-nav-item">
+                    <span class="nav-icon">👥</span>
+                    <span>Users</span>
+                    <span class="nav-badge" id="userCount">0</span>
+                </a>
+                <a href="campaigns.html" class="admin-nav-item">
+                    <span class="nav-icon">📝</span>
+                    <span>Campaigns</span>
+                    <span class="nav-badge" id="campaignCount">0</span>
+                </a>
+                <a href="subscriptions.html" class="admin-nav-item">
+                    <span class="nav-icon">💳</span>
+                    <span>Subscriptions</span>
+                </a>
+                <a href="billing.html" class="admin-nav-item">
+                    <span class="nav-icon">💰</span>
+                    <span>Billing</span>
+                </a>
+                <a href="ai-usage.html" class="admin-nav-item">
+                    <span class="nav-icon">🤖</span>
+                    <span>AI Usage</span>
+                </a>
+                <a href="prompts.html" class="admin-nav-item active">
+                    <span class="nav-icon">📄</span>
+                    <span>Prompts</span>
+                </a>
+                <a href="settings.html" class="admin-nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="logs.html" class="admin-nav-item">
+                    <span class="nav-icon">📋</span>
+                    <span>Logs</span>
+                </a>
+                <a href="analytics.html" class="admin-nav-item">
+                    <span class="nav-icon">📈</span>
+                    <span>Analytics</span>
+                </a>
+            </nav>
+
+            <div class="admin-sidebar-footer">
+                <div class="admin-user">
+                    <div class="admin-avatar">A</div>
+                    <div>
+                        <span class="admin-name">Admin</span>
+                        <span class="admin-role">Super Admin</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+
+            <!-- Page Header -->
+            <header class="admin-page-header">
+                <div>
+                    <!-- Toggle Button with Menu text -->
+                    <button class="admin-sidebar-toggle" id="adminSidebarToggle" aria-label="Toggle navigation">
+                        <span class="trigger-box">
+                            <span class="trigger-line"></span>
+                        </span>
+                        <span class="menu-text">Menu</span>
+                    </button>
+                    <h1>Prompt Management</h1>
+                    <p class="page-subtitle">Manage AI prompt templates for all modules.</p>
+                </div>
+                <div class="admin-header-actions">
+                    <button class="btn-primary btn-sm" onclick="showAddPromptModal()">➕ New Prompt</button>
+                </div>
+            </header>
+
+            <!-- Prompt Categories -->
+            <div class="admin-prompt-categories">
+                <button class="category-btn active" data-category="all" onclick="filterPrompts('all')">All</button>
+                <button class="category-btn" data-category="social" onclick="filterPrompts('social')">Social Media</button>
+                <button class="category-btn" data-category="authority" onclick="filterPrompts('authority')">Authority</button>
+                <button class="category-btn" data-category="business" onclick="filterPrompts('business')">Business</button>
+            </div>
+
+            <!-- Prompts Table -->
+            <div class="admin-card">
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Module</th>
+                                <th>Version</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="promptsTableBody">
+                            <tr>
+                                <td colspan="6" class="loading-text">Loading prompts...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="admin-table-footer">
+                    <span class="table-info" id="promptTableInfo">Showing 0 prompts</span>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <div id="footer"></div>
+
+    <!-- ========== MODAL ========== -->
+    <div class="admin-modal" id="promptModal" style="display:none;">
+        <div class="admin-modal-content admin-modal-large">
+            <div class="admin-modal-header">
+                <h2 id="promptModalTitle">Edit Prompt</h2>
+                <button class="modal-close" onclick="closePromptModal()">✕</button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="promptForm">
+                    <div class="form-group">
+                        <label>Prompt Name</label>
+                        <input type="text" class="form-input" id="promptName" placeholder="linkedin-post" />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select class="form-select" id="promptCategory">
+                                <option value="social">Social Media</option>
+                                <option value="authority">Authority</option>
+                                <option value="business">Business</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Module</label>
+                            <select class="form-select" id="promptModule">
+                                <option value="creator">Creator Module</option>
+                                <option value="authority">Authority Builder</option>
+                                <option value="growth">Business Growth</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Prompt Template</label>
+                        <textarea class="form-textarea" id="promptTemplate" rows="10" placeholder="Write your prompt template here..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-select" id="promptStatus">
+                            <option value="active">Active</option>
+                            <option value="draft">Draft</option>
+                            <option value="disabled">Disabled</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn-secondary" onclick="closePromptModal()">Cancel</button>
+                <button class="btn-secondary" onclick="testPrompt()">🧪 Test</button>
+                <button class="btn-primary" onclick="savePrompt()">Save Prompt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="../js/main.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/admin-footer.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>

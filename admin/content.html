@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Content Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+    <link rel="stylesheet" href="../css/pages/content.css" />
+    <script type="module">
+        import { requireAdmin } from '../js/auth-guard.js';
+        await requireAdmin();
+    </script>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <div id="header"></div>
+
+    <!-- ========== ADMIN WRAPPER ========== -->
+    <div class="admin-wrapper">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <nav class="admin-nav">
+                <a href="index.html" class="admin-nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span>Overview</span>
+                </a>
+                <a href="users.html" class="admin-nav-item">
+                    <span class="nav-icon">👥</span>
+                    <span>Users</span>
+                    <span class="nav-badge" id="userCount">0</span>
+                </a>
+                <a href="campaigns.html" class="admin-nav-item">
+                    <span class="nav-icon">📝</span>
+                    <span>Campaigns</span>
+                    <span class="nav-badge" id="campaignCount">0</span>
+                </a>
+                <a href="content.html" class="admin-nav-item active">
+                    <span class="nav-icon">📄</span>
+                    <span>Content</span>
+                    <span class="nav-badge" id="contentCount">0</span>
+                </a>
+                <a href="subscriptions.html" class="admin-nav-item">
+                    <span class="nav-icon">💳</span>
+                    <span>Subscriptions</span>
+                </a>
+                <a href="billing.html" class="admin-nav-item">
+                    <span class="nav-icon">💰</span>
+                    <span>Billing</span>
+                </a>
+                <a href="ai-usage.html" class="admin-nav-item">
+                    <span class="nav-icon">🤖</span>
+                    <span>AI Usage</span>
+                </a>
+                <a href="prompts.html" class="admin-nav-item">
+                    <span class="nav-icon">📄</span>
+                    <span>Prompts</span>
+                </a>
+                <a href="settings.html" class="admin-nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="logs.html" class="admin-nav-item">
+                    <span class="nav-icon">📋</span>
+                    <span>Logs</span>
+                </a>
+                <a href="analytics.html" class="admin-nav-item">
+                    <span class="nav-icon">📈</span>
+                    <span>Analytics</span>
+                </a>
+            </nav>
+
+            <div class="admin-sidebar-footer">
+                <div class="admin-user">
+                    <div class="admin-avatar">A</div>
+                    <div>
+                        <span class="admin-name">Admin</span>
+                        <span class="admin-role">Super Admin</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+
+            <!-- Page Header -->
+            <header class="admin-page-header">
+                <div>
+                    <button class="admin-sidebar-toggle" id="adminSidebarToggle" aria-label="Toggle navigation">
+                        <span class="trigger-box">
+                            <span class="trigger-line"></span>
+                        </span>
+                        <span class="menu-text">Menu</span>
+                    </button>
+                    <h1>Content Manager</h1>
+                    <p class="page-subtitle">Create and manage all content types from one place.</p>
+                </div>
+                <div class="admin-header-actions">
+                    <span class="content-summary" id="contentSummary">Total: 0 items</span>
+                </div>
+            </header>
+
+            <!-- Content Manager -->
+            <div class="content-manager">
+
+                <!-- Sidebar: Content Types -->
+                <div class="content-sidebar">
+                    <h3>Content Types</h3>
+
+                    <!-- Blog Posts -->
+                    <button class="content-type-btn active" data-type="blog" onclick="window.loadContentType('blog')">
+                        <span class="icon">📝</span>
+                        Blog Posts
+                        <span class="badge" id="blogCount">0</span>
+                    </button>
+
+                    <!-- Career Posts -->
+                    <button class="content-type-btn" data-type="career" onclick="window.loadContentType('career')">
+                        <span class="icon">💼</span>
+                        Career Posts
+                        <span class="badge" id="careerCount">0</span>
+                    </button>
+
+                    <!-- Pages -->
+                    <button class="content-type-btn" data-type="page" onclick="window.loadContentType('page')">
+                        <span class="icon">📄</span>
+                        Pages
+                        <span class="badge" id="pageCount">0</span>
+                    </button>
+
+                    <!-- Assets -->
+                    <button class="content-type-btn" data-type="asset" onclick="window.loadContentType('asset')">
+                        <span class="icon">🎵</span>
+                        Assets
+                        <span class="badge" id="assetCount">0</span>
+                    </button>
+
+                    <!-- Team Members -->
+                    <button class="content-type-btn" data-type="team" onclick="window.loadContentType('team')">
+                        <span class="icon">👥</span>
+                        Team Members
+                        <span class="badge" id="teamCount">0</span>
+                    </button>
+
+                    <!-- Packages (Pricing Plans) -->
+                    <button class="content-type-btn" data-type="package" onclick="window.loadContentType('package')">
+                        <span class="icon">📦</span>
+                        Packages
+                        <span class="badge" id="packageCount">0</span>
+                    </button>
+
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="content-main">
+
+                    <!-- Form Container -->
+                    <div class="form-container" id="formContainer">
+                        <div id="formContent">
+                            <!-- Forms are loaded here by content-loader.js -->
+                            <div class="form-loading">
+                                <div class="spinner"></div>
+                                <p>Loading form...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- List/Table of items -->
+                    <div class="content-list">
+                        <div class="content-list-header">
+                            <h3 id="listTitle">Recent Items</h3>
+                            <span class="count" id="listCount">0 items</span>
+                        </div>
+                        <div id="listContainer">
+                            <div class="empty-state">
+                                <span class="empty-icon">📭</span>
+                                <p>No items yet. Create your first one above.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <div id="footer"></div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="../js/main.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/admin-footer.js"></script>
+
+    <!-- Content Loader -->
+    <script type="module" src="../js/forms/content-loader.js"></script>
+</body>
+</html>

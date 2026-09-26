@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Admin Logs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+    <script type="module">
+        import { requireAdmin } from '../js/auth-guard.js';
+        await requireAdmin();
+    </script>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <div id="header"></div>
+
+    <!-- ========== ADMIN WRAPPER ========== -->
+    <div class="admin-wrapper">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <nav class="admin-nav">
+                <a href="index.html" class="admin-nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span>Overview</span>
+                </a>
+                <a href="users.html" class="admin-nav-item">
+                    <span class="nav-icon">👥</span>
+                    <span>Users</span>
+                    <span class="nav-badge" id="userCount">0</span>
+                </a>
+                <a href="campaigns.html" class="admin-nav-item">
+                    <span class="nav-icon">📝</span>
+                    <span>Campaigns</span>
+                    <span class="nav-badge" id="campaignCount">0</span>
+                </a>
+                <a href="subscriptions.html" class="admin-nav-item">
+                    <span class="nav-icon">💳</span>
+                    <span>Subscriptions</span>
+                </a>
+                <a href="billing.html" class="admin-nav-item">
+                    <span class="nav-icon">💰</span>
+                    <span>Billing</span>
+                </a>
+                <a href="ai-usage.html" class="admin-nav-item">
+                    <span class="nav-icon">🤖</span>
+                    <span>AI Usage</span>
+                </a>
+                <a href="prompts.html" class="admin-nav-item">
+                    <span class="nav-icon">📄</span>
+                    <span>Prompts</span>
+                </a>
+                <a href="settings.html" class="admin-nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="logs.html" class="admin-nav-item active">
+                    <span class="nav-icon">📋</span>
+                    <span>Logs</span>
+                </a>
+                <a href="analytics.html" class="admin-nav-item">
+                    <span class="nav-icon">📈</span>
+                    <span>Analytics</span>
+                </a>
+            </nav>
+
+            <div class="admin-sidebar-footer">
+                <div class="admin-user">
+                    <div class="admin-avatar">A</div>
+                    <div>
+                        <span class="admin-name">Admin</span>
+                        <span class="admin-role">Super Admin</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+
+            <!-- Page Header -->
+            <header class="admin-page-header">
+                <div>
+                    <!-- Toggle Button with Menu text -->
+                    <button class="admin-sidebar-toggle" id="adminSidebarToggle" aria-label="Toggle navigation">
+                        <span class="trigger-box">
+                            <span class="trigger-line"></span>
+                        </span>
+                        <span class="menu-text">Menu</span>
+                    </button>
+                    <h1>Activity Logs</h1>
+                    <p class="page-subtitle">View all platform activity and system events.</p>
+                </div>
+                <div class="admin-header-actions">
+                    <button class="btn-secondary btn-sm" onclick="exportLogs()">📥 Export</button>
+                    <button class="btn-secondary btn-sm" onclick="clearLogs()">🗑️ Clear</button>
+                </div>
+            </header>
+
+            <!-- Filters -->
+            <div class="admin-filters">
+                <div class="filter-group">
+                    <input type="text" class="filter-input" id="logSearch" placeholder="Search logs..." oninput="filterLogs()" />
+                    <select class="filter-select" id="logTypeFilter" onchange="filterLogs()">
+                        <option value="all">All Types</option>
+                        <option value="user">User</option>
+                        <option value="system">System</option>
+                        <option value="campaign">Campaign</option>
+                        <option value="payment">Payment</option>
+                        <option value="error">Error</option>
+                    </select>
+                    <select class="filter-select" id="logSeverityFilter" onchange="filterLogs()">
+                        <option value="all">All Severity</option>
+                        <option value="info">Info</option>
+                        <option value="warning">Warning</option>
+                        <option value="error">Error</option>
+                    </select>
+                    <input type="date" class="filter-input" id="logDateFrom" placeholder="From" />
+                    <input type="date" class="filter-input" id="logDateTo" placeholder="To" />
+                    <button class="btn-secondary btn-sm" onclick="applyLogDateFilter()">Apply</button>
+                </div>
+            </div>
+
+            <!-- Logs Table -->
+            <div class="admin-card">
+                <div class="admin-table-container">
+                    <table class="admin-table admin-table-logs">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Type</th>
+                                <th>Severity</th>
+                                <th>User</th>
+                                <th>Message</th>
+                                <th>IP</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logsTableBody">
+                            <tr>
+                                <td colspan="6" class="loading-text">Loading logs...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="admin-table-footer">
+                    <span class="table-info" id="logTableInfo">Showing 0 logs</span>
+                    <div class="table-pagination">
+                        <button class="pagination-btn" onclick="prevPage()">←</button>
+                        <span class="page-info" id="pageInfo">Page 1 of 1</span>
+                        <button class="pagination-btn" onclick="nextPage()">→</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <div id="footer"></div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="../js/main.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/admin-footer.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>

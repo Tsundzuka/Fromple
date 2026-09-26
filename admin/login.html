@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Admin Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body class="auth-page">
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Logo -->
+            <a href="index.html" class="auth-logo">
+                <span class="brand-logo-wrapper">
+                    <img src="../assets/icons/logo.png" alt="Fromple" class="brand-logo" />
+                    <img src="../assets/icons/brand.png" alt="Fromple" class="brand-text-image" />
+                </span>
+            </a>
+
+            <h1>Admin Login</h1>
+            <p class="auth-subtitle">Sign in to access the admin dashboard.</p>
+
+            <!-- ========== LOGIN FORM ========== -->
+            <div id="loginFormContainer" class="auth-form-container">
+                <form class="auth-form" id="adminLoginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" class="form-input" placeholder="admin@fromple.ai" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required />
+                    </div>
+                    <div class="auth-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked />
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Log In</button>
+                </form>
+
+                <p class="auth-footer">
+                    <a href="../login.html">Return to user login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+</body>
+</html>

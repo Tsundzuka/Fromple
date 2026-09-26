@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fromple - Admin AI Usage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+    <script type="module">
+        import { requireAdmin } from '../js/auth-guard.js';
+        await requireAdmin();
+    </script>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <div id="header"></div>
+
+    <!-- ========== ADMIN WRAPPER ========== -->
+    <div class="admin-wrapper">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <nav class="admin-nav">
+                <a href="index.html" class="admin-nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span>Overview</span>
+                </a>
+                <a href="users.html" class="admin-nav-item">
+                    <span class="nav-icon">👥</span>
+                    <span>Users</span>
+                    <span class="nav-badge" id="userCount">0</span>
+                </a>
+                <a href="campaigns.html" class="admin-nav-item">
+                    <span class="nav-icon">📝</span>
+                    <span>Campaigns</span>
+                    <span class="nav-badge" id="campaignCount">0</span>
+                </a>
+                <a href="subscriptions.html" class="admin-nav-item">
+                    <span class="nav-icon">💳</span>
+                    <span>Subscriptions</span>
+                </a>
+                <a href="billing.html" class="admin-nav-item">
+                    <span class="nav-icon">💰</span>
+                    <span>Billing</span>
+                </a>
+                <a href="ai-usage.html" class="admin-nav-item active">
+                    <span class="nav-icon">🤖</span>
+                    <span>AI Usage</span>
+                </a>
+                <a href="prompts.html" class="admin-nav-item">
+                    <span class="nav-icon">📄</span>
+                    <span>Prompts</span>
+                </a>
+                <a href="settings.html" class="admin-nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="logs.html" class="admin-nav-item">
+                    <span class="nav-icon">📋</span>
+                    <span>Logs</span>
+                </a>
+                <a href="analytics.html" class="admin-nav-item">
+                    <span class="nav-icon">📈</span>
+                    <span>Analytics</span>
+                </a>
+            </nav>
+
+            <div class="admin-sidebar-footer">
+                <div class="admin-user">
+                    <div class="admin-avatar">A</div>
+                    <div>
+                        <span class="admin-name">Admin</span>
+                        <span class="admin-role">Super Admin</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+
+            <!-- Page Header -->
+            <header class="admin-page-header">
+                <div>
+                    <!-- Toggle Button with Menu text -->
+                    <button class="admin-sidebar-toggle" id="adminSidebarToggle" aria-label="Toggle navigation">
+                        <span class="trigger-box">
+                            <span class="trigger-line"></span>
+                        </span>
+                        <span class="menu-text">Menu</span>
+                    </button>
+                    <h1>AI Usage & Analytics</h1>
+                    <p class="page-subtitle">Monitor AI provider usage, costs, and queue performance.</p>
+                </div>
+                <div class="admin-header-actions">
+                    <span class="ai-cost-summary">Cost this month: <strong id="aiCostThisMonth">R0.00</strong></span>
+                </div>
+            </header>
+
+            <!-- AI Stats -->
+            <div class="admin-stats-mini">
+                <div class="mini-stat">
+                    <span class="mini-label">Total Tokens</span>
+                    <span class="mini-value" id="aiTotalTokens">0</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-label">Groq</span>
+                    <span class="mini-value" id="aiGroqTokens">0</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-label">Gemini</span>
+                    <span class="mini-value" id="aiGeminiTokens">0</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-label">Queue Length</span>
+                    <span class="mini-value" id="aiQueueLength">0</span>
+                </div>
+            </div>
+
+            <!-- Provider Breakdown -->
+            <div class="admin-grid-2col">
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>Provider Usage</h3>
+                    </div>
+                    <div id="providerUsageChart">
+                        <div class="chart-bar">
+                            <span class="chart-label">Groq</span>
+                            <div class="chart-bar-track">
+                                <div class="chart-bar-fill" style="width: 70%; background: var(--primary);"></div>
+                            </div>
+                            <span class="chart-value">70%</span>
+                        </div>
+                        <div class="chart-bar">
+                            <span class="chart-label">Gemini</span>
+                            <div class="chart-bar-track">
+                                <div class="chart-bar-fill" style="width: 30%; background: var(--secondary);"></div>
+                            </div>
+                            <span class="chart-value">30%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>Queue Status</h3>
+                    </div>
+                    <div class="queue-status-details">
+                        <div class="queue-stat">
+                            <span class="queue-stat-label">Waiting</span>
+                            <span class="queue-stat-value" id="queueWaiting">0</span>
+                        </div>
+                        <div class="queue-stat">
+                            <span class="queue-stat-label">Processing</span>
+                            <span class="queue-stat-value" id="queueProcessing">0</span>
+                        </div>
+                        <div class="queue-stat">
+                            <span class="queue-stat-label">Completed Today</span>
+                            <span class="queue-stat-value" id="queueCompletedToday">0</span>
+                        </div>
+                        <div class="queue-stat">
+                            <span class="queue-stat-label">Avg Wait Time</span>
+                            <span class="queue-stat-value" id="queueAvgWait">0s</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Usage by User -->
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3>Top Users by AI Usage</h3>
+                    <a href="users.html" class="text-link">View All</a>
+                </div>
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Tokens Used</th>
+                                <th>Requests</th>
+                                <th>Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topUsersTableBody">
+                            <tr>
+                                <td colspan="4" class="loading-text">Loading data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <div id="footer"></div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="../js/main.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/admin-footer.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>
