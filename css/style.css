@@ -58,10 +58,18 @@
 @import 'pages/auth.css';
 
 /* DASHBOARD - User dashboard
-   Sidebar navigation, stats grid, campaign list, quick actions,
-   queue list, activity table with filters, upload dropzone,
-   review cards, planner grid, brand voice settings, and user settings.
+   Sidebar navigation, stats grid, KPI strip, class table,
+   movement histograms, condition contribution table,
+   AI interpretation card, and responsive behavior.
    Pages: dashboard.html
+   ============================================================ */
+@import 'pages/dashboard.css';
+
+/* PROFILE - User profile page
+   Profile hero with avatar, personal information form,
+   security and preferences sections, plan summary,
+   danger zone, and responsive behavior.
+   Pages: profile.html
    ============================================================ */
 @import 'pages/profile.css';
 
