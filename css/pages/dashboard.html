@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/profile.css" />
+</head>
+<body>
+
+    <div id="header"></div>
+
+    <main class="main-content">
+        <div class="settings-container">
+
+            <!-- ============ PROFILE HEADER ============ -->
+            <div class="card profile-hero">
+                <div class="profile-hero-bg" aria-hidden="true"></div>
+                <div class="profile-hero-body">
+                    <div class="profile-avatar-wrap">
+                        <div class="profile-avatar-lg" id="profileAvatar">JD</div>
+                        <button class="profile-avatar-edit" type="button" aria-label="Change photo">
+                            <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
+                                <path d="M11.5 2.5l2 2L6 12l-3 1 1-3 7.5-7.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="profile-hero-info">
+                        <h1 id="profileName">John Doe</h1>
+                        <p id="profileEmail">john.doe@example.com</p>
+                        <div class="profile-hero-meta">
+                            <span class="badge success">Active</span>
+                            <span class="profile-hero-since">Member since Jan 2026</span>
+                        </div>
+                    </div>
+                    <div class="profile-hero-actions">
+                        <button class="btn-secondary" type="button">Change Photo</button>
+                        <button class="btn-secondary profile-danger-outline" type="button">Sign Out</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============ PERSONAL INFORMATION ============ -->
+            <div class="card settings-card">
+                <div class="profile-section-head">
+                    <div>
+                        <h2 class="settings-title">Personal Information</h2>
+                        <p class="settings-hint">Your name and contact details.</p>
+                    </div>
+                </div>
+
+                <div class="settings-form">
+                    <div class="settings-field">
+                        <label class="settings-label" for="firstName">First Name</label>
+                        <input type="text" id="firstName" class="form-input" value="John" />
+                    </div>
+                    <div class="settings-field">
+                        <label class="settings-label" for="lastName">Last Name</label>
+                        <input type="text" id="lastName" class="form-input" value="Doe" />
+                    </div>
+                    <div class="settings-field">
+                        <label class="settings-label" for="email">Email</label>
+                        <input type="email" id="email" class="form-input" value="john.doe@example.com" />
+                    </div>
+                    <div class="settings-field">
+                        <label class="settings-label" for="phone">Phone</label>
+                        <input type="tel" id="phone" class="form-input" value="+1 (555) 000-0000" />
+                    </div>
+                    <div class="settings-field settings-field-full">
+                        <label class="settings-label" for="location">Location</label>
+                        <input type="text" id="location" class="form-input" value="New York, USA" />
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="btn-secondary" type="button">Cancel</button>
+                    <button class="btn-primary" type="button">Save Changes</button>
+                </div>
+            </div>
+
+            <!-- ============ SECURITY ============ -->
+            <div class="card settings-card">
+                <div class="profile-section-head">
+                    <div>
+                        <h2 class="settings-title">Security</h2>
+                        <p class="settings-hint">Password and account protection.</p>
+                    </div>
+                </div>
+
+                <div class="settings-form">
+                    <div class="settings-field">
+                        <label class="settings-label" for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" class="form-input" placeholder="••••••••" />
+                    </div>
+                    <div class="settings-field">
+                        <label class="settings-label" for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" class="form-input" placeholder="••••••••" />
+                    </div>
+                </div>
+
+                <div class="profile-divider"></div>
+
+                <div class="profile-toggle-row">
+                    <div>
+                        <div class="toggle-label">Two-factor authentication</div>
+                        <p class="profile-toggle-hint">Add an extra layer of security to your account.</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="twoFactorToggle" />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="btn-primary" type="button">Update Password</button>
+                </div>
+            </div>
+
+            <!-- ============ PREFERENCES ============ -->
+            <div class="card settings-card">
+                <div class="profile-section-head">
+                    <div>
+                        <h2 class="settings-title">Preferences</h2>
+                        <p class="settings-hint">How the app behaves for you.</p>
+                    </div>
+                </div>
+
+                <div class="settings-field">
+                    <label class="settings-label" for="timezone">Timezone</label>
+                    <select id="timezone" class="form-input">
+                        <option>UTC</option>
+                        <option selected>America / New York</option>
+                        <option>Europe / London</option>
+                        <option>Asia / Tokyo</option>
+                    </select>
+                </div>
+
+                <div class="profile-divider"></div>
+
+                <div class="profile-toggle-row">
+                    <div>
+                        <div class="toggle-label">Email notifications</div>
+                        <p class="profile-toggle-hint">Receive alerts when setups are registered or filtered.</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="profile-toggle-row">
+                    <div>
+                        <div class="toggle-label">Weekly digest</div>
+                        <p class="profile-toggle-hint">A summary of registry activity every Monday.</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="profile-toggle-row">
+                    <div>
+                        <div class="toggle-label">Dark mode</div>
+                        <p class="profile-toggle-hint">Use the dark theme across the dashboard.</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle" />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- ============ PLAN ============ -->
+            <div class="card settings-card">
+                <div class="profile-section-head">
+                    <div>
+                        <h2 class="settings-title">Plan</h2>
+                        <p class="settings-hint">Your current subscription.</p>
+                    </div>
+                </div>
+
+                <div class="settings-plan">
+                    <div>
+                        <span class="settings-plan-name">Research</span>
+                        <span class="settings-plan-price">Free · unlimited paper trading</span>
+                    </div>
+                    <div class="settings-plan-actions">
+                        <button class="btn-secondary btn-sm" type="button">Change Plan</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============ DANGER ZONE ============ -->
+            <div class="card settings-card profile-danger-zone">
+                <div class="profile-section-head">
+                    <div>
+                        <h2 class="settings-title">Danger Zone</h2>
+                        <p class="settings-hint">Irreversible actions. Proceed carefully.</p>
+                    </div>
+                </div>
+
+                <div class="profile-danger-row">
+                    <div>
+                        <div class="toggle-label">Export all data</div>
+                        <p class="profile-toggle-hint">Download every observation, class, and signal as JSON.</p>
+                    </div>
+                    <button class="btn-secondary" type="button">Export</button>
+                </div>
+
+                <div class="profile-danger-row">
+                    <div>
+                        <div class="toggle-label">Delete account</div>
+                        <p class="profile-toggle-hint">Permanently remove your account and all associated data.</p>
+                    </div>
+                    <button class="btn-secondary settings-danger" type="button">Delete Account</button>
+                </div>
+
+                <p class="danger-warning">
+                    Deleting your account removes all observations, registered classes, signals, and statistics from the registry. This cannot be undone.
+                </p>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/header.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>
