@@ -87,7 +87,7 @@ function generateHeaderHTML(user, isLoggedIn) {
         <!-- Desktop Navigation -->
         <ul class="desktop-nav">
             <li><a href="${assetPath}index.html" class="${isActive('index.html')}">Home</a></li>
-            <li><a href="${assetPath}services.html" class="${isActive('services.html')}">Engine</a></li>
+            <li><a href="${assetPath}services.html" class="${isActive('services.html')}">Services</a></li>
             <li><a href="${assetPath}blog.html" class="${isActive('blog.html')}">Blog</a></li>
             <li><a href="${assetPath}dashboard.html" class="nav-cta">Open Registry</a></li>
 
@@ -201,7 +201,7 @@ function generateHeaderHTML(user, isLoggedIn) {
 
                 <ul class="drawer-links">
                     <li><a href="${assetPath}index.html" class="drawer-link ${isActive('index.html')}">Home</a></li>
-                    <li><a href="${assetPath}services.html" class="drawer-link ${isActive('services.html')}">Engine</a></li>
+                    <li><a href="${assetPath}services.html" class="drawer-link ${isActive('services.html')}">Services</a></li>
                     <li><a href="${assetPath}dashboard.html" class="drawer-link ${isActive('dashboard.html')}">Dashboard</a></li>
                     <li><a href="${assetPath}registry.html" class="drawer-link ${isActive('registry.html')}">Registry</a></li>
                     <li><a href="${assetPath}blog.html" class="drawer-link ${isActive('blog.html')}">Blog</a></li>
