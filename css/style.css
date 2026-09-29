@@ -63,7 +63,7 @@
    review cards, planner grid, brand voice settings, and user settings.
    Pages: dashboard.html
    ============================================================ */
-@import 'pages/dashboard.css';
+@import 'pages/profile.css';
 
 /* BLOG - Blog listing and blog post detail
    Blog grid with cards, featured posts, category tags.
