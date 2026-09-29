@@ -7,11 +7,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/base/variables.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/admin.css" />
+
+    <script type="module">
+        import { requireAuth } from './js/auth-guard.js';
+        await requireAuth();
+    </script>
 </head>
 <body>
 
+    <!-- ===== AUTH LOADING OVERLAY ===== -->
+    <div id="authLoadingOverlay" class="auth-loading-overlay">
+        <img src="assets/icons/logo.png" alt="Fromple" class="auth-loading-logo" />
+        <div class="auth-loading-spinner"></div>
+        <p class="auth-loading-text">Loading...</p>
+    </div>
+
+    <!-- ========== HEADER ========== -->
     <div id="header"></div>
 
     <main class="dash-page">
@@ -334,7 +350,8 @@
         </div>
     </main>
 
+    <script src="js/main.js"></script>
     <script src="js/header.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="js/footer.js"></script>
 </body>
 </html>
