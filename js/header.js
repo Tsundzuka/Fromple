@@ -79,8 +79,8 @@ function generateHeaderHTML(user, isLoggedIn) {
         <!-- Brand / Logo -->
         <a href="${assetPath}index.html" class="brand-link">
             <span class="brand-logo-wrapper">
-                <img src="${assetPath}assets/icons/logo.png" alt="Pattern Registry" class="brand-logo" />
-                <img src="${assetPath}assets/icons/brand.png" alt="Pattern Registry" class="brand-text-image" />
+                <img src="${assetPath}assets/icons/logo.png" alt="Fromple" class="brand-logo" />
+                <img src="${assetPath}assets/icons/brand.png" alt="Fromple" class="brand-text-image" />
             </span>
         </a>
 
@@ -89,7 +89,7 @@ function generateHeaderHTML(user, isLoggedIn) {
             <li><a href="${assetPath}index.html" class="${isActive('index.html')}">Home</a></li>
             <li><a href="${assetPath}services.html" class="${isActive('services.html')}">Services</a></li>
             <li><a href="${assetPath}blog.html" class="${isActive('blog.html')}">Blog</a></li>
-            <li><a href="${assetPath}dashboard.html" class="nav-cta">Open Registry</a></li>
+            <li><a href="${assetPath}dashboard.html" class="nav-cta">Dashboard</a></li>
 
             ${isLoggedIn ? `
                 <!-- PROFILE DROPDOWN - Only shown when logged in -->
@@ -123,16 +123,7 @@ function generateHeaderHTML(user, isLoggedIn) {
                                     <rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
                                     <rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
                                 </svg>
-                                Dashboard
-                            </a></li>
-                            <li><a href="${assetPath}registry.html" class="dropdown-item">
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M2 4C2 3.44772 2.44772 3 3 3H13C13.5523 3 14 3.44772 14 4V12C14 12.5523 13.5523 13 13 13H3C2.44772 13 2 12.5523 2 12V4Z" stroke="currentColor" stroke-width="1.5"/>
-                                    <path d="M2 6.5H14" stroke="currentColor" stroke-width="1.5"/>
-                                    <path d="M5 3V1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                    <path d="M11 3V1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                </svg>
-                                Registry
+                                Profile
                             </a></li>
                             <li><a href="${assetPath}settings.html" class="dropdown-item">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -145,6 +136,16 @@ function generateHeaderHTML(user, isLoggedIn) {
                                     <path d="M3.5 10.5L2.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                                 </svg>
                                 Settings
+                            </a></li>
+                            <li><a href="${assetPath}dashboard.html?tab=brand-voice" class="dropdown-item">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 1V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M8 13V15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M3 8H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M15 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/>
+                                </svg>
+                                Brand Voice
                             </a></li>
                         </ul>
                         <div class="dropdown-divider"></div>
@@ -178,8 +179,8 @@ function generateHeaderHTML(user, isLoggedIn) {
             <div class="drawer-inner">
                 <div class="drawer-header">
                     <span class="drawer-brand">
-                        <img src="${assetPath}assets/icons/logo.png" alt="Pattern Registry" class="drawer-logo" />
-                        <span>Registry</span>
+                        <img src="${assetPath}assets/icons/logo.png" alt="Fromple" class="drawer-logo" />
+                        <span>Fromple</span>
                     </span>
                     <button class="menu-close" popovertarget="premium-nav" popovertargetaction="hide" aria-label="Close Navigation Menu">
                         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
@@ -202,13 +203,12 @@ function generateHeaderHTML(user, isLoggedIn) {
                 <ul class="drawer-links">
                     <li><a href="${assetPath}index.html" class="drawer-link ${isActive('index.html')}">Home</a></li>
                     <li><a href="${assetPath}services.html" class="drawer-link ${isActive('services.html')}">Services</a></li>
-                    <li><a href="${assetPath}dashboard.html" class="drawer-link ${isActive('dashboard.html')}">Dashboard</a></li>
-                    <li><a href="${assetPath}registry.html" class="drawer-link ${isActive('registry.html')}">Registry</a></li>
+                    <li><a href="${assetPath}team.html" class="drawer-link ${isActive('team.html')}">Team</a></li>
                     <li><a href="${assetPath}blog.html" class="drawer-link ${isActive('blog.html')}">Blog</a></li>
                 </ul>
 
                 <div class="drawer-actions">
-                    <a href="${assetPath}dashboard.html" class="drawer-cta">Open Registry</a>
+                    <a href="${assetPath}dashboard.html" class="drawer-cta">Dashboard</a>
                     ${isLoggedIn ? `
                         <a href="#" class="drawer-login" id="drawerSignOutBtn">Sign Out</a>
                     ` : `
