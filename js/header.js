@@ -88,7 +88,6 @@ function generateHeaderHTML(user, isLoggedIn) {
         <ul class="desktop-nav">
             <li><a href="${assetPath}index.html" class="${isActive('index.html')}">Home</a></li>
             <li><a href="${assetPath}services.html" class="${isActive('services.html')}">Services</a></li>
-            <li><a href="${assetPath}pricing.html" class="${isActive('pricing.html')}">Pricing</a></li>
             <li><a href="${assetPath}blog.html" class="${isActive('blog.html')}">Blog</a></li>
             <li><a href="${assetPath}get-started.html" class="nav-cta">Get Started</a></li>
             
