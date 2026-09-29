@@ -73,13 +73,6 @@
    ============================================================ */
 @import 'pages/blog.css';
 
-/* PRICING - Pricing plans page
-   Pricing cards with plans (Free, Professional, Growth),
-   pricing badges, feature lists, and pricing FAQ section.
-   Pages: pricing.html
-   ============================================================ */
-@import 'pages/pricing.css';
-
 /* CAREERS - Job listings and company culture
    Why join us cards, open positions list with role items,
    benefits and perks grid.
