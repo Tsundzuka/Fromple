@@ -32,11 +32,14 @@
 
         <aside class="sidebar" id="sidebar">
             <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-tab="paper-trading">
+                <a href="#" class="nav-item active" data-tab="classes">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 20V10M9 20V4M14 20v-7M19 20V7" />
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
                     </svg>
-                    <span>Paper Trading</span>
+                    <span>Class Generation</span>
                 </a>
                 <a href="#" data-tab="categorisation">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -45,14 +48,11 @@
                     </svg>
                     <span>Data Categorisation</span>
                 </a>
-                <a href="#" data-tab="classes">
+                <a href="#" data-tab="paper-trading">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                        <path d="M4 20V10M9 20V4M14 20v-7M19 20V7" />
                     </svg>
-                    <span>Class Generation</span>
+                    <span>Paper Trading</span>
                 </a>
                 <a href="#" data-tab="signals">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -105,7 +105,7 @@
             <!-- ============================================================ -->
             <!-- TAB 1: PAPER TRADING                                         -->
             <!-- ============================================================ -->
-            <section class="tab-content active" id="tab-paper-trading">
+            <section class="tab-content" id="tab-paper-trading">
                 <header class="dashboard-header">
                     <div>
                         <h1>Paper Trading</h1>
@@ -473,7 +473,7 @@
             <!-- ============================================================ -->
             <!-- TAB 3: CLASS GENERATION                                      -->
             <!-- ============================================================ -->
-            <section class="tab-content" id="tab-classes">
+            <section class="tab-content active" id="tab-classes">
                 <header class="dashboard-header">
                     <div>
                         <h1>Class Generation</h1>
@@ -485,6 +485,7 @@
                     </div>
                 </header>
 
+                <!-- KPI CARDS -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon blue">
@@ -510,20 +511,21 @@
                         </div>
                         <div class="stat-content">
                             <span class="stat-value">5</span>
-                            <span class="stat-label">Surfaced</span>
+                            <span class="stat-label">Winners</span>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon purple">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 5v14M5 12h14" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 5v14M5 12l7 7 7-7" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">2</span>
-                            <span class="stat-label">New this week</span>
+                            <span class="stat-value">3</span>
+                            <span class="stat-label">Losers</span>
                         </div>
                     </div>
                 </div>
 
+                <!-- REGISTERED CLASSES -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Registered Classes</h3>
@@ -534,21 +536,40 @@
                             <button class="filter-btn" type="button">New</button>
                         </div>
                     </div>
-                    <div class="table-wrap">
+
+                    <div class="timeframe-bar">
+                        <span class="timeframe-label">Timeframe</span>
+                        <div class="timeframe-tabs" id="classTimeframes">
+                            <button class="timeframe-btn" type="button" data-tf="M15">M15</button>
+                            <button class="timeframe-btn" type="button" data-tf="H1">H1</button>
+                            <button class="timeframe-btn active" type="button" data-tf="H4">H4</button>
+                            <button class="timeframe-btn" type="button" data-tf="D1">D1</button>
+                            <button class="timeframe-btn" type="button" data-tf="W1">W1</button>
+                        </div>
+                        <span class="timeframe-meta" id="classSelectionInfo">All classes &middot; 8</span>
+                    </div>
+
+                    <div class="table-wrap class-table-wrap">
                         <table class="activity-table class-table">
                             <thead>
                                 <tr>
+                                    <th class="col-check">
+                                        <input type="checkbox" class="class-check" id="classSelectAll" aria-label="Select all classes" />
+                                    </th>
                                     <th>Class</th>
                                     <th>Signals</th>
                                     <th>Observations</th>
                                     <th>Long</th>
                                     <th>Short</th>
+                                    <th>Wins</th>
+                                    <th>Losses</th>
                                     <th>Status</th>
                                     <th>Last seen</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr data-class="A" data-timeframe="H4">
+                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class A" /></td>
                                     <td>
                                         <div class="class-cell">
                                             <div class="class-badge">A</div>
@@ -562,10 +583,13 @@
                                     <td>487</td>
                                     <td><span class="perf-pill long">58%</span></td>
                                     <td><span class="perf-pill short">34%</span></td>
+                                    <td class="num-wins">283</td>
+                                    <td class="num-losses">204</td>
                                     <td><span class="status-badge completed">Active</span></td>
                                     <td class="activity-time">2h ago</td>
                                 </tr>
-                                <tr>
+                                <tr data-class="B" data-timeframe="H4">
+                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class B" /></td>
                                     <td>
                                         <div class="class-cell">
                                             <div class="class-badge">B</div>
@@ -579,10 +603,13 @@
                                     <td>312</td>
                                     <td><span class="perf-pill long">41%</span></td>
                                     <td><span class="perf-pill short">47%</span></td>
+                                    <td class="num-wins">147</td>
+                                    <td class="num-losses">165</td>
                                     <td><span class="status-badge completed">Active</span></td>
                                     <td class="activity-time">5h ago</td>
                                 </tr>
-                                <tr class="selected-row">
+                                <tr data-class="C" data-timeframe="H4" class="selected-row">
+                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class C" checked /></td>
                                     <td>
                                         <div class="class-cell">
                                             <div class="class-badge primary">C</div>
@@ -596,10 +623,13 @@
                                     <td>621</td>
                                     <td><span class="perf-pill long">68%</span></td>
                                     <td><span class="perf-pill short">28%</span></td>
+                                    <td class="num-wins">421</td>
+                                    <td class="num-losses">200</td>
                                     <td><span class="status-badge completed">Active</span></td>
                                     <td class="activity-time">2h ago</td>
                                 </tr>
-                                <tr>
+                                <tr data-class="D" data-timeframe="H4">
+                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class D" /></td>
                                     <td>
                                         <div class="class-cell">
                                             <div class="class-badge">D</div>
@@ -613,10 +643,13 @@
                                     <td>148</td>
                                     <td><span class="perf-pill long">22%</span></td>
                                     <td><span class="perf-pill short">31%</span></td>
+                                    <td class="num-wins">62</td>
+                                    <td class="num-losses">86</td>
                                     <td><span class="status-badge pending">Filtered</span></td>
                                     <td class="activity-time">1d ago</td>
                                 </tr>
-                                <tr>
+                                <tr data-class="E" data-timeframe="H4">
+                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class E" /></td>
                                     <td>
                                         <div class="class-cell">
                                             <div class="class-badge">E</div>
@@ -630,10 +663,33 @@
                                     <td>402</td>
                                     <td><span class="perf-pill long">54%</span></td>
                                     <td><span class="perf-pill short">39%</span></td>
+                                    <td class="num-wins">217</td>
+                                    <td class="num-losses">185</td>
                                     <td><span class="status-badge completed">Active</span></td>
                                     <td class="activity-time">4h ago</td>
                                 </tr>
-                                <tr>
+                                <tr data-class="F" data-timeframe="H4">
+                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class F" /></td>
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge">F</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class F</strong>
+                                                <span>Volatility expansion breakout</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>4</td>
+                                    <td>88</td>
+                                    <td><span class="perf-pill long">61%</span></td>
+                                    <td><span class="perf-pill short">43%</span></td>
+                                    <td class="num-wins">52</td>
+                                    <td class="num-losses">36</td>
+                                    <td><span class="status-badge completed">Active</span></td>
+                                    <td class="activity-time">3h ago</td>
+                                </tr>
+                                <tr data-class="G" data-timeframe="H4">
+                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class G" /></td>
                                     <td>
                                         <div class="class-cell">
                                             <div class="class-badge">G</div>
@@ -647,10 +703,13 @@
                                     <td>834</td>
                                     <td><span class="perf-pill long">72%</span></td>
                                     <td><span class="perf-pill short">21%</span></td>
+                                    <td class="num-wins">601</td>
+                                    <td class="num-losses">233</td>
                                     <td><span class="status-badge completed">Active</span></td>
                                     <td class="activity-time">18m ago</td>
                                 </tr>
-                                <tr>
+                                <tr data-class="H" data-timeframe="H4">
+                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class H" /></td>
                                     <td>
                                         <div class="class-cell">
                                             <div class="class-badge">H</div>
@@ -664,6 +723,8 @@
                                     <td>44</td>
                                     <td><span class="perf-pill long">33%</span></td>
                                     <td><span class="perf-pill short">30%</span></td>
+                                    <td class="num-wins">20</td>
+                                    <td class="num-losses">24</td>
                                     <td><span class="status-badge in-progress">New</span></td>
                                     <td class="activity-time">just now</td>
                                 </tr>
@@ -672,94 +733,112 @@
                     </div>
                 </div>
 
-                <div class="grid-2col">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Long movement · Class C</h3>
-                            <span class="card-meta">n = 621</span>
-                        </div>
-                        <div class="movement-row">
-                            <div class="movement-stat">
-                                <span class="movement-label">Mean favorable</span>
-                                <span class="movement-value pos">+82.4</span>
-                            </div>
-                            <div class="movement-stat">
-                                <span class="movement-label">Mean adverse</span>
-                                <span class="movement-value neg">−34.1</span>
-                            </div>
-                        </div>
-                        <div class="histogram histogram-long" aria-hidden="true">
-                            <span style="height: 8%"></span><span style="height: 14%"></span>
-                            <span style="height: 22%"></span><span style="height: 32%"></span>
-                            <span style="height: 46%"></span><span style="height: 62%"></span>
-                            <span style="height: 78%"></span><span style="height: 92%"></span>
-                            <span style="height: 100%"></span><span style="height: 88%"></span>
-                            <span style="height: 72%"></span><span style="height: 54%"></span>
-                            <span style="height: 38%"></span><span style="height: 24%"></span>
-                            <span style="height: 14%"></span><span style="height: 7%"></span>
-                        </div>
-                        <div class="histogram-legend">
-                            <span>0</span><span>50</span><span>100</span><span>150+</span>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Short movement · Class C</h3>
-                            <span class="card-meta">n = 621</span>
-                        </div>
-                        <div class="movement-row">
-                            <div class="movement-stat">
-                                <span class="movement-label">Mean favorable</span>
-                                <span class="movement-value pos">+31.2</span>
-                            </div>
-                            <div class="movement-stat">
-                                <span class="movement-label">Mean adverse</span>
-                                <span class="movement-value neg">−58.7</span>
-                            </div>
-                        </div>
-                        <div class="histogram histogram-short" aria-hidden="true">
-                            <span style="height: 22%"></span><span style="height: 34%"></span>
-                            <span style="height: 48%"></span><span style="height: 62%"></span>
-                            <span style="height: 74%"></span><span style="height: 84%"></span>
-                            <span style="height: 90%"></span><span style="height: 88%"></span>
-                            <span style="height: 78%"></span><span style="height: 64%"></span>
-                            <span style="height: 48%"></span><span style="height: 34%"></span>
-                            <span style="height: 22%"></span><span style="height: 14%"></span>
-                            <span style="height: 8%"></span><span style="height: 4%"></span>
-                        </div>
-                        <div class="histogram-legend">
-                            <span>0</span><span>50</span><span>100</span><span>150+</span>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- DUAL-AXIS CHART -->
                 <div class="card">
                     <div class="card-header">
-                        <h3>Condition contribution · Class C</h3>
-                        <span class="card-meta">Edge = favorable % − unfavorable %</span>
+                        <h3>Profitability vs. average pip move</h3>
+                        <span class="card-meta" id="classChartMeta">All classes &middot; H4 &middot; lifespan to date</span>
                     </div>
-                    <div class="table-wrap">
-                        <table class="activity-table">
-                            <thead>
-                                <tr>
-                                    <th>Condition</th>
-                                    <th>Category</th>
-                                    <th>In favorable</th>
-                                    <th>In unfavorable</th>
-                                    <th>Edge</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Trend up</td><td><span class="cat-tag">Structure</span></td><td>84%</td><td>41%</td><td><span class="edge-pos">+43</span></td></tr>
-                                <tr><td>Volume high</td><td><span class="cat-tag">Technical</span></td><td>76%</td><td>38%</td><td><span class="edge-pos">+38</span></td></tr>
-                                <tr><td>MA20 rising</td><td><span class="cat-tag">Indicator</span></td><td>71%</td><td>44%</td><td><span class="edge-pos">+27</span></td></tr>
-                                <tr><td>Support holding</td><td><span class="cat-tag">Structure</span></td><td>68%</td><td>52%</td><td><span class="edge-pos">+16</span></td></tr>
-                                <tr><td>RSI &gt; 55</td><td><span class="cat-tag">Indicator</span></td><td>59%</td><td>61%</td><td><span class="edge-neg">−2</span></td></tr>
-                                <tr><td>CPI within 3 days</td><td><span class="cat-tag fund">Calendar</span></td><td>48%</td><td>66%</td><td><span class="edge-neg">−18</span></td></tr>
-                                <tr><td>COT net long</td><td><span class="cat-tag fund">Fundamental</span></td><td>62%</td><td>57%</td><td><span class="edge-pos">+5</span></td></tr>
-                            </tbody>
-                        </table>
+
+                    <div class="chart-legend">
+                        <span class="legend-item"><span class="legend-swatch teal"></span>% profitable classes</span>
+                        <span class="legend-item"><span class="legend-swatch amber"></span>Average pip move</span>
+                    </div>
+
+                    <div class="line-chart-wrap">
+                        <svg id="classPerfChart" class="line-chart" viewBox="0 0 960 380" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Profitability and average pip move across the class lifespan">
+                            <!-- Horizontal gridlines: right axis, every 50 pips -->
+                            <g class="chart-grid">
+                                <line x1="64" y1="330" x2="888" y2="330" />
+                                <line x1="64" y1="299" x2="888" y2="299" />
+                                <line x1="64" y1="268" x2="888" y2="268" />
+                                <line x1="64" y1="237" x2="888" y2="237" />
+                                <line x1="64" y1="206" x2="888" y2="206" />
+                                <line x1="64" y1="175" x2="888" y2="175" />
+                                <line x1="64" y1="144" x2="888" y2="144" />
+                                <line x1="64" y1="113" x2="888" y2="113" />
+                                <line x1="64" y1="82"  x2="888" y2="82" />
+                                <line x1="64" y1="51"  x2="888" y2="51" />
+                                <line x1="64" y1="20"  x2="888" y2="20" />
+                            </g>
+
+                            <!-- Axes -->
+                            <g class="chart-axis">
+                                <line x1="64" y1="20" x2="64" y2="330" />
+                                <line x1="888" y1="20" x2="888" y2="330" />
+                            </g>
+
+                            <!-- Left Y axis labels — % profitable -->
+                            <g class="chart-label chart-label-left">
+                                <text x="54" y="334" text-anchor="end">0%</text>
+                                <text x="54" y="272" text-anchor="end">20%</text>
+                                <text x="54" y="210" text-anchor="end">40%</text>
+                                <text x="54" y="148" text-anchor="end">60%</text>
+                                <text x="54" y="86"  text-anchor="end">80%</text>
+                                <text x="54" y="24"  text-anchor="end">100%</text>
+                            </g>
+
+                            <!-- Right Y axis labels — average pips (ticks every 50, max 500) -->
+                            <g class="chart-label chart-label-right">
+                                <text x="898" y="334" text-anchor="start">0</text>
+                                <text x="898" y="303" text-anchor="start">50</text>
+                                <text x="898" y="272" text-anchor="start">100</text>
+                                <text x="898" y="241" text-anchor="start">150</text>
+                                <text x="898" y="210" text-anchor="start">200</text>
+                                <text x="898" y="179" text-anchor="start">250</text>
+                                <text x="898" y="148" text-anchor="start">300</text>
+                                <text x="898" y="117" text-anchor="start">350</text>
+                                <text x="898" y="86"  text-anchor="start">400</text>
+                                <text x="898" y="55"  text-anchor="start">450</text>
+                                <text x="898" y="24"  text-anchor="start">500</text>
+                            </g>
+
+                            <!-- X axis labels — duration across the class lifespan -->
+                            <g class="chart-label chart-label-x">
+                                <text x="64"    y="352" text-anchor="middle">W1</text>
+                                <text x="155.6" y="352" text-anchor="middle">W2</text>
+                                <text x="247.1" y="352" text-anchor="middle">W3</text>
+                                <text x="338.7" y="352" text-anchor="middle">W4</text>
+                                <text x="430.2" y="352" text-anchor="middle">W5</text>
+                                <text x="521.8" y="352" text-anchor="middle">W6</text>
+                                <text x="613.3" y="352" text-anchor="middle">W7</text>
+                                <text x="704.9" y="352" text-anchor="middle">W8</text>
+                                <text x="796.4" y="352" text-anchor="middle">W9</text>
+                                <text x="888"   y="352" text-anchor="middle">W10</text>
+                            </g>
+
+                            <!-- Series: % profitable classes -->
+                            <polyline class="chart-line chart-line-pct"
+                                points="64,199.8 155.6,190.5 247.1,181.2 338.7,168.8 430.2,159.5 521.8,150.2 613.3,140.9 704.9,134.7 796.4,125.4 888,119.2" />
+                            <g class="chart-points chart-points-pct">
+                                <circle cx="64" cy="199.8" r="3.5" />
+                                <circle cx="155.6" cy="190.5" r="3.5" />
+                                <circle cx="247.1" cy="181.2" r="3.5" />
+                                <circle cx="338.7" cy="168.8" r="3.5" />
+                                <circle cx="430.2" cy="159.5" r="3.5" />
+                                <circle cx="521.8" cy="150.2" r="3.5" />
+                                <circle cx="613.3" cy="140.9" r="3.5" />
+                                <circle cx="704.9" cy="134.7" r="3.5" />
+                                <circle cx="796.4" cy="125.4" r="3.5" />
+                                <circle cx="888" cy="119.2" r="3.5" />
+                            </g>
+
+                            <!-- Series: average pip move -->
+                            <polyline class="chart-line chart-line-pips"
+                                points="64,218.4 155.6,209.1 247.1,199.8 338.7,187.4 430.2,178.1 521.8,168.8 613.3,159.5 704.9,150.2 796.4,140.9 888,131.6" />
+                            <g class="chart-points chart-points-pips">
+                                <circle cx="64" cy="218.4" r="3.5" />
+                                <circle cx="155.6" cy="209.1" r="3.5" />
+                                <circle cx="247.1" cy="199.8" r="3.5" />
+                                <circle cx="338.7" cy="187.4" r="3.5" />
+                                <circle cx="430.2" cy="178.1" r="3.5" />
+                                <circle cx="521.8" cy="168.8" r="3.5" />
+                                <circle cx="613.3" cy="159.5" r="3.5" />
+                                <circle cx="704.9" cy="150.2" r="3.5" />
+                                <circle cx="796.4" cy="140.9" r="3.5" />
+                                <circle cx="888" cy="131.6" r="3.5" />
+                            </g>
+                        </svg>
                     </div>
                 </div>
             </section>
@@ -1221,6 +1300,38 @@
 
         document.getElementById('adminSidebarToggle')?.addEventListener('click', () => {
             document.getElementById('sidebar')?.classList.toggle('open');
+        });
+
+        // --- Class table selection (mock behaviour; dashboard.js will replace) ---
+        const classRows = document.querySelectorAll('.class-table tbody tr');
+        const selectAll = document.getElementById('classSelectAll');
+
+        classRows.forEach(row => {
+            const cb = row.querySelector('.class-check');
+            cb.addEventListener('change', () => {
+                row.classList.toggle('selected-row', cb.checked);
+            });
+            row.addEventListener('click', (e) => {
+                if (e.target.closest('.col-check')) return;
+                cb.checked = !cb.checked;
+                cb.dispatchEvent(new Event('change'));
+            });
+        });
+
+        selectAll?.addEventListener('change', () => {
+            classRows.forEach(row => {
+                const cb = row.querySelector('.class-check');
+                cb.checked = selectAll.checked;
+                cb.dispatchEvent(new Event('change'));
+            });
+        });
+
+        // --- Timeframe buttons (mock behaviour; dashboard.js will replace) ---
+        document.querySelectorAll('#classTimeframes .timeframe-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#classTimeframes .timeframe-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
         });
     </script>
 </body>
