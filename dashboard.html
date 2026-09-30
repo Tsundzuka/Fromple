@@ -38,6 +38,13 @@
                     </svg>
                     <span>Paper Trading</span>
                 </a>
+                <a href="#" data-tab="categorisation">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 7l4-4 4 4M7 3v14" />
+                        <path d="M21 17l-4 4-4-4M17 21V7" />
+                    </svg>
+                    <span>Data Categorisation</span>
+                </a>
                 <a href="#" data-tab="classes">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="7" height="7" rx="1.5" />
@@ -45,7 +52,7 @@
                         <rect x="3" y="14" width="7" height="7" rx="1.5" />
                         <rect x="14" y="14" width="7" height="7" rx="1.5" />
                     </svg>
-                    <span>Class Generation &amp; Data Categorisation</span>
+                    <span>Class Generation</span>
                 </a>
                 <a href="#" data-tab="signals">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -306,13 +313,171 @@
             </section>
 
             <!-- ============================================================ -->
-            <!-- TAB 2: CLASS GENERATION & DATA CATEGORISATION                -->
+            <!-- TAB 2: DATA CATEGORISATION                                   -->
+            <!-- ============================================================ -->
+            <section class="tab-content" id="tab-categorisation">
+                <header class="dashboard-header">
+                    <div>
+                        <h1>Data Categorisation</h1>
+                        <p class="page-subtitle">Every condition is grouped into a category so individual contribution can be measured.</p>
+                    </div>
+                    <div class="dashboard-header-actions">
+                        <button class="btn-secondary" type="button">Export</button>
+                        <button class="btn-primary" type="button">+ Add Category</button>
+                    </div>
+                </header>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#14B8A6" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#14B8A6" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#14B8A6" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#14B8A6" stroke-width="2"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">5</span>
+                            <span class="stat-label">Categories</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M4 6h16M4 12h16M4 18h10" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">28</span>
+                            <span class="stat-label">Conditions categorised</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#F59E0B" stroke-width="2"/><path d="M12 8v5M12 16h.01" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">Uncategorised</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#7C3AED" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">4</span>
+                            <span class="stat-label">Added this week</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Categories</h3>
+                        <span class="card-meta">how conditions are grouped</span>
+                    </div>
+                    <div class="category-grid">
+                        <div class="category-card">
+                            <div class="category-head">
+                                <span class="category-name">Structure</span>
+                                <span class="category-count">6 conditions</span>
+                            </div>
+                            <p class="category-desc">Support / resistance state, trend direction, range position, prior swing points.</p>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-head">
+                                <span class="category-name">Technical</span>
+                                <span class="category-count">5 conditions</span>
+                            </div>
+                            <p class="category-desc">Volume, volatility, momentum, price action characteristics.</p>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-head">
+                                <span class="category-name">Indicator</span>
+                                <span class="category-count">8 conditions</span>
+                            </div>
+                            <p class="category-desc">Moving averages, RSI, MACD, Bollinger Bands, and other computed signals.</p>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-head">
+                                <span class="category-name">Calendar</span>
+                                <span class="category-count">4 conditions</span>
+                            </div>
+                            <p class="category-desc">Economic events, actual vs. forecast, time relative to release, importance.</p>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-head">
+                                <span class="category-name">Fundamental</span>
+                                <span class="category-count">5 conditions</span>
+                            </div>
+                            <p class="category-desc">COT positioning, net long/short changes, weekly sentiment shifts.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>All Conditions</h3>
+                        <div class="filter-tabs">
+                            <button class="filter-btn active" type="button">All</button>
+                            <button class="filter-btn" type="button">Structure</button>
+                            <button class="filter-btn" type="button">Technical</button>
+                            <button class="filter-btn" type="button">Indicator</button>
+                            <button class="filter-btn" type="button">Calendar</button>
+                            <button class="filter-btn" type="button">Fundamental</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="activity-table">
+                            <thead>
+                                <tr>
+                                    <th>Condition</th>
+                                    <th>Category</th>
+                                    <th>Usage in classes</th>
+                                    <th>Observations</th>
+                                    <th>Last updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Trend up</td><td><span class="cat-tag">Structure</span></td><td>7 classes</td><td>2,184</td><td class="activity-time">2h ago</td></tr>
+                                <tr><td>Trend down</td><td><span class="cat-tag">Structure</span></td><td>5 classes</td><td>1,412</td><td class="activity-time">3h ago</td></tr>
+                                <tr><td>Support holding</td><td><span class="cat-tag">Structure</span></td><td>6 classes</td><td>1,876</td><td class="activity-time">2h ago</td></tr>
+                                <tr><td>Resistance holding</td><td><span class="cat-tag">Structure</span></td><td>4 classes</td><td>1,204</td><td class="activity-time">4h ago</td></tr>
+                                <tr><td>Range position · upper</td><td><span class="cat-tag">Structure</span></td><td>3 classes</td><td>862</td><td class="activity-time">6h ago</td></tr>
+                                <tr><td>Range position · lower</td><td><span class="cat-tag">Structure</span></td><td>3 classes</td><td>794</td><td class="activity-time">6h ago</td></tr>
+
+                                <tr><td>Volume high</td><td><span class="cat-tag">Technical</span></td><td>6 classes</td><td>1,938</td><td class="activity-time">2h ago</td></tr>
+                                <tr><td>Volume low</td><td><span class="cat-tag">Technical</span></td><td>3 classes</td><td>722</td><td class="activity-time">8h ago</td></tr>
+                                <tr><td>Volatility expanding</td><td><span class="cat-tag">Technical</span></td><td>5 classes</td><td>1,614</td><td class="activity-time">3h ago</td></tr>
+                                <tr><td>Momentum strong</td><td><span class="cat-tag">Technical</span></td><td>4 classes</td><td>1,102</td><td class="activity-time">5h ago</td></tr>
+                                <tr><td>Wick rejection</td><td><span class="cat-tag">Technical</span></td><td>2 classes</td><td>512</td><td class="activity-time">10h ago</td></tr>
+
+                                <tr><td>MA20 rising</td><td><span class="cat-tag">Indicator</span></td><td>5 classes</td><td>1,806</td><td class="activity-time">2h ago</td></tr>
+                                <tr><td>MA50 rising</td><td><span class="cat-tag">Indicator</span></td><td>4 classes</td><td>1,428</td><td class="activity-time">4h ago</td></tr>
+                                <tr><td>RSI &gt; 55</td><td><span class="cat-tag">Indicator</span></td><td>6 classes</td><td>1,846</td><td class="activity-time">2h ago</td></tr>
+                                <tr><td>RSI &lt; 45</td><td><span class="cat-tag">Indicator</span></td><td>4 classes</td><td>1,206</td><td class="activity-time">5h ago</td></tr>
+                                <tr><td>MACD cross</td><td><span class="cat-tag">Indicator</span></td><td>3 classes</td><td>886</td><td class="activity-time">7h ago</td></tr>
+                                <tr><td>Bollinger squeeze</td><td><span class="cat-tag">Indicator</span></td><td>2 classes</td><td>534</td><td class="activity-time">12h ago</td></tr>
+
+                                <tr><td>CPI within 3 days</td><td><span class="cat-tag fund">Calendar</span></td><td>4 classes</td><td>1,024</td><td class="activity-time">6h ago</td></tr>
+                                <tr><td>NFP within 2 days</td><td><span class="cat-tag fund">Calendar</span></td><td>3 classes</td><td>712</td><td class="activity-time">8h ago</td></tr>
+                                <tr><td>Rate decision imminent</td><td><span class="cat-tag fund">Calendar</span></td><td>2 classes</td><td>418</td><td class="activity-time">14h ago</td></tr>
+                                <tr><td>No event nearby</td><td><span class="cat-tag fund">Calendar</span></td><td>5 classes</td><td>1,542</td><td class="activity-time">2h ago</td></tr>
+
+                                <tr><td>COT net long</td><td><span class="cat-tag fund">Fundamental</span></td><td>4 classes</td><td>1,286</td><td class="activity-time">1d ago</td></tr>
+                                <tr><td>COT net short</td><td><span class="cat-tag fund">Fundamental</span></td><td>3 classes</td><td>908</td><td class="activity-time">1d ago</td></tr>
+                                <tr><td>COT net long rising</td><td><span class="cat-tag fund">Fundamental</span></td><td>3 classes</td><td>742</td><td class="activity-time">1d ago</td></tr>
+                                <tr><td>COT net short falling</td><td><span class="cat-tag fund">Fundamental</span></td><td>2 classes</td><td>486</td><td class="activity-time">1d ago</td></tr>
+                                <tr><td>COT extreme positioning</td><td><span class="cat-tag fund">Fundamental</span></td><td>2 classes</td><td>364</td><td class="activity-time">1d ago</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TAB 3: CLASS GENERATION                                      -->
             <!-- ============================================================ -->
             <section class="tab-content" id="tab-classes">
                 <header class="dashboard-header">
                     <div>
-                        <h1>Class Generation &amp; Data Categorisation</h1>
-                        <p class="page-subtitle">Registered setups, the conditions that compose them, and how those conditions are categorised.</p>
+                        <h1>Class Generation</h1>
+                        <p class="page-subtitle">Registered setups, the conditions that compose them, and accumulated performance.</p>
                     </div>
                     <div class="dashboard-header-actions">
                         <button class="btn-secondary" type="button">Export</button>
@@ -344,8 +509,8 @@
                             <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 2l3 6 6 .9-4.5 4.2 1.1 6.4L12 16.6 6.4 19.5l1.1-6.4L3 8.9 9 8z" stroke="#F59E0B" stroke-width="2" stroke-linejoin="round"/></svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">28</span>
-                            <span class="stat-label">Conditions tracked</span>
+                            <span class="stat-value">5</span>
+                            <span class="stat-label">Surfaced</span>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -597,54 +762,10 @@
                         </table>
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Data Categorisation</h3>
-                        <span class="card-meta">how conditions are grouped</span>
-                    </div>
-                    <div class="category-grid">
-                        <div class="category-card">
-                            <div class="category-head">
-                                <span class="category-name">Structure</span>
-                                <span class="category-count">6 conditions</span>
-                            </div>
-                            <p class="category-desc">Support / resistance state, trend direction, range position, prior swing points.</p>
-                        </div>
-                        <div class="category-card">
-                            <div class="category-head">
-                                <span class="category-name">Technical</span>
-                                <span class="category-count">5 conditions</span>
-                            </div>
-                            <p class="category-desc">Volume, volatility, momentum, price action characteristics.</p>
-                        </div>
-                        <div class="category-card">
-                            <div class="category-head">
-                                <span class="category-name">Indicator</span>
-                                <span class="category-count">8 conditions</span>
-                            </div>
-                            <p class="category-desc">Moving averages, RSI, MACD, Bollinger Bands, and other computed signals.</p>
-                        </div>
-                        <div class="category-card">
-                            <div class="category-head">
-                                <span class="category-name">Calendar</span>
-                                <span class="category-count">4 conditions</span>
-                            </div>
-                            <p class="category-desc">Economic events, actual vs. forecast, time relative to release, importance.</p>
-                        </div>
-                        <div class="category-card">
-                            <div class="category-head">
-                                <span class="category-name">Fundamental</span>
-                                <span class="category-count">5 conditions</span>
-                            </div>
-                            <p class="category-desc">COT positioning, net long/short changes, weekly sentiment shifts.</p>
-                        </div>
-                    </div>
-                </div>
             </section>
 
             <!-- ============================================================ -->
-            <!-- TAB 3: SIGNAL GENERATION                                     -->
+            <!-- TAB 4: SIGNAL GENERATION                                     -->
             <!-- ============================================================ -->
             <section class="tab-content" id="tab-signals">
                 <header class="dashboard-header">
@@ -837,7 +958,7 @@
             </section>
 
             <!-- ============================================================ -->
-            <!-- TAB 4: MONITORING                                            -->
+            <!-- TAB 5: MONITORING                                            -->
             <!-- ============================================================ -->
             <section class="tab-content" id="tab-monitoring">
                 <header class="dashboard-header">
