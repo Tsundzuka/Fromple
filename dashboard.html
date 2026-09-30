@@ -51,7 +51,14 @@
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M2 12h3l3-8 4 16 3-10 3 4h4" />
                     </svg>
-                    <span>Signal Generation &amp; Monitoring</span>
+                    <span>Signal Generation</span>
+                </a>
+                <a href="#" data-tab="monitoring">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    <span>Monitoring</span>
                 </a>
             </nav>
 
@@ -637,16 +644,17 @@
             </section>
 
             <!-- ============================================================ -->
-            <!-- TAB 3: SIGNAL GENERATION & MONITORING                        -->
+            <!-- TAB 3: SIGNAL GENERATION                                     -->
             <!-- ============================================================ -->
             <section class="tab-content" id="tab-signals">
                 <header class="dashboard-header">
                     <div>
-                        <h1>Signal Generation &amp; Monitoring</h1>
-                        <p class="page-subtitle">Live recognition of registered setups as the market unfolds, and continuous monitoring of open positions.</p>
+                        <h1>Signal Generation</h1>
+                        <p class="page-subtitle">Live recognition of registered setups as the market unfolds.</p>
                     </div>
                     <div class="dashboard-header-actions">
-                        <button class="btn-secondary" type="button">Configure Alerts</button>
+                        <button class="btn-secondary" type="button">Export</button>
+                        <button class="btn-primary" type="button">+ Manual Signal</button>
                     </div>
                 </header>
 
@@ -674,8 +682,8 @@
                             <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#F59E0B" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">8</span>
-                            <span class="stat-label">Setups monitored</span>
+                            <span class="stat-value">2.4h</span>
+                            <span class="stat-label">Avg time to trigger</span>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -810,65 +818,6 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h3>Monitoring · Open Positions</h3>
-                        <span class="card-meta">
-                            <span class="live-dot-inline"></span> watching 8 setups
-                        </span>
-                    </div>
-                    <div class="table-wrap">
-                        <table class="activity-table">
-                            <thead>
-                                <tr>
-                                    <th>Setup</th>
-                                    <th>Age</th>
-                                    <th>Movement so far</th>
-                                    <th>Adverse so far</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Signal G-2</strong> · Long</td>
-                                    <td class="activity-time">18m</td>
-                                    <td class="mono pos">+12.4</td>
-                                    <td class="mono neg">−3.1</td>
-                                    <td><span class="status-badge completed">Favorable</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Signal C-7</strong> · Long</td>
-                                    <td class="activity-time">2h 14m</td>
-                                    <td class="mono pos">+82.4</td>
-                                    <td class="mono neg">−34.1</td>
-                                    <td><span class="status-badge completed">Favorable</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Signal C-7</strong> · Short</td>
-                                    <td class="activity-time">2h 14m</td>
-                                    <td class="mono pos">+31.2</td>
-                                    <td class="mono neg">−58.7</td>
-                                    <td><span class="status-badge pending">Adverse</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Signal A-3</strong> · Long</td>
-                                    <td class="activity-time">4h 02m</td>
-                                    <td class="mono pos">+46.8</td>
-                                    <td class="mono neg">−22.5</td>
-                                    <td><span class="status-badge completed">Favorable</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Signal A-3</strong> · Short</td>
-                                    <td class="activity-time">4h 02m</td>
-                                    <td class="mono pos">+18.2</td>
-                                    <td class="mono neg">−41.0</td>
-                                    <td><span class="status-badge pending">Adverse</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
                         <h3>Interpretation · Signal G-2</h3>
                         <span class="badge info">AI · Inference</span>
                     </div>
@@ -884,6 +833,247 @@
                         tradeable on the short side and should be treated as long-only until
                         contradictory evidence accumulates.
                     </p>
+                </div>
+            </section>
+
+            <!-- ============================================================ -->
+            <!-- TAB 4: MONITORING                                            -->
+            <!-- ============================================================ -->
+            <section class="tab-content" id="tab-monitoring">
+                <header class="dashboard-header">
+                    <div>
+                        <h1>Monitoring</h1>
+                        <p class="page-subtitle">Watching open positions and tracked setups in real time.</p>
+                    </div>
+                    <div class="dashboard-header-actions">
+                        <button class="btn-secondary" type="button">Configure Alerts</button>
+                    </div>
+                </header>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="#14B8A6" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="#14B8A6" stroke-width="2"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">8</span>
+                            <span class="stat-label">Watched setups</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 17l5-6 4 4 9-10" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">24</span>
+                            <span class="stat-label">Favorable so far</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 7l5 6 4-4 9 10" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">7</span>
+                            <span class="stat-label">Adverse so far</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#7C3AED" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">31</span>
+                            <span class="stat-label">Closed today</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Open Positions</h3>
+                        <span class="card-meta">
+                            <span class="live-dot-inline"></span> live
+                        </span>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="activity-table">
+                            <thead>
+                                <tr>
+                                    <th>Setup</th>
+                                    <th>Direction</th>
+                                    <th>Age</th>
+                                    <th>Favorable</th>
+                                    <th>Adverse</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Signal G-2</strong></td>
+                                    <td><span class="direction-badge long">Long</span></td>
+                                    <td class="activity-time">18m</td>
+                                    <td class="mono pos">+12.4</td>
+                                    <td class="mono neg">−3.1</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal C-7</strong></td>
+                                    <td><span class="direction-badge long">Long</span></td>
+                                    <td class="activity-time">2h 14m</td>
+                                    <td class="mono pos">+82.4</td>
+                                    <td class="mono neg">−34.1</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal C-7</strong></td>
+                                    <td><span class="direction-badge short">Short</span></td>
+                                    <td class="activity-time">2h 14m</td>
+                                    <td class="mono pos">+31.2</td>
+                                    <td class="mono neg">−58.7</td>
+                                    <td><span class="status-badge pending">Adverse</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal A-3</strong></td>
+                                    <td><span class="direction-badge long">Long</span></td>
+                                    <td class="activity-time">4h 02m</td>
+                                    <td class="mono pos">+46.8</td>
+                                    <td class="mono neg">−22.5</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal A-3</strong></td>
+                                    <td><span class="direction-badge short">Short</span></td>
+                                    <td class="activity-time">4h 02m</td>
+                                    <td class="mono pos">+18.2</td>
+                                    <td class="mono neg">−41.0</td>
+                                    <td><span class="status-badge pending">Adverse</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal E-4</strong></td>
+                                    <td><span class="direction-badge long">Long</span></td>
+                                    <td class="activity-time">9h 18m</td>
+                                    <td class="mono pos">+28.5</td>
+                                    <td class="mono neg">−17.2</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Alert Feed</h3>
+                        <span class="badge info">3 new</span>
+                    </div>
+                    <div class="signal-feed">
+                        <div class="signal-item new">
+                            <span class="signal-dot-wrap"></span>
+                            <div class="signal-item-info">
+                                <div class="signal-item-title">Signal G-2 crossed +10 favorable</div>
+                                <div class="signal-item-desc">Long side reached the first favorable threshold</div>
+                            </div>
+                            <span class="signal-item-time">just now</span>
+                        </div>
+                        <div class="signal-item new">
+                            <span class="signal-dot-wrap"></span>
+                            <div class="signal-item-info">
+                                <div class="signal-item-title">Signal C-7 short adverse crossed −50</div>
+                                <div class="signal-item-desc">Short side adverse movement exceeding historical mean</div>
+                            </div>
+                            <span class="signal-item-time">34m ago</span>
+                        </div>
+                        <div class="signal-item new">
+                            <span class="signal-dot-wrap"></span>
+                            <div class="signal-item-info">
+                                <div class="signal-item-title">Signal A-3 long closed favorable</div>
+                                <div class="signal-item-desc">Position closed at +46.8 favorable / −22.5 adverse</div>
+                            </div>
+                            <span class="signal-item-time">1h ago</span>
+                        </div>
+                        <div class="signal-item">
+                            <span class="signal-dot-wrap"></span>
+                            <div class="signal-item-info">
+                                <div class="signal-item-title">New setup H-1 registered</div>
+                                <div class="signal-item-desc">Combination not previously seen — 44 observations so far</div>
+                            </div>
+                            <span class="signal-item-time">3h ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Watched Setups</h3>
+                            <span class="card-meta">8 active</span>
+                        </div>
+                        <div class="signal-feed">
+                            <div class="signal-item">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Class G · Signal G-2</div>
+                                    <div class="signal-item-desc">Post-event drift · long favored</div>
+                                </div>
+                                <span class="signal-item-time">18m</span>
+                            </div>
+                            <div class="signal-item">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Class C · Signal C-7</div>
+                                    <div class="signal-item-desc">Trend continuation · long favored</div>
+                                </div>
+                                <span class="signal-item-time">2h</span>
+                            </div>
+                            <div class="signal-item">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Class A · Signal A-3</div>
+                                    <div class="signal-item-desc">Trend + volume · long favored</div>
+                                </div>
+                                <span class="signal-item-time">4h</span>
+                            </div>
+                            <div class="signal-item">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Class E · Signal E-4</div>
+                                    <div class="signal-item-desc">Breakout follow-through · long favored</div>
+                                </div>
+                                <span class="signal-item-time">9h</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Today's Movement</h3>
+                            <span class="card-meta">last 24 hours</span>
+                        </div>
+                        <div class="movement-row">
+                            <div class="movement-stat">
+                                <span class="movement-label">Total favorable</span>
+                                <span class="movement-value pos">+612.8</span>
+                            </div>
+                            <div class="movement-stat">
+                                <span class="movement-label">Total adverse</span>
+                                <span class="movement-value neg">−218.4</span>
+                            </div>
+                        </div>
+                        <div class="histogram histogram-long" aria-hidden="true">
+                            <span style="height: 12%"></span><span style="height: 18%"></span>
+                            <span style="height: 26%"></span><span style="height: 38%"></span>
+                            <span style="height: 52%"></span><span style="height: 68%"></span>
+                            <span style="height: 82%"></span><span style="height: 94%"></span>
+                            <span style="height: 100%"></span><span style="height: 86%"></span>
+                            <span style="height: 66%"></span><span style="height: 46%"></span>
+                            <span style="height: 30%"></span><span style="height: 18%"></span>
+                            <span style="height: 10%"></span><span style="height: 5%"></span>
+                        </div>
+                        <div class="histogram-legend">
+                            <span>0</span><span>25</span><span>50</span><span>75+</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
