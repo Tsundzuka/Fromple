@@ -842,14 +842,19 @@
     font-size: 14px;
 }
 
-.class-table th:nth-child(2),
+/* Numeric columns centered: Signals(3), Obs(4), Long(5), Short(6), Wins(7), Losses(8) */
 .class-table th:nth-child(3),
 .class-table th:nth-child(4),
 .class-table th:nth-child(5),
-.class-table td:nth-child(2),
+.class-table th:nth-child(6),
+.class-table th:nth-child(7),
+.class-table th:nth-child(8),
 .class-table td:nth-child(3),
 .class-table td:nth-child(4),
-.class-table td:nth-child(5) {
+.class-table td:nth-child(5),
+.class-table td:nth-child(6),
+.class-table td:nth-child(7),
+.class-table td:nth-child(8) {
     text-align: center;
 }
 
@@ -857,6 +862,38 @@
 .class-table tbody tr.selected-row { background: var(--primary-lightest); }
 .class-table tbody tr.selected-row:hover { background: var(--primary-light); }
 
+/* ---------- Checkbox column ---------- */
+.class-table th.col-check,
+.class-table td.col-check {
+    width: 44px;
+    padding-left: 20px;
+    padding-right: 0;
+    text-align: left;
+}
+
+.class-check {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--primary);
+    cursor: pointer;
+    display: block;
+    margin: 0;
+}
+
+.class-table tbody tr.selected-row .class-check { accent-color: var(--primary-dark); }
+
+/* ---------- Wins / Losses ---------- */
+.class-table td.num-wins,
+.class-table td.num-losses {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.class-table td.num-wins   { color: var(--primary-dark); }
+.class-table td.num-losses { color: #B91C1C; }
+
+/* ---------- Class cell / badge ---------- */
 .class-cell {
     display: flex;
     align-items: center;
@@ -903,6 +940,92 @@
 
 .class-badge.primary { background: var(--gradient-primary); }
 
+/* ---------- Timeframe bar ---------- */
+.timeframe-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 4px 0 14px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.timeframe-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-500);
+    flex-shrink: 0;
+}
+
+.timeframe-tabs {
+    display: inline-flex;
+    gap: 3px;
+    background: var(--gray-100);
+    padding: 3px;
+    border-radius: 8px;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.timeframe-btn {
+    padding: 5px 10px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.timeframe-btn:hover { color: var(--gray-800); }
+
+.timeframe-btn.active {
+    background: #fff;
+    color: var(--primary-dark);
+    box-shadow: var(--shadow-sm);
+}
+
+.timeframe-meta {
+    margin-left: auto;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gray-400);
+    white-space: nowrap;
+}
+
+/* ---------- Scroll container: exactly 7 rows visible ---------- */
+.class-table-wrap {
+    --class-row-h: 63px;   /* badge 34px + 14px padding top/bottom + 1px border */
+    --class-head-h: 34px;
+    max-height: calc(var(--class-head-h) + 7 * var(--class-row-h));
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.class-table-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
+.class-table-wrap::-webkit-scrollbar-track { background: transparent; }
+.class-table-wrap::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 4px;
+}
+.class-table-wrap::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+
+/* Sticky header inside the scroll container */
+.class-table thead th {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+    box-shadow: inset 0 -1px 0 var(--gray-200);
+}
+
 /* ---------- Performance pills (Long / Short %) ---------- */
 .perf-pill {
     display: inline-block;
@@ -918,7 +1041,7 @@
 .perf-pill.long  { background: var(--primary-light); color: var(--primary-dark); }
 .perf-pill.short { background: #FEE2E2; color: #B91C1C; }
 
-/* ---------- Movement stats ---------- */
+/* ---------- Movement stats (used in Monitoring) ---------- */
 .movement-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -954,7 +1077,7 @@
 .movement-value.pos { color: var(--primary-dark); }
 .movement-value.neg { color: #DC2626; }
 
-/* ---------- Histogram ---------- */
+/* ---------- Histogram (used in Monitoring) ---------- */
 .histogram {
     display: flex;
     align-items: flex-end;
@@ -986,7 +1109,7 @@
     padding: 0 2px;
 }
 
-/* ---------- Edge indicators ---------- */
+/* ---------- Edge indicators (used in Paper Trading) ---------- */
 .edge-pos,
 .edge-neg {
     display: inline-block;
@@ -1001,6 +1124,78 @@
 
 .edge-pos { background: var(--primary-light); color: var(--primary-dark); }
 .edge-neg { background: #FEE2E2; color: #B91C1C; }
+
+/* ---------- Dual-axis line chart ---------- */
+.line-chart-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.line-chart {
+    width: 100%;
+    height: auto;
+    min-width: 620px;
+    display: block;
+}
+
+.chart-grid line {
+    stroke: var(--gray-100);
+    stroke-width: 1;
+}
+
+.chart-axis line {
+    stroke: var(--gray-300);
+    stroke-width: 1;
+}
+
+.chart-label text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    fill: var(--gray-400);
+}
+
+.chart-line {
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.chart-line-pct  { stroke: var(--primary); }
+.chart-line-pips { stroke: #F59E0B; }
+
+.chart-points circle {
+    stroke: #fff;
+    stroke-width: 1.5;
+}
+
+.chart-points-pct circle  { fill: var(--primary); }
+.chart-points-pips circle { fill: #F59E0B; }
+
+.chart-legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: var(--gray-600);
+}
+
+.legend-swatch {
+    width: 14px;
+    height: 3px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.legend-swatch.teal  { background: var(--primary); }
+.legend-swatch.amber { background: #F59E0B; }
 
 /* ---------- AI interpretation ---------- */
 .review-text {
@@ -1238,10 +1433,15 @@
 
     .snapshot-grid { grid-template-columns: 1fr 1fr; }
 
-    .class-table th:nth-child(2),
-    .class-table td:nth-child(2),
-    .class-table th:nth-child(7),
-    .class-table td:nth-child(7) {
+    /* Timeframe bar adjustments */
+    .timeframe-bar { gap: 8px; }
+    .timeframe-meta { margin-left: 0; width: 100%; }
+
+    /* Hide Signals (3) and Last seen (10) */
+    .class-table th:nth-child(3),
+    .class-table td:nth-child(3),
+    .class-table th:nth-child(10),
+    .class-table td:nth-child(10) {
         display: none;
     }
 }
@@ -1262,8 +1462,9 @@
 
     .movement-row { grid-template-columns: 1fr; }
 
-    .class-table th:nth-child(6),
-    .class-table td:nth-child(6) { display: none; }
+    /* Hide Status (9) */
+    .class-table th:nth-child(9),
+    .class-table td:nth-child(9) { display: none; }
 
     .class-cell-info span { display: none; }
 
