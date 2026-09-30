@@ -20,20 +20,16 @@
 </head>
 <body>
 
-    <!-- ===== AUTH LOADING OVERLAY ===== -->
     <div id="authLoadingOverlay" class="auth-loading-overlay">
         <img src="assets/icons/logo.png" alt="Fromple" class="auth-loading-logo" />
         <div class="auth-loading-spinner"></div>
         <p class="auth-loading-text">Loading...</p>
     </div>
 
-    <!-- ========== HEADER ========== -->
     <div id="header"></div>
 
-    <!-- ========== DASHBOARD WRAPPER ========== -->
     <div class="dashboard-wrapper">
 
-        <!-- ========== SIDEBAR ========== -->
         <aside class="sidebar" id="sidebar">
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active" data-tab="paper-trading">
@@ -49,13 +45,13 @@
                         <rect x="3" y="14" width="7" height="7" rx="1.5" />
                         <rect x="14" y="14" width="7" height="7" rx="1.5" />
                     </svg>
-                    <span>Class Generation</span>
+                    <span>Class Generation &amp; Data Categorisation</span>
                 </a>
                 <a href="#" data-tab="signals">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M2 12h3l3-8 4 16 3-10 3 4h4" />
                     </svg>
-                    <span>Signals</span>
+                    <span>Signal Generation &amp; Monitoring</span>
                 </a>
             </nav>
 
@@ -83,7 +79,6 @@
             </div>
         </aside>
 
-        <!-- ========== MAIN ========== -->
         <main class="main-content" id="mainContent">
 
             <button class="admin-sidebar-toggle" id="adminSidebarToggle" aria-label="Toggle navigation">
@@ -304,13 +299,13 @@
             </section>
 
             <!-- ============================================================ -->
-            <!-- TAB 2: CLASS GENERATION                                      -->
+            <!-- TAB 2: CLASS GENERATION & DATA CATEGORISATION                -->
             <!-- ============================================================ -->
             <section class="tab-content" id="tab-classes">
                 <header class="dashboard-header">
                     <div>
-                        <h1>Class Generation</h1>
-                        <p class="page-subtitle">Registered setups, their underlying conditions, and accumulated performance.</p>
+                        <h1>Class Generation &amp; Data Categorisation</h1>
+                        <p class="page-subtitle">Registered setups, the conditions that compose them, and how those conditions are categorised.</p>
                     </div>
                     <div class="dashboard-header-actions">
                         <button class="btn-secondary" type="button">Export</button>
@@ -595,16 +590,60 @@
                         </table>
                     </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Data Categorisation</h3>
+                        <span class="card-meta">how conditions are grouped</span>
+                    </div>
+                    <div class="category-grid">
+                        <div class="category-card">
+                            <div class="category-head">
+                                <span class="category-name">Structure</span>
+                                <span class="category-count">6 conditions</span>
+                            </div>
+                            <p class="category-desc">Support / resistance state, trend direction, range position, prior swing points.</p>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-head">
+                                <span class="category-name">Technical</span>
+                                <span class="category-count">5 conditions</span>
+                            </div>
+                            <p class="category-desc">Volume, volatility, momentum, price action characteristics.</p>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-head">
+                                <span class="category-name">Indicator</span>
+                                <span class="category-count">8 conditions</span>
+                            </div>
+                            <p class="category-desc">Moving averages, RSI, MACD, Bollinger Bands, and other computed signals.</p>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-head">
+                                <span class="category-name">Calendar</span>
+                                <span class="category-count">4 conditions</span>
+                            </div>
+                            <p class="category-desc">Economic events, actual vs. forecast, time relative to release, importance.</p>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-head">
+                                <span class="category-name">Fundamental</span>
+                                <span class="category-count">5 conditions</span>
+                            </div>
+                            <p class="category-desc">COT positioning, net long/short changes, weekly sentiment shifts.</p>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- ============================================================ -->
-            <!-- TAB 3: SIGNALS                                               -->
+            <!-- TAB 3: SIGNAL GENERATION & MONITORING                        -->
             <!-- ============================================================ -->
             <section class="tab-content" id="tab-signals">
                 <header class="dashboard-header">
                     <div>
-                        <h1>Signal Monitoring</h1>
-                        <p class="page-subtitle">Live recognition of registered setups as the market unfolds.</p>
+                        <h1>Signal Generation &amp; Monitoring</h1>
+                        <p class="page-subtitle">Live recognition of registered setups as the market unfolds, and continuous monitoring of open positions.</p>
                     </div>
                     <div class="dashboard-header-actions">
                         <button class="btn-secondary" type="button">Configure Alerts</button>
@@ -771,6 +810,65 @@
 
                 <div class="card">
                     <div class="card-header">
+                        <h3>Monitoring · Open Positions</h3>
+                        <span class="card-meta">
+                            <span class="live-dot-inline"></span> watching 8 setups
+                        </span>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="activity-table">
+                            <thead>
+                                <tr>
+                                    <th>Setup</th>
+                                    <th>Age</th>
+                                    <th>Movement so far</th>
+                                    <th>Adverse so far</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Signal G-2</strong> · Long</td>
+                                    <td class="activity-time">18m</td>
+                                    <td class="mono pos">+12.4</td>
+                                    <td class="mono neg">−3.1</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal C-7</strong> · Long</td>
+                                    <td class="activity-time">2h 14m</td>
+                                    <td class="mono pos">+82.4</td>
+                                    <td class="mono neg">−34.1</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal C-7</strong> · Short</td>
+                                    <td class="activity-time">2h 14m</td>
+                                    <td class="mono pos">+31.2</td>
+                                    <td class="mono neg">−58.7</td>
+                                    <td><span class="status-badge pending">Adverse</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal A-3</strong> · Long</td>
+                                    <td class="activity-time">4h 02m</td>
+                                    <td class="mono pos">+46.8</td>
+                                    <td class="mono neg">−22.5</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal A-3</strong> · Short</td>
+                                    <td class="activity-time">4h 02m</td>
+                                    <td class="mono pos">+18.2</td>
+                                    <td class="mono neg">−41.0</td>
+                                    <td><span class="status-badge pending">Adverse</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
                         <h3>Interpretation · Signal G-2</h3>
                         <span class="badge info">AI · Inference</span>
                     </div>
@@ -792,15 +890,12 @@
         </main>
     </div>
 
-    <!-- ========== FOOTER ========== -->
     <div id="footer"></div>
 
-    <!-- ========== SCRIPTS ========== -->
     <script src="js/main.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
     <script>
-        // ---------- Tab switching ----------
         document.querySelectorAll('.sidebar-nav a[data-tab]').forEach(link => {
             link.addEventListener('click', e => {
                 e.preventDefault();
@@ -809,16 +904,12 @@
                 link.classList.add('active');
                 document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
                 document.getElementById('tab-' + tab)?.classList.add('active');
-                // close mobile sidebar on tab change
                 document.getElementById('sidebar')?.classList.remove('open');
-                document.querySelector('.sidebar-overlay')?.classList.remove('active');
             });
         });
 
-        // ---------- Mobile sidebar toggle ----------
         document.getElementById('adminSidebarToggle')?.addEventListener('click', () => {
             document.getElementById('sidebar')?.classList.toggle('open');
-            document.querySelector('.sidebar-overlay')?.classList.toggle('active');
         });
     </script>
 </body>
