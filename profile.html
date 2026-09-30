@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fromple - Profile</title>
+    <title>Profile</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -20,51 +20,45 @@
 </head>
 <body>
 
-    <!-- ===== AUTH LOADING OVERLAY ===== -->
     <div id="authLoadingOverlay" class="auth-loading-overlay">
-        <img src="assets/icons/logo.png" alt="Fromple" class="auth-loading-logo" />
+        <img src="assets/icons/logo.png" alt="" class="auth-loading-logo" />
         <div class="auth-loading-spinner"></div>
         <p class="auth-loading-text">Loading...</p>
     </div>
 
-    <!-- ========== HEADER ========== -->
     <div id="header"></div>
 
-    <!-- ========== DASHBOARD WRAPPER ========== -->
     <div class="dashboard-wrapper">
 
-        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active" data-tab="dashboard">
-                    <img src="assets/icons/dashboard.svg" alt="" class="nav-icon" role="presentation" />
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                    </svg>
                     <span>Overview</span>
-                    <span class="usage-badge">12/28</span>
-                </a>
-                <a href="#" data-tab="ai-visibility">
-                    <img src="assets/icons/upload.svg" alt="" class="nav-icon" role="presentation" />
-                    <span>AI Visibility</span>
-                    <span class="usage-badge">4</span>
-                </a>
-                <a href="#" data-tab="upload">
-                    <img src="assets/icons/upload.svg" alt="" class="nav-icon" role="presentation" />
-                    <span>Uploads</span>
                 </a>
                 <a href="#" data-tab="review">
-                    <img src="assets/icons/review.svg" alt="" class="nav-icon" role="presentation" />
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 11l3 3L22 4" />
+                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                    </svg>
                     <span>Review</span>
                 </a>
-                <a href="#" data-tab="brand-voice">
-                    <img src="assets/icons/brand-voice.svg" alt="" class="nav-icon" role="presentation" />
-                    <span>Brand Voice</span>
-                </a>
                 <a href="#" data-tab="usage">
-                    <img src="assets/icons/growth-line.svg" alt="" class="nav-icon" role="presentation" />
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 17l5-6 4 4 9-10" />
+                    </svg>
                     <span>Usage &amp; Analytics</span>
-                    <span class="usage-badge">43%</span>
                 </a>
                 <a href="#" data-tab="settings">
-                    <img src="assets/icons/settings.svg" alt="" class="nav-icon" role="presentation" />
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" />
+                    </svg>
                     <span>Settings</span>
                 </a>
             </nav>
@@ -72,31 +66,29 @@
             <div class="sidebar-footer">
                 <div class="sidebar-usage-summary">
                     <div class="sidebar-usage-header">
-                        <span class="sidebar-usage-label">📈 Feature Usage</span>
-                        <span class="sidebar-usage-value">12/28</span>
+                        <span class="sidebar-usage-label">Registry load</span>
+                        <span class="sidebar-usage-value">2,936</span>
                     </div>
                     <div class="sidebar-usage-bar">
-                        <div class="sidebar-usage-fill" style="width: 43%;"></div>
+                        <div class="sidebar-usage-fill" style="width: 72%;"></div>
                     </div>
                     <div class="sidebar-usage-details">
-                        <span>43% adoption</span>
-                        <span>47 total generations</span>
+                        <span>72% capacity</span>
+                        <span>8 classes</span>
                     </div>
                 </div>
                 <div class="user-info">
                     <div class="user-avatar">JD</div>
                     <div class="user-details">
                         <span class="user-name">John Doe</span>
-                        <span class="user-plan" id="userPlan">Pro</span>
+                        <span class="user-plan" id="userPlan">Research</span>
                     </div>
                 </div>
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content" id="mainContent">
 
-            <!-- Toggle Button -->
             <button class="admin-sidebar-toggle" id="adminSidebarToggle" aria-label="Toggle navigation">
                 <span class="trigger-box">
                     <span class="trigger-line"></span>
@@ -111,49 +103,45 @@
                 <header class="dashboard-header">
                     <div>
                         <h1>Overview</h1>
-                        <p class="page-subtitle">Welcome back, John. Here's your content overview for <strong>May 2026</strong>.</p>
+                        <p class="page-subtitle">Welcome back, John. Here's your registry summary for the last 24 hours.</p>
                     </div>
-                    <a href="service-detail.html?module=content-creation" class="btn-primary btn-sm">
-                        <img src="assets/icons/upload.svg" alt="" class="btn-icon" role="presentation" />
-                        New Upload
-                    </a>
                 </header>
 
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon blue">
-                            <img src="assets/icons/dashboard.svg" alt="" role="presentation" />
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M4 6h16M4 12h16M4 18h10" stroke="#14B8A6" stroke-width="2" stroke-linecap="round"/></svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">28</span>
-                            <span class="stat-label">Total Features</span>
+                            <span class="stat-value">2,936</span>
+                            <span class="stat-label">Total observations</span>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon green">
-                            <img src="assets/icons/growth-line.svg" alt="" role="presentation" />
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#10B981" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#10B981" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#10B981" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#10B981" stroke-width="2"/></svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">12</span>
-                            <span class="stat-label">Features Used</span>
+                            <span class="stat-value">8</span>
+                            <span class="stat-label">Classes registered</span>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon orange">
-                            <img src="assets/icons/planner.svg" alt="" role="presentation" />
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M2 12h3l3-8 4 16 3-10 3 4h4" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">43%</span>
-                            <span class="stat-label">Adoption Rate</span>
+                            <span class="stat-value">37</span>
+                            <span class="stat-label">Active signals</span>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon purple">
-                            <img src="assets/icons/review.svg" alt="" role="presentation" />
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 4h18l-7 8v6l-4-2v-4L3 4z" stroke="#7C3AED" stroke-width="2" stroke-linejoin="round"/></svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">47</span>
-                            <span class="stat-label">Total Generations</span>
+                            <span class="stat-value">3</span>
+                            <span class="stat-label">Filtered setups</span>
                         </div>
                     </div>
                 </div>
@@ -161,154 +149,149 @@
                 <div class="grid-2col">
                     <div class="card">
                         <div class="card-header">
-                            <h3>
-                                <img src="assets/icons/growth-line.svg" alt="" class="card-icon" role="presentation" />
-                                Most Used Features
-                            </h3>
+                            <h3>Top Performing Classes</h3>
                             <span class="badge info">Top 5</span>
                         </div>
                         <div class="feature-usage-list">
-                            <div style="padding:20px;text-align:center;color:var(--gray-500);">Loading features...</div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">Class G · Post-event drift</span>
+                                    <span class="feature-usage-count">72% long</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 72%;"></div></div>
+                            </div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">Class C · Trend continuation</span>
+                                    <span class="feature-usage-count">68% long</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 68%;"></div></div>
+                            </div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">Class A · Trend + volume</span>
+                                    <span class="feature-usage-count">58% long</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 58%;"></div></div>
+                            </div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">Class E · Breakout follow-through</span>
+                                    <span class="feature-usage-count">54% long</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 54%;"></div></div>
+                            </div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">Class B · Reversal near resistance</span>
+                                    <span class="feature-usage-count">47% short</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 47%;"></div></div>
+                            </div>
                         </div>
-                        <p class="feature-usage-hint">You've used <strong>12 of 28</strong> features this month.</p>
+                        <p class="feature-usage-hint">Ranked by favorable-movement ratio across all observations.</p>
                     </div>
 
                     <div class="card">
                         <div class="card-header">
-                            <h3>
-                                <img src="assets/icons/dashboard.svg" alt="" class="card-icon" role="presentation" />
-                                Feature Adoption
-                            </h3>
-                            <span class="badge info">12/28</span>
+                            <h3>Category Load</h3>
+                            <span class="badge info">28 conditions</span>
                         </div>
                         <div class="adoption-list">
                             <div class="adoption-item">
                                 <div class="adoption-info">
-                                    <span class="adoption-module">Content Creation</span>
-                                    <span class="adoption-count">6/8</span>
+                                    <span class="adoption-module">Structure</span>
+                                    <span class="adoption-count">6/28</span>
                                 </div>
-                                <div class="adoption-bar">
-                                    <div class="adoption-fill" style="width: 75%;"></div>
-                                </div>
+                                <div class="adoption-bar"><div class="adoption-fill" style="width: 21%;"></div></div>
                             </div>
                             <div class="adoption-item">
                                 <div class="adoption-info">
-                                    <span class="adoption-module">Authority &amp; Growth</span>
-                                    <span class="adoption-count">3/7</span>
+                                    <span class="adoption-module">Technical</span>
+                                    <span class="adoption-count">5/28</span>
                                 </div>
-                                <div class="adoption-bar">
-                                    <div class="adoption-fill" style="width: 43%;"></div>
-                                </div>
+                                <div class="adoption-bar"><div class="adoption-fill" style="width: 18%;"></div></div>
                             </div>
                             <div class="adoption-item">
                                 <div class="adoption-info">
-                                    <span class="adoption-module">AI Agents</span>
-                                    <span class="adoption-count">4/7</span>
+                                    <span class="adoption-module">Indicator</span>
+                                    <span class="adoption-count">8/28</span>
                                 </div>
-                                <div class="adoption-bar">
-                                    <div class="adoption-fill" style="width: 57%;"></div>
-                                </div>
+                                <div class="adoption-bar"><div class="adoption-fill" style="width: 29%;"></div></div>
                             </div>
                             <div class="adoption-item">
                                 <div class="adoption-info">
-                                    <span class="adoption-module">Workflow &amp; Intelligence</span>
-                                    <span class="adoption-count">2/6</span>
+                                    <span class="adoption-module">Calendar</span>
+                                    <span class="adoption-count">4/28</span>
                                 </div>
-                                <div class="adoption-bar">
-                                    <div class="adoption-fill" style="width: 33%;"></div>
+                                <div class="adoption-bar"><div class="adoption-fill" style="width: 14%;"></div></div>
+                            </div>
+                            <div class="adoption-item">
+                                <div class="adoption-info">
+                                    <span class="adoption-module">Fundamental</span>
+                                    <span class="adoption-count">5/28</span>
                                 </div>
+                                <div class="adoption-bar"><div class="adoption-fill" style="width: 18%;"></div></div>
                             </div>
                         </div>
-                        <p class="adoption-hint">You've used features across all 4 modules.</p>
+                        <p class="adoption-hint">All 28 conditions are currently categorised.</p>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
-                        <h3>
-                            <img src="assets/icons/planner.svg" alt="" class="card-icon" role="presentation" />
-                            Content Queue
-                        </h3>
-                        <span class="badge info">3 items</span>
-                    </div>
-                    <div class="queue-list">
-                        <div class="queue-item">
-                            <span class="queue-type">
-                                <img src="assets/icons/review.svg" alt="" class="queue-icon" role="presentation" />
-                                LinkedIn Post – Masterclass Insights
-                            </span>
-                            <div class="queue-status">
-                                <span class="status-dot waiting"></span>
-                                <span>Waiting</span>
-                                <span class="queue-time">~2 min</span>
-                            </div>
-                        </div>
-                        <div class="queue-item">
-                            <span class="queue-type">
-                                <img src="assets/icons/review.svg" alt="" class="queue-icon" role="presentation" />
-                                Blog Article – AI Content Strategy 2026
-                            </span>
-                            <div class="queue-status">
-                                <span class="status-dot processing"></span>
-                                <span>Processing</span>
-                                <span class="queue-time">~4 min</span>
-                            </div>
-                        </div>
-                        <div class="queue-item">
-                            <span class="queue-type">
-                                <img src="assets/icons/review.svg" alt="" class="queue-icon" role="presentation" />
-                                Newsletter – Weekly Roundup
-                            </span>
-                            <div class="queue-status">
-                                <span class="status-dot done"></span>
-                                <span>Completed</span>
-                                <span class="queue-time">Ready</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3>
-                            <img src="assets/icons/dashboard.svg" alt="" class="card-icon" role="presentation" />
-                            Recent Activity
-                        </h3>
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <span style="font-size: 13px; color: var(--gray-500);">Last 7 days</span>
-                            <a href="#" class="text-link">View All</a>
-                        </div>
+                        <h3>Recent Registry Activity</h3>
+                        <span class="badge info">last 24 hours</span>
                     </div>
                     <div class="activity-summary">
                         <div class="activity-summary-item">
                             <span>📊</span>
-                            <span><span class="count">12</span> activities this week</span>
+                            <span><span class="count">47</span> new observations</span>
                         </div>
                         <div class="activity-summary-item">
                             <span>✅</span>
-                            <span><span class="count">8</span> completed</span>
+                            <span><span class="count">31</span> closed experiments</span>
                         </div>
                         <div class="activity-summary-item">
                             <span>⏳</span>
-                            <span><span class="count">4</span> in progress</span>
+                            <span><span class="count">16</span> still open</span>
                         </div>
-                    </div>
-                    <div class="activity-filters">
-                        <button class="filter-btn active" data-filter="all">All</button>
-                        <button class="filter-btn" data-filter="generated">Generated</button>
-                        <button class="filter-btn" data-filter="created">Created</button>
-                        <button class="filter-btn" data-filter="published">Published</button>
                     </div>
                     <div class="activity-container">
                         <table class="activity-table">
                             <thead>
-                                <tr><th>Activity</th><th>Description</th><th>Status</th><th>Time</th></tr>
+                                <tr><th>Event</th><th>Detail</th><th>Class</th><th>Time</th></tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="4" style="text-align:center;padding:40px;color:var(--gray-500);">
-                                        Loading activity...
-                                    </td>
+                                    <td><strong>Signal recognized</strong></td>
+                                    <td>Post-event drift · 834 obs</td>
+                                    <td>Class G</td>
+                                    <td class="activity-time">18m ago</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>New setup registered</strong></td>
+                                    <td>Combination not previously seen</td>
+                                    <td>Class H</td>
+                                    <td class="activity-time">3h ago</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal recognized</strong></td>
+                                    <td>Trend continuation · 621 obs</td>
+                                    <td>Class C</td>
+                                    <td class="activity-time">2h ago</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Setup filtered</strong></td>
+                                    <td>Mean-reversion · low favorable ratio</td>
+                                    <td>Class D</td>
+                                    <td class="activity-time">6h ago</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal recognized</strong></td>
+                                    <td>Breakout follow-through · 402 obs</td>
+                                    <td>Class E</td>
+                                    <td class="activity-time">9h ago</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -317,838 +300,379 @@
             </section>
 
             <!-- ============================================================ -->
-            <!-- TAB 2: AI VISIBILITY                                         -->
+            <!-- TAB 2: REVIEW                                                -->
             <!-- ============================================================ -->
-            <section class="tab-content" id="tab-ai-visibility">
+            <section class="tab-content" id="tab-review">
                 <header class="dashboard-header">
                     <div>
-                        <h1>AI Visibility Platform</h1>
-                        <p class="page-subtitle">The 4‑pillar lifecycle to Find, Diagnose, Optimize, and Monitor your AI search presence.</p>
+                        <h1>Review</h1>
+                        <p class="page-subtitle">Setups that need attention before they are surfaced as signals.</p>
                     </div>
-                    <button class="btn-primary btn-sm" id="fullReportBtn">
-                        <img src="assets/icons/download.svg" alt="" class="btn-icon" role="presentation" />
-                        Full Report
-                    </button>
                 </header>
 
-                <!-- Pillar Tabs -->
-                <div class="pillar-tabs">
-                    <button class="pillar-tab active" data-pillar="find">🔍 FIND</button>
-                    <button class="pillar-tab" data-pillar="diagnose">🧩 DIAGNOSE</button>
-                    <button class="pillar-tab" data-pillar="optimize">⚡ OPTIMIZE</button>
-                    <button class="pillar-tab" data-pillar="monitor">📈 MONITOR</button>
-                </div>
-
-                <!-- ========================================================== -->
-                <!-- FIND PILLAR                                               -->
-                <!-- ========================================================== -->
-                <div class="pillar-content active" id="pillar-find">
-                    <!-- Quick Stats -->
-                    <div class="find-stats-grid">
-                        <div class="find-stat-card">
-                            <span class="find-stat-icon">📊</span>
-                            <div>
-                                <span class="find-stat-value" id="findTotalScans">0</span>
-                                <span class="find-stat-label">Total Scans</span>
-                            </div>
-                        </div>
-                        <div class="find-stat-card">
-                            <span class="find-stat-icon">✅</span>
-                            <div>
-                                <span class="find-stat-value" id="findCompletedScans">0</span>
-                                <span class="find-stat-label">Completed</span>
-                            </div>
-                        </div>
-                        <div class="find-stat-card">
-                            <span class="find-stat-icon">⏳</span>
-                            <div>
-                                <span class="find-stat-value" id="findPendingScans">0</span>
-                                <span class="find-stat-label">Pending / Running</span>
-                            </div>
-                        </div>
-                        <div class="find-stat-card">
-                            <span class="find-stat-icon">📈</span>
-                            <div>
-                                <span class="find-stat-value" id="findAvgScore">—</span>
-                                <span class="find-stat-label">Average Score</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Scanner Card -->
-                    <div class="card scanner-card">
-                        <div class="card-header">
-                            <h3>🔍 Run AI Visibility Scan</h3>
-                            <span class="badge info" id="findPlanBadge">Free</span>
-                        </div>
-                        <p style="color:var(--gray-600);margin-bottom:16px;">
-                            Enter your business details and target questions. We'll scan real-time web sources to see if you're mentioned.
-                        </p>
-
-                        <form id="auditForm">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="businessName">Your Business Name *</label>
-                                    <input type="text" id="businessName" placeholder="e.g., John's Plumbing Services" required />
-                                    <span class="helper-text">Use the exact name customers search for.</span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="brandAliases">Brand Aliases</label>
-                                    <input type="text" id="brandAliases" placeholder="e.g., JPS, John's Plumbing, JoPlumb" />
-                                    <span class="helper-text">Other names, abbreviations, or common misspellings.</span>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="businessUrl">Your Website URL *</label>
-                                    <input type="url" id="businessUrl" placeholder="https://johnsplumbing.co.za" required />
-                                </div>
-                                <div class="form-group">
-                                    <label for="country">Country / Location *</label>
-                                    <select id="country" required>
-                                        <option value="">Select your target country...</option>
-                                        <option value="US">United States</option>
-                                        <option value="UK">United Kingdom</option>
-                                        <option value="CA">Canada</option>
-                                        <option value="AU">Australia</option>
-                                        <option value="ZA" selected>South Africa</option>
-                                        <option value="NZ">New Zealand</option>
-                                        <option value="IE">Ireland</option>
-                                        <option value="IN">India</option>
-                                        <option value="DE">Germany</option>
-                                        <option value="FR">France</option>
-                                        <option value="ES">Spain</option>
-                                        <option value="IT">Italy</option>
-                                        <option value="BR">Brazil</option>
-                                        <option value="MX">Mexico</option>
-                                        <option value="SG">Singapore</option>
-                                        <option value="AE">UAE</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                    <span class="helper-text">AI responses vary by region. Select where your customers are located.</span>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="industry">Industry *</label>
-                                    <select id="industry" required>
-                                        <option value="">Select your industry...</option>
-                                        <option value="local_service">Local service (plumber, electrician, cleaner)</option>
-                                        <option value="professional_service">Professional service (lawyer, accountant, consultant)</option>
-                                        <option value="healthcare">Healthcare (doctor, dentist, clinic)</option>
-                                        <option value="b2b_saas">B2B software / SaaS</option>
-                                        <option value="d2c_ecommerce">Consumer brand / e-commerce</option>
-                                        <option value="hospitality">Hospitality (restaurant, hotel, cafe)</option>
-                                        <option value="education">Education / training</option>
-                                        <option value="real_estate">Real estate</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                    <span class="helper-text">Used to tailor recommendations to your industry's real channels.</span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="reportEmail">Email for Report</label>
-                                    <input type="email" id="reportEmail" placeholder="client@example.com" />
-                                    <span class="helper-text">We'll send the full audit report (PDF) to this email.</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="queries">Target Queries (one per line) *</label>
-                                <textarea id="queries" rows="5" placeholder="What's the best plumber in Johannesburg?&#10;Who fixes burst pipes fast?&#10;Which plumbing company has the best reviews?&#10;Affordable emergency plumber near me&#10;Top-rated plumbing services in South Africa" required></textarea>
-                                <div class="helper-text" id="queryCounter">0 queries entered</div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="competitors">Competitor Domains</label>
-                                <input type="text" id="competitors" placeholder="plumbright.co.za, rapidrepair.co.za, 24hourplumbing.co.za" />
-                                <span class="helper-text">Comma-separated. We'll compare your mentions against theirs.</span>
-                            </div>
-
-                            <div class="form-group">
-                                <label style="display:block;font-weight:600;font-size:14px;margin-bottom:4px;color:var(--gray-700);">Platforms to Scan</label>
-                                <div class="platform-checkboxes">
-                                    <label>
-                                        <input type="checkbox" id="ai_tavily" checked value="tavily" />
-                                        <span>🌐 Web Visibility (Tavily)</span>
-                                    </label>
-                                    <label>
-                                        <input type="checkbox" id="ai_you" checked value="you" />
-                                        <span>🔎 Web Search (You.com)</span>
-                                    </label>
-                                </div>
-                                <span class="helper-text">Both platforms use real-time web data with citations. ChatGPT, Gemini, Claude, and Perplexity are coming soon.</span>
-                            </div>
-
-                            <!-- Repeat this scan toggle -->
-                            <div class="form-group repeat-scan-group">
-                                <div class="toggle-row">
-                                    <div>
-                                        <label class="toggle-label" for="repeatScanToggle">Repeat this scan</label>
-                                        <span class="helper-text">Your first scan runs now. We'll re-run it automatically.</span>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="repeatScanToggle" />
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-
-                                <div id="repeatScanOptions" style="display:none;margin-top:12px;">
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="repeatFrequency">Frequency</label>
-                                            <select id="repeatFrequency">
-                                                <option value="daily">Daily</option>
-                                                <option value="weekly" selected>Weekly</option>
-                                                <option value="biweekly">Every 2 weeks</option>
-                                                <option value="monthly">Monthly</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="repeatTime">Run at</label>
-                                            <input type="time" id="repeatTime" value="09:00" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="submit" class="btn-primary btn-lg" id="runAuditBtn">
-                                    <span class="btn-text">🚀 Run AI Visibility Scan</span>
-                                    <span class="btn-spinner" style="display:none;">⏳ Scanning...</span>
-                                </button>
-                                <span id="auditStatus" style="font-size:14px;color:var(--gray-500);"></span>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Recent Scans -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>📋 Recent Scans</h3>
-                            <div style="display:flex;gap:8px;align-items:center;">
-                                <span class="badge info" id="recentScansCount">0 scans</span>
-                                <button class="btn-secondary btn-sm" id="refreshScansBtn" style="font-size:11px;">↻ Refresh</button>
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="activity-table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Queries</th>
-                                        <th>Score</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recentScansBody">
-                                    <tr>
-                                        <td colspan="5" style="text-align:center;padding:40px;color:var(--gray-500);">
-                                            <span style="display:block;font-size:32px;margin-bottom:8px;">🔍</span>
-                                            No scans found. Run your first scan above!
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ========================================================== -->
-                <!-- DIAGNOSE PILLAR                                           -->
-                <!-- ========================================================== -->
-                <div class="pillar-content" id="pillar-diagnose">
-
-                    <!-- INDUSTRY METRICS -->
-                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px;">
-                        <div class="card" style="padding:16px;">
-                            <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">Average Visibility</div>
-                            <div style="font-size:28px;font-weight:700;color:var(--primary);" id="diagnoseAvgVisibility">—</div>
-                            <div style="font-size:11px;color:var(--gray-400);">% of AI answers mentioning you</div>
-                        </div>
-                        <div class="card" style="padding:16px;">
-                            <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">Share of Voice</div>
-                            <div style="font-size:28px;font-weight:700;color:var(--primary);" id="diagnoseAvgSov">—</div>
-                            <div style="font-size:11px;color:var(--gray-400);">vs. tracked competitors</div>
-                        </div>
-                        <div class="card" style="padding:16px;">
-                            <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">Sentiment</div>
-                            <div style="font-size:28px;font-weight:700;color:var(--primary);" id="diagnoseSentiment">—</div>
-                            <div style="font-size:11px;color:var(--gray-400);">How AI describes your brand (0–100)</div>
-                        </div>
-                        <div class="card" style="padding:16px;grid-column:span 3;">
-                            <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">Top Recommended Action</div>
-                            <div style="font-size:13px;line-height:1.5;color:var(--gray-800);" id="diagnoseTopAction">—</div>
-                            <div style="font-size:11px;color:var(--gray-400);margin-top:6px;" id="diagnoseTopActionSource"></div>
-                        </div>
-                    </div>
-
-                    <!-- Competitor Leaderboard -->
-                    <div class="card" id="diagnoseLeaderboardCard" style="margin-bottom:16px;display:none;">
-                        <div class="card-header">
-                            <h3>🏆 Competitor Leaderboard</h3>
-                            <span class="badge info" id="diagnoseLeaderboardBadge">0 competitors</span>
-                        </div>
-                        <div id="diagnoseLeaderboardBody" style="padding:8px 16px 16px;"></div>
-                    </div>
-
-                    <!-- Top Sources -->
-                    <div class="card" id="diagnoseTopSourcesCard" style="margin-bottom:16px;display:none;">
-                        <div class="card-header">
-                            <h3>📚 Where AI Pulls Answers From</h3>
-                        </div>
-                        <div id="diagnoseTopSourcesBody" style="padding:8px 16px 16px;display:flex;flex-wrap:wrap;gap:8px;"></div>
-                    </div>
-
-                    <!-- Stats Grid -->
-                    <div class="diagnose-stats-grid">
-                        <div class="diagnose-stat-card">
-                            <span class="diagnose-stat-icon">🎯</span>
-                            <div>
-                                <span class="diagnose-stat-value" id="diagnoseTotalQueries">0</span>
-                                <span class="diagnose-stat-label">Total Queries Analyzed</span>
-                            </div>
-                        </div>
-                        <div class="diagnose-stat-card">
-                            <span class="diagnose-stat-icon">🏆</span>
-                            <div>
-                                <span class="diagnose-stat-value" id="diagnoseWinningQueries">0</span>
-                                <span class="diagnose-stat-label">Queries You Win</span>
-                            </div>
-                        </div>
-                        <div class="diagnose-stat-card">
-                            <span class="diagnose-stat-icon">⚠️</span>
-                            <div>
-                                <span class="diagnose-stat-value" id="diagnoseGapCount">0</span>
-                                <span class="diagnose-stat-label">Identified Gaps</span>
-                            </div>
-                        </div>
-                        <div class="diagnose-stat-card">
-                            <span class="diagnose-stat-icon">📊</span>
-                            <div>
-                                <span class="diagnose-stat-value" id="diagnoseAvgScore">0</span>
-                                <span class="diagnose-stat-label">Average Visibility Score</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Query Comparison Table -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>🔍 Query Performance Comparison</h3>
-                            <span class="badge info" id="diagnoseQueryCount">0 queries</span>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="diagnose-table">
-                                <thead>
-                                    <tr>
-                                        <th>Query</th>
-                                        <th>Your Brand</th>
-                                        <th>Competitors Present</th>
-                                        <th>AI Answer</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="diagnoseTableBody">
-                                    <tr>
-                                        <td colspan="5" style="text-align:center;padding:40px;color:var(--gray-500);">
-                                            <span style="display:block;font-size:32px;margin-bottom:8px;">🔍</span>
-                                            No diagnosis data available.<br>
-                                            Run a visibility scan to get insights.
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Gap Analysis Cards -->
-                    <div class="diagnose-gaps-grid" id="diagnoseGapsContainer">
-                        <!-- Rendered by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- ========================================================== -->
-                <!-- OPTIMIZE PILLAR                                           -->
-                <!-- ========================================================== -->
-                <div class="pillar-content" id="pillar-optimize">
-
-                    <!-- Stats Grid — priority-based -->
-                    <div class="optimize-stats-grid">
-                        <div class="optimize-stat-card">
-                            <span class="optimize-stat-icon">📋</span>
-                            <div>
-                                <span class="optimize-stat-value" id="optimizeTotalActions">0</span>
-                                <span class="optimize-stat-label">Total Actions</span>
-                            </div>
-                        </div>
-                        <div class="optimize-stat-card">
-                            <span class="optimize-stat-icon">🔴</span>
-                            <div>
-                                <span class="optimize-stat-value" id="optimizeHighPriority">0</span>
-                                <span class="optimize-stat-label">High Priority</span>
-                            </div>
-                        </div>
-                        <div class="optimize-stat-card">
-                            <span class="optimize-stat-icon">🟡</span>
-                            <div>
-                                <span class="optimize-stat-value" id="optimizeMediumPriority">0</span>
-                                <span class="optimize-stat-label">Medium Priority</span>
-                            </div>
-                        </div>
-                        <div class="optimize-stat-card">
-                            <span class="optimize-stat-icon">🟢</span>
-                            <div>
-                                <span class="optimize-stat-value" id="optimizeLowPriority">0</span>
-                                <span class="optimize-stat-label">Low Priority</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Plan -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>⚡ Prioritized Action Plan</h3>
-                            <div style="display:flex;gap:8px;align-items:center;">
-                                <span class="badge warning" id="optimizeHighBadge">0 High</span>
-                                <span class="badge info" id="optimizeMediumBadge">0 Medium</span>
-                                <span class="badge muted" id="optimizeLowBadge">0 Low</span>
-                            </div>
-                        </div>
-                        <div id="optimizeActionsContainer">
-                            <!-- Rendered by JavaScript -->
-                        </div>
-                    </div>
-
-                    <!-- Content Outline Output -->
-                    <div id="draftOutput" style="display:none; margin-top:16px;">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>📝 Content Outline</h3>
-                                <div style="display:flex;gap:8px;align-items:center;">
-                                    <button class="btn-secondary btn-sm" id="copyDraftBtn">📋 Copy</button>
-                                    <button class="btn-secondary btn-sm" onclick="document.getElementById('draftOutput').style.display='none'">Close</button>
-                                </div>
-                            </div>
-                            <p style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">
-                                Structured outline built from your scan data. Hand it to a writer, or paste it into ChatGPT/Claude as a brief.
-                            </p>
-                            <div id="draftContent" style="white-space:pre-wrap; font-family:'SF Mono',Menlo,Consolas,monospace; font-size:13px; padding:16px; background:var(--gray-50); border-radius:8px; min-height:200px; line-height:1.6; max-height:600px; overflow-y:auto;"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ========================================================== -->
-                <!-- MONITOR PILLAR — Industry Standard v2                      -->
-                <!-- ========================================================== -->
-                <div class="pillar-content" id="pillar-monitor">
-
-                    <!-- Header row -->
-                    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px;">
-                        <div style="font-size:13px;color:var(--gray-500);">
-                            <span id="monitorLastScanTime">No scans yet</span>
-                        </div>
-                        <div style="display:flex;gap:8px;">
-                            <button class="btn-secondary btn-sm" id="monitorConfigureScheduleBtn">⚙️ Configure Schedule</button>
-                            <button class="btn-primary btn-sm" id="monitorRunScanBtn">▶ Run Scan Now</button>
-                        </div>
-                    </div>
-
-                    <!-- Hero metrics — 4 cards with delta indicators -->
-                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px;">
-                        <div class="card" style="padding:16px;">
-                            <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">Visibility</div>
-                            <div style="display:flex;align-items:baseline;gap:8px;">
-                                <span style="font-size:28px;font-weight:700;color:var(--primary);" id="monitorVisibility">—</span>
-                                <span style="font-size:12px;font-weight:600;" id="monitorVisibilityDelta"></span>
-                            </div>
-                            <div style="font-size:11px;color:var(--gray-400);margin-top:4px;">% of AI answers mentioning you</div>
-                        </div>
-
-                        <div class="card" style="padding:16px;">
-                            <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">Share of Voice</div>
-                            <div style="display:flex;align-items:baseline;gap:8px;">
-                                <span style="font-size:28px;font-weight:700;color:var(--primary);" id="monitorSov">—</span>
-                                <span style="font-size:12px;font-weight:600;" id="monitorSovDelta"></span>
-                            </div>
-                            <div style="font-size:11px;color:var(--gray-400);margin-top:4px;">vs. tracked competitors</div>
-                        </div>
-
-                        <div class="card" style="padding:16px;">
-                            <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">Sentiment</div>
-                            <div style="display:flex;align-items:baseline;gap:8px;">
-                                <span style="font-size:28px;font-weight:700;color:var(--primary);" id="monitorSentiment">—</span>
-                                <span style="font-size:12px;font-weight:600;" id="monitorSentimentDelta"></span>
-                            </div>
-                            <div style="font-size:11px;color:var(--gray-400);margin-top:4px;">How AI describes your brand</div>
-                        </div>
-
-                        <div class="card" style="padding:16px;">
-                            <div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">Score</div>
-                            <div style="display:flex;align-items:baseline;gap:8px;">
-                                <span style="font-size:28px;font-weight:700;color:var(--primary);" id="monitorScore">—</span>
-                                <span style="font-size:12px;font-weight:600;" id="monitorScoreDelta"></span>
-                            </div>
-                            <div style="font-size:11px;color:var(--gray-400);margin-top:4px;">Aggregate visibility score</div>
-                        </div>
-                    </div>
-
-                    <!-- Trend chart with metric selector -->
-                    <div class="card" style="margin-bottom:16px;">
-                        <div class="card-header" style="flex-wrap:wrap;gap:8px;">
-                            <h3>📈 Trend</h3>
-                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                                <button class="btn-secondary btn-sm monitor-metric-btn active" data-metric="visibility">Visibility</button>
-                                <button class="btn-secondary btn-sm monitor-metric-btn" data-metric="sov">Share of Voice</button>
-                                <button class="btn-secondary btn-sm monitor-metric-btn" data-metric="sentiment">Sentiment</button>
-                                <button class="btn-secondary btn-sm monitor-metric-btn" data-metric="score">Score</button>
-                            </div>
-                            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-left:auto;">
-                                <button class="btn-secondary btn-sm monitor-time-btn active" data-range="30">30d</button>
-                                <button class="btn-secondary btn-sm monitor-time-btn" data-range="90">90d</button>
-                                <button class="btn-secondary btn-sm monitor-time-btn" data-range="365">1y</button>
-                            </div>
-                        </div>
-                        <div style="padding:16px;position:relative;">
-                            <canvas id="monitorChart" height="220" style="width:100%;max-height:220px;"></canvas>
-                            <div id="monitorChartEmpty" style="display:none;text-align:center;padding:40px;color:var(--gray-500);">
-                                <span style="display:block;font-size:32px;margin-bottom:8px;">📈</span>
-                                No trend data yet.<br>
-                                Run your first scan to start tracking.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Two-column: Since last scan + Competitor movement -->
-                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;margin-bottom:16px;">
-
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>🔄 Since Last Scan</h3>
-                                <span class="badge info" id="monitorSinceLastLabel">—</span>
-                            </div>
-                            <div style="padding:16px;" id="monitorSinceLastBody">
-                                <div style="text-align:center;color:var(--gray-500);padding:20px 0;">
-                                    No previous scan to compare yet.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>🏆 Competitor Movement</h3>
-                                <span class="badge info" id="monitorCompetitorMovementBadge">0 tracked</span>
-                            </div>
-                            <div style="padding:16px;" id="monitorCompetitorMovementBody">
-                                <div style="text-align:center;color:var(--gray-500);padding:20px 0;">
-                                    Track competitors to see movement.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Alerts feed -->
-                    <div class="card" style="margin-bottom:16px;">
-                        <div class="card-header">
-                            <h3>🔔 Alerts</h3>
-                            <div style="display:flex;gap:6px;align-items:center;">
-                                <span class="badge warning" id="monitorAlertCount">0 new</span>
-                                <button class="btn-secondary btn-sm" style="font-size:11px;" id="monitorMarkAllReadBtn">Mark all read</button>
-                            </div>
-                        </div>
-                        <div id="monitorAlertsContainer" style="padding:8px 16px 16px;">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-
-                    <!-- Schedule configuration -->
-                    <div class="card" id="monitorScheduleCard" style="margin-bottom:16px;">
-                        <div class="card-header">
-                            <h3>⚙️ Automated Scanning</h3>
-                            <span class="badge muted" id="monitorScheduleStatusBadge">Not configured</span>
-                        </div>
-                        <div style="padding:16px;">
-                            <p style="font-size:13px;color:var(--gray-600);margin-bottom:16px;">
-                                Run this scan automatically on a schedule. We'll track visibility, SOV, and sentiment over time
-                                and alert you when something changes.
-                            </p>
-
-                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:16px;">
-                                <div>
-                                    <label style="display:block;font-size:12px;color:var(--gray-500);margin-bottom:4px;">Frequency</label>
-                                    <select id="monitorScheduleFrequency" style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:8px;background:var(--bg-input);">
-                                        <option value="daily">Daily</option>
-                                        <option value="weekly" selected>Weekly</option>
-                                        <option value="biweekly">Every 2 weeks</option>
-                                        <option value="monthly">Monthly</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label style="display:block;font-size:12px;color:var(--gray-500);margin-bottom:4px;">Next Run</label>
-                                    <div style="font-size:14px;padding:8px 12px;color:var(--gray-700);" id="monitorScheduleNextRun">Not scheduled</div>
-                                </div>
-                                <div>
-                                    <label style="display:block;font-size:12px;color:var(--gray-500);margin-bottom:4px;">Notify Email</label>
-                                    <input type="email" id="monitorScheduleEmail" placeholder="you@company.com" style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:8px;background:var(--bg-input);" />
-                                </div>
-                            </div>
-
-                            <div style="margin-bottom:16px;">
-                                <label style="display:block;font-size:12px;color:var(--gray-500);margin-bottom:8px;">Notify me when</label>
-                                <div style="display:flex;flex-wrap:wrap;gap:16px;font-size:13px;">
-                                    <label style="display:flex;align-items:center;gap:6px;">
-                                        <input type="checkbox" id="monitorNotifyScoreDrop" checked /> Score drops 15+ points
-                                    </label>
-                                    <label style="display:flex;align-items:center;gap:6px;">
-                                        <input type="checkbox" id="monitorNotifyOvertake" checked /> Competitor overtakes you
-                                    </label>
-                                    <label style="display:flex;align-items:center;gap:6px;">
-                                        <input type="checkbox" id="monitorNotifyNewMention" checked /> Brand newly mentioned
-                                    </label>
-                                    <label style="display:flex;align-items:center;gap:6px;">
-                                        <input type="checkbox" id="monitorNotifyWeeklyDigest" /> Weekly digest
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                                <button class="btn-primary btn-sm" id="monitorScheduleSaveBtn">💾 Save Schedule</button>
-                                <button class="btn-secondary btn-sm" id="monitorSchedulePauseBtn">⏸ Pause</button>
-                                <button class="btn-secondary btn-sm" id="monitorScheduleDeleteBtn" style="color:var(--red);">🗑 Remove</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Scan history -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>📅 Scan History</h3>
-                            <span class="badge info" id="monitorHistoryCount">0 scans</span>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="activity-table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Score</th>
-                                        <th>Visibility</th>
-                                        <th>SOV</th>
-                                        <th>Sentiment</th>
-                                        <th>Trigger</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="monitorHistoryBody">
-                                    <tr>
-                                        <td colspan="7" style="text-align:center;padding:40px;color:var(--gray-500);">
-                                            <span style="display:block;font-size:32px;margin-bottom:8px;">📅</span>
-                                            No scan history yet.
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- TAB 3: UPLOADS                                               -->
-            <!-- ============================================================ -->
-            <section class="tab-content" id="tab-upload">
-                <header class="dashboard-header">
-                    <div>
-                        <h1>Uploads</h1>
-                        <p class="page-subtitle">Track your content sources and upload history.</p>
-                    </div>
-                    <a href="service-detail.html?module=content-creation" class="btn-primary btn-sm">
-                        <img src="assets/icons/upload.svg" alt="" class="btn-icon" role="presentation" />
-                        New Upload
-                    </a>
-                </header>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon blue"><img src="assets/icons/upload.svg" alt="" /></div>
-                        <div class="stat-content"><span class="stat-value">0</span><span class="stat-label">Total Uploads</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green"><img src="assets/icons/growth-line.svg" alt="" /></div>
-                        <div class="stat-content"><span class="stat-value">0</span><span class="stat-label">This Month</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange"><img src="assets/icons/planner.svg" alt="" /></div>
-                        <div class="stat-content"><span class="stat-value">0</span><span class="stat-label">Assets Generated</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple"><img src="assets/icons/review.svg" alt="" /></div>
-                        <div class="stat-content"><span class="stat-value">0</span><span class="stat-label">Avg. Per Upload</span></div>
-                    </div>
-                </div>
-                <div class="grid-2col">
-                    <div class="card">
-                        <div class="card-header"><h3>Upload Sources</h3></div>
-                        <div class="source-breakdown">
-                            <div class="source-item">
-                                <span class="source-label"><span class="source-icon">📄</span> Text Input</span>
-                                <span class="source-count">0</span>
-                                <div class="source-bar"><div class="source-fill" style="width:0%;"></div></div>
-                            </div>
-                            <div class="source-item">
-                                <span class="source-label"><span class="source-icon">🎥</span> Video URL</span>
-                                <span class="source-count">0</span>
-                                <div class="source-bar"><div class="source-fill" style="width:0%;"></div></div>
-                            </div>
-                            <div class="source-item">
-                                <span class="source-label"><span class="source-icon">📁</span> File Upload</span>
-                                <span class="source-count">0</span>
-                                <div class="source-bar"><div class="source-fill" style="width:0%;"></div></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header"><h3>Most Productive Uploads</h3></div>
-                        <div class="productive-list"><div style="padding:16px;text-align:center;color:var(--gray-500);">No uploads yet.</div></div>
-                    </div>
-                </div>
                 <div class="card">
-                    <div class="card-header"><h3>Upload History</h3></div>
-                    <div class="activity-container">
+                    <div class="card-header">
+                        <h3>Awaiting Review</h3>
+                        <span class="badge warning">4 pending</span>
+                    </div>
+                    <div class="table-wrap">
                         <table class="activity-table">
-                            <thead><tr><th>Source</th><th>Name</th><th>Date</th><th>Assets</th><th>Status</th></tr></thead>
-                            <tbody id="uploadsTableBody">
-                                <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--gray-500);">Loading uploads...</td></tr>
+                            <thead>
+                                <tr>
+                                    <th>Setup</th>
+                                    <th>Reason</th>
+                                    <th>Observations</th>
+                                    <th>Detected</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge">H</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class H · Signal H-1</strong>
+                                                <span>New combination — gathering data</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge in-progress">New setup</span></td>
+                                    <td>44</td>
+                                    <td class="activity-time">1d ago</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge">D</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class D · Signal D-1</strong>
+                                                <span>Mean-reversion in range</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge pending">Low ratio</span></td>
+                                    <td>148</td>
+                                    <td class="activity-time">6h ago</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge">F</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class F · Signal F-2</strong>
+                                                <span>Range exhaustion</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge pending">Insufficient history</span></td>
+                                    <td>91</td>
+                                    <td class="activity-time">2d ago</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge">B</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class B · Signal B-9</strong>
+                                                <span>Reversal near resistance</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge pending">Short-side borderline</span></td>
+                                    <td>312</td>
+                                    <td class="activity-time">5h ago</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </section>
 
-            <!-- ============================================================ -->
-            <!-- TAB 4: REVIEW                                                -->
-            <!-- ============================================================ -->
-            <section class="tab-content" id="tab-review">
-                <header class="dashboard-header">
-                    <div><h1>Review</h1><p class="page-subtitle">Review and edit your AI-generated content before publishing.</p></div>
-                    <button class="btn-primary btn-sm">Bulk Edit</button>
-                </header>
-                <div class="review-grid">
-                    <div style="grid-column:1/-1; text-align:center;padding:60px;color:var(--gray-500);">
-                        <div style="font-size:48px;margin-bottom:16px;">📝</div>
-                        <h3>No content generated yet</h3>
-                        <p>Go to <a href="/service-detail.html" style="color:var(--primary);">Services</a> to generate your first piece of content.</p>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Review Criteria</h3>
+                        <span class="card-meta">configuration</span>
                     </div>
+                    <p class="review-text">
+                        A setup is added to this list automatically when it meets any of the following
+                        conditions. The thresholds are configurable and can be adjusted from Settings.
+                    </p>
+                    <p class="review-text">
+                        · Fewer than the minimum required observations.<br />
+                        · Favorable-to-adverse ratio below the configured floor.<br />
+                        · Recently added to the registry and not yet validated.
+                    </p>
                 </div>
             </section>
 
             <!-- ============================================================ -->
-            <!-- TAB 5: BRAND VOICE                                           -->
-            <!-- ============================================================ -->
-            <section class="tab-content" id="tab-brand-voice">
-                <header class="dashboard-header">
-                    <div><h1>Brand Voice</h1><p class="page-subtitle">Configure your brand's writing style to ensure consistency across all 28 content features.</p></div>
-                    <button class="btn-primary btn-sm" onclick="saveBrandVoice()">Save Changes</button>
-                </header>
-                <div class="card brand-voice-card">
-                    <div class="brand-voice-section">
-                        <h3 class="brand-voice-label">Tone &amp; Style</h3>
-                        <p class="brand-voice-hint">How should your content sound? Select all that apply.</p>
-                        <div class="brand-voice-tags">
-                            <span class="platform-pill active-tag">Professional</span>
-                            <span class="platform-pill">Casual</span>
-                            <span class="platform-pill">Authoritative</span>
-                            <span class="platform-pill">Conversational</span>
-                            <span class="platform-pill">Educational</span>
-                            <span class="platform-pill">Inspirational</span>
-                        </div>
-                    </div>
-                    <div class="brand-voice-section">
-                        <h3 class="brand-voice-label">Sample Content</h3>
-                        <p class="brand-voice-hint">Provide examples of your existing content to help AI learn your style.</p>
-                        <div class="brand-voice-sample">
-                            <p class="brand-voice-sample-text">"We help creators and businesses scale their content without burning out. Our AI-powered platform transforms one recording into a complete multi-channel content campaign."</p>
-                        </div>
-                        <button class="btn-secondary btn-sm">Add Sample</button>
-                    </div>
-                    <div class="brand-voice-section">
-                        <h3 class="brand-voice-label">Keywords &amp; Phrases</h3>
-                        <p class="brand-voice-hint">Words and phrases you want to emphasize in your content.</p>
-                        <div class="brand-voice-keywords">
-                            <span class="platform-pill active-tag">Content Strategy</span>
-                            <span class="platform-pill active-tag">AI-Powered</span>
-                            <span class="platform-pill active-tag">Repurposing</span>
-                            <span class="platform-pill active-tag">Multi-Channel</span>
-                            <button class="btn-secondary btn-sm">Add Keyword</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- TAB 6: USAGE & ANALYTICS                                     -->
+            <!-- TAB 3: USAGE & ANALYTICS                                     -->
             <!-- ============================================================ -->
             <section class="tab-content" id="tab-usage">
                 <header class="dashboard-header">
-                    <div><h1>Usage &amp; Analytics</h1><p class="page-subtitle">Track your feature adoption, content generation patterns, and platform performance.</p></div>
-                    <button class="btn-secondary btn-sm" onclick="exportUsageData()"><img src="assets/icons/download.svg" alt="" class="btn-icon" role="presentation" /> Export Data</button>
+                    <div>
+                        <h1>Usage &amp; Analytics</h1>
+                        <p class="page-subtitle">Registry growth, condition usage, and observation volume over time.</p>
+                    </div>
+                    <button class="btn-secondary btn-sm" type="button">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+                        Export Data
+                    </button>
                 </header>
+
                 <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-icon blue"><img src="assets/icons/dashboard.svg" alt="" /></div><div class="stat-content"><span class="stat-value">28</span><span class="stat-label">Total Features</span></div></div>
-                    <div class="stat-card"><div class="stat-icon green"><img src="assets/icons/growth-line.svg" alt="" /></div><div class="stat-content"><span class="stat-value">0</span><span class="stat-label">Features Used</span></div></div>
-                    <div class="stat-card"><div class="stat-icon orange"><img src="assets/icons/planner.svg" alt="" /></div><div class="stat-content"><span class="stat-value">0%</span><span class="stat-label">Adoption Rate</span></div></div>
-                    <div class="stat-card"><div class="stat-icon purple"><img src="assets/icons/review.svg" alt="" /></div><div class="stat-content"><span class="stat-value">0</span><span class="stat-label">Total Generations</span></div></div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M4 6h16M4 12h16M4 18h10" stroke="#14B8A6" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">28</span>
+                            <span class="stat-label">Conditions tracked</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#10B981" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">2,936</span>
+                            <span class="stat-label">Total observations</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 2l3 6 6 .9-4.5 4.2 1.1 6.4L12 16.6 6.4 19.5l1.1-6.4L3 8.9 9 8z" stroke="#F59E0B" stroke-width="2" stroke-linejoin="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">8</span>
+                            <span class="stat-label">Classes registered</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 17l5-6 4 4 9-10" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">147</span>
+                            <span class="stat-label">Observations today</span>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="grid-2col">
-                    <div class="card"><div class="card-header"><h3>Most Used Features</h3></div><div class="feature-usage-list"><div style="padding:20px;text-align:center;color:var(--gray-500);">No features used yet.</div></div></div>
-                    <div class="card"><div class="card-header"><h3>Least Used Features</h3></div><div class="feature-usage-list"><div style="padding:20px;text-align:center;color:var(--gray-500);">No features used yet.</div></div></div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Most Used Conditions</h3>
+                        </div>
+                        <div class="feature-usage-list">
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">Trend up</span>
+                                    <span class="feature-usage-count">2,184 obs</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 92%;"></div></div>
+                            </div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">Volume high</span>
+                                    <span class="feature-usage-count">1,938 obs</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 82%;"></div></div>
+                            </div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">Support holding</span>
+                                    <span class="feature-usage-count">1,876 obs</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 79%;"></div></div>
+                            </div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">RSI &gt; 55</span>
+                                    <span class="feature-usage-count">1,846 obs</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 78%;"></div></div>
+                            </div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">MA20 rising</span>
+                                    <span class="feature-usage-count">1,806 obs</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 76%;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Least Used Conditions</h3>
+                        </div>
+                        <div class="feature-usage-list">
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">COT extreme positioning</span>
+                                    <span class="feature-usage-count">364 obs</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 15%;"></div></div>
+                            </div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">Rate decision imminent</span>
+                                    <span class="feature-usage-count">418 obs</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 18%;"></div></div>
+                            </div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">COT net short falling</span>
+                                    <span class="feature-usage-count">486 obs</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 20%;"></div></div>
+                            </div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">Wick rejection</span>
+                                    <span class="feature-usage-count">512 obs</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 22%;"></div></div>
+                            </div>
+                            <div class="feature-usage-item">
+                                <div class="feature-usage-info">
+                                    <span class="feature-usage-name">Bollinger squeeze</span>
+                                    <span class="feature-usage-count">534 obs</span>
+                                </div>
+                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 23%;"></div></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="card">
-                    <div class="card-header"><h3>Feature Adoption by Module</h3></div>
+                    <div class="card-header">
+                        <h3>Observations by Category</h3>
+                    </div>
                     <div class="adoption-list-full">
-                        <div class="adoption-item-full"><div class="adoption-info-full"><span class="adoption-module">Content Creation</span><span class="adoption-count">0/8</span><span class="adoption-percent">0%</span></div><div class="adoption-bar"><div class="adoption-fill" style="width:0%;"></div></div></div>
-                        <div class="adoption-item-full"><div class="adoption-info-full"><span class="adoption-module">Authority &amp; Growth</span><span class="adoption-count">0/7</span><span class="adoption-percent">0%</span></div><div class="adoption-bar"><div class="adoption-fill" style="width:0%;"></div></div></div>
-                        <div class="adoption-item-full"><div class="adoption-info-full"><span class="adoption-module">AI Agents</span><span class="adoption-count">0/7</span><span class="adoption-percent">0%</span></div><div class="adoption-bar"><div class="adoption-fill" style="width:0%;"></div></div></div>
-                        <div class="adoption-item-full"><div class="adoption-info-full"><span class="adoption-module">Workflow &amp; Intelligence</span><span class="adoption-count">0/6</span><span class="adoption-percent">0%</span></div><div class="adoption-bar"><div class="adoption-fill" style="width:0%;"></div></div></div>
+                        <div class="adoption-item-full">
+                            <div class="adoption-info-full">
+                                <span class="adoption-module">Structure</span>
+                                <span class="adoption-count">8,332 obs</span>
+                                <span class="adoption-percent">31%</span>
+                            </div>
+                            <div class="adoption-bar"><div class="adoption-fill" style="width: 31%;"></div></div>
+                        </div>
+                        <div class="adoption-item-full">
+                            <div class="adoption-info-full">
+                                <span class="adoption-module">Indicator</span>
+                                <span class="adoption-count">7,706 obs</span>
+                                <span class="adoption-percent">29%</span>
+                            </div>
+                            <div class="adoption-bar"><div class="adoption-fill" style="width: 29%;"></div></div>
+                        </div>
+                        <div class="adoption-item-full">
+                            <div class="adoption-info-full">
+                                <span class="adoption-module">Technical</span>
+                                <span class="adoption-count">5,888 obs</span>
+                                <span class="adoption-percent">22%</span>
+                            </div>
+                            <div class="adoption-bar"><div class="adoption-fill" style="width: 22%;"></div></div>
+                        </div>
+                        <div class="adoption-item-full">
+                            <div class="adoption-info-full">
+                                <span class="adoption-module">Fundamental</span>
+                                <span class="adoption-count">3,786 obs</span>
+                                <span class="adoption-percent">14%</span>
+                            </div>
+                            <div class="adoption-bar"><div class="adoption-fill" style="width: 14%;"></div></div>
+                        </div>
+                        <div class="adoption-item-full">
+                            <div class="adoption-info-full">
+                                <span class="adoption-module">Calendar</span>
+                                <span class="adoption-count">3,696 obs</span>
+                                <span class="adoption-percent">14%</span>
+                            </div>
+                            <div class="adoption-bar"><div class="adoption-fill" style="width: 14%;"></div></div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="card">
-                    <div class="card-header"><h3>Usage Over Time</h3></div>
+                    <div class="card-header">
+                        <h3>Observations Over Time</h3>
+                    </div>
                     <div class="usage-timeline">
-                        <div class="usage-week"><span class="usage-week-label">Week 1</span><div class="usage-week-bars"><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div></div><span class="usage-week-total">0 uses</span></div>
-                        <div class="usage-week"><span class="usage-week-label">Week 2</span><div class="usage-week-bars"><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div></div><span class="usage-week-total">0 uses</span></div>
-                        <div class="usage-week"><span class="usage-week-label">Week 3</span><div class="usage-week-bars"><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div></div><span class="usage-week-total">0 uses</span></div>
-                        <div class="usage-week"><span class="usage-week-label">Week 4</span><div class="usage-week-bars"><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div><div class="usage-day-bar" style="height:0px;"></div></div><span class="usage-week-total">0 uses</span></div>
+                        <div class="usage-week">
+                            <span class="usage-week-label">Week 1</span>
+                            <div class="usage-week-bars">
+                                <div class="usage-day-bar" style="height:12px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:18px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:22px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:16px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:24px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:14px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:20px;background:var(--primary);"></div>
+                            </div>
+                            <span class="usage-week-total">618 obs</span>
+                        </div>
+                        <div class="usage-week">
+                            <span class="usage-week-label">Week 2</span>
+                            <div class="usage-week-bars">
+                                <div class="usage-day-bar" style="height:18px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:22px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:16px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:24px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:28px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:20px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:18px;background:var(--primary);"></div>
+                            </div>
+                            <span class="usage-week-total">742 obs</span>
+                        </div>
+                        <div class="usage-week">
+                            <span class="usage-week-label">Week 3</span>
+                            <div class="usage-week-bars">
+                                <div class="usage-day-bar" style="height:20px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:24px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:28px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:22px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:18px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:26px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:24px;background:var(--primary);"></div>
+                            </div>
+                            <span class="usage-week-total">806 obs</span>
+                        </div>
+                        <div class="usage-week">
+                            <span class="usage-week-label">Week 4</span>
+                            <div class="usage-week-bars">
+                                <div class="usage-day-bar" style="height:24px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:26px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:22px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:28px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:24px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:30px;background:var(--primary);"></div>
+                                <div class="usage-day-bar" style="height:22px;background:var(--primary);"></div>
+                            </div>
+                            <span class="usage-week-total">770 obs</span>
+                        </div>
                     </div>
-                    <p class="usage-timeline-hint">No usage data available yet. Start generating content!</p>
-                </div>
-                <div class="card">
-                    <div class="card-header"><h3>Features You Haven't Tried Yet</h3></div>
-                    <div class="unused-features"><div style="padding:20px;text-align:center;color:var(--gray-500);">Start generating content to see unused features.</div></div>
                 </div>
             </section>
 
             <!-- ============================================================ -->
-            <!-- TAB 7: SETTINGS                                              -->
+            <!-- TAB 4: SETTINGS                                              -->
             <!-- ============================================================ -->
             <section class="tab-content" id="tab-settings">
                 <header class="dashboard-header">
                     <div>
-                        <h1>⚙️ Settings</h1>
-                        <p class="page-subtitle">Manage your business profile, recurring scans, and account preferences.</p>
+                        <h1>Settings</h1>
+                        <p class="page-subtitle">Manage your account, trading parameters, and preferences.</p>
                     </div>
-                    <button class="btn-primary btn-sm" id="saveAllSettingsBtn">
-                        <img src="assets/icons/save.svg" alt="" class="btn-icon" role="presentation" />
-                        Save All Changes
-                    </button>
+                    <button class="btn-primary btn-sm" id="saveAllSettingsBtn" type="button">Save All Changes</button>
                 </header>
 
                 <div class="settings-container">
 
                     <!-- Personal Profile -->
                     <div class="card settings-card">
-                        <h3 class="settings-title">👤 Personal Profile</h3>
-                        <p class="settings-hint">Your personal information – used for account access and notifications.</p>
+                        <h3 class="settings-title">Personal Profile</h3>
+                        <p class="settings-hint">Your personal information — used for account access and notifications.</p>
                         <div class="settings-form">
                             <div class="settings-field">
                                 <label class="settings-label">Full Name</label>
@@ -1163,290 +687,131 @@
                                 <input type="tel" class="form-input" id="personalPhone" value="+27 82 123 4567" />
                             </div>
                             <div class="settings-field">
-                                <label class="settings-label">Job Title</label>
-                                <input type="text" class="form-input" id="personalTitle" value="CEO & Founder" />
+                                <label class="settings-label">Timezone</label>
+                                <select class="form-input" id="personalTimezone">
+                                    <option value="UTC">UTC</option>
+                                    <option value="America/New_York">America / New York</option>
+                                    <option value="Europe/London" selected>Europe / London</option>
+                                    <option value="Africa/Johannesburg">Africa / Johannesburg</option>
+                                    <option value="Asia/Tokyo">Asia / Tokyo</option>
+                                </select>
                             </div>
                         </div>
                         <div style="margin-top:12px;">
-                            <button class="btn-secondary btn-sm" id="updatePersonalBtn">Update Personal Info</button>
+                            <button class="btn-secondary btn-sm" id="updatePersonalBtn" type="button">Update Personal Info</button>
                         </div>
                     </div>
 
-                    <!-- Business Profile -->
-                    <div class="card settings-card" style="border-left: 4px solid var(--primary);" id="businessProfileSection">
-                        <h3 class="settings-title">🏢 Business Profile</h3>
-                        <p class="settings-hint">Your company details – used for invoices, reports, and client-facing materials.</p>
+                    <!-- Trading Parameters -->
+                    <div class="card settings-card" style="border-left: 4px solid var(--primary);" id="tradingParamsSection">
+                        <h3 class="settings-title">Trading Parameters</h3>
+                        <p class="settings-hint">These settings control how the engine classifies conditions and evaluates setups.</p>
 
-                        <div class="settings-form" style="grid-template-columns: 1fr 1fr;">
-                            <div>
-                                <div class="settings-field">
-                                    <label class="settings-label">Company Name *</label>
-                                    <input type="text" class="form-input" id="companyName" value="Fromple Consulting" />
-                                </div>
-                                <div class="settings-field">
-                                    <label class="settings-label">Website</label>
-                                    <input type="url" class="form-input" id="companyWebsite" value="https://fromple.ai" />
-                                </div>
-                                <div class="settings-field">
-                                    <label class="settings-label">Industry</label>
-                                    <select class="form-input" id="companyIndustry">
-                                        <option value="">Select industry...</option>
-                                        <option value="technology" selected>Technology</option>
-                                        <option value="marketing">Marketing & Advertising</option>
-                                        <option value="consulting">Consulting</option>
-                                        <option value="financial">Financial Services</option>
-                                        <option value="healthcare">Healthcare</option>
-                                        <option value="education">Education</option>
-                                        <option value="real_estate">Real Estate</option>
-                                        <option value="retail">Retail</option>
-                                        <option value="manufacturing">Manufacturing</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-                                <div class="settings-field">
-                                    <label class="settings-label">Company Size</label>
-                                    <select class="form-input" id="companySize">
-                                        <option value="1-10">1 – 10 employees</option>
-                                        <option value="11-50">11 – 50 employees</option>
-                                        <option value="51-200" selected>51 – 200 employees</option>
-                                        <option value="201-500">201 – 500 employees</option>
-                                        <option value="500+">500+ employees</option>
-                                    </select>
-                                </div>
+                        <div class="settings-form">
+                            <div class="settings-field">
+                                <label class="settings-label">Instrument</label>
+                                <input type="text" class="form-input" id="paramInstrument" value="EURUSD" />
                             </div>
-                            <div>
-                                <div class="settings-field">
-                                    <label class="settings-label">Phone (Business)</label>
-                                    <input type="tel" class="form-input" id="companyPhone" value="+27 10 123 4567" />
-                                </div>
-                                <div class="settings-field">
-                                    <label class="settings-label">VAT / Tax ID</label>
-                                    <input type="text" class="form-input" id="companyTaxId" value="ZA1234567890" />
-                                </div>
-                                <div class="settings-field">
-                                    <label class="settings-label">Currency</label>
-                                    <select class="form-input" id="companyCurrency">
-                                        <option value="ZAR" selected>ZAR – South African Rand</option>
-                                        <option value="USD">USD – US Dollar</option>
-                                        <option value="EUR">EUR – Euro</option>
-                                        <option value="GBP">GBP – British Pound</option>
-                                    </select>
-                                </div>
-                                <div class="settings-field">
-                                    <label class="settings-label">Default Scan Frequency</label>
-                                    <select class="form-input" id="defaultFrequency">
-                                        <option value="manual">Manual (One-time)</option>
-                                        <option value="monthly" selected>Monthly (Starter)</option>
-                                        <option value="weekly">Weekly (Pro)</option>
-                                        <option value="daily">Daily (Enterprise)</option>
-                                    </select>
-                                    <span class="helper-text" style="font-size:12px;">Used as the default when creating new recurring schedules.</span>
-                                </div>
+                            <div class="settings-field">
+                                <label class="settings-label">Timeframe</label>
+                                <select class="form-input" id="paramTimeframe">
+                                    <option value="M5">M5</option>
+                                    <option value="M15">M15</option>
+                                    <option value="H1" selected>H1</option>
+                                    <option value="H4">H4</option>
+                                    <option value="D1">D1</option>
+                                </select>
                             </div>
-                        </div>
-
-                        <!-- Physical Address -->
-                        <div style="margin-top:12px;">
-                            <label class="settings-label">Physical Address</label>
-                            <div class="settings-form" style="grid-template-columns: 2fr 1fr 1fr;">
-                                <div class="settings-field">
-                                    <label class="settings-label" style="font-size:12px; font-weight:400;">Street Address</label>
-                                    <input type="text" class="form-input" id="addressLine1" placeholder="123 Main Street" value="15 Long Street" />
-                                </div>
-                                <div class="settings-field">
-                                    <label class="settings-label" style="font-size:12px; font-weight:400;">Address Line 2</label>
-                                    <input type="text" class="form-input" id="addressLine2" placeholder="Suite 200" value="Suite 200" />
-                                </div>
-                                <div class="settings-field">
-                                    <label class="settings-label" style="font-size:12px; font-weight:400;">City</label>
-                                    <input type="text" class="form-input" id="city" placeholder="Cape Town" value="Cape Town" />
-                                </div>
-                                <div class="settings-field">
-                                    <label class="settings-label" style="font-size:12px; font-weight:400;">State / Province</label>
-                                    <input type="text" class="form-input" id="state" placeholder="Western Cape" value="Western Cape" />
-                                </div>
-                                <div class="settings-field">
-                                    <label class="settings-label" style="font-size:12px; font-weight:400;">Postal Code</label>
-                                    <input type="text" class="form-input" id="postalCode" placeholder="8001" value="8001" />
-                                </div>
-                                <div class="settings-field">
-                                    <label class="settings-label" style="font-size:12px; font-weight:400;">Country</label>
-                                    <select class="form-input" id="companyCountry">
-                                        <option value="South Africa" selected>South Africa</option>
-                                        <option value="United States">United States</option>
-                                        <option value="United Kingdom">United Kingdom</option>
-                                        <option value="Australia">Australia</option>
-                                        <option value="Canada">Canada</option>
-                                        <option value="New Zealand">New Zealand</option>
-                                        <option value="Germany">Germany</option>
-                                        <option value="France">France</option>
-                                        <option value="India">India</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
+                            <div class="settings-field">
+                                <label class="settings-label">Minimum observations to surface</label>
+                                <input type="number" class="form-input" id="paramMinObservations" value="100" />
+                                <span class="helper-text" style="font-size:12px;">Setups below this are held in Review.</span>
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-label">Favorable-to-adverse ratio floor</label>
+                                <input type="number" step="0.1" class="form-input" id="paramRatioFloor" value="1.5" />
+                                <span class="helper-text" style="font-size:12px;">Setups below this are filtered.</span>
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-label">Movement measurement window</label>
+                                <select class="form-input" id="paramWindow">
+                                    <option value="12">12 candles</option>
+                                    <option value="24" selected>24 candles</option>
+                                    <option value="48">48 candles</option>
+                                    <option value="96">96 candles</option>
+                                </select>
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-label">Class similarity threshold</label>
+                                <input type="number" step="0.05" class="form-input" id="paramSimilarity" value="0.75" />
+                                <span class="helper-text" style="font-size:12px;">Higher = stricter merging of similar setups.</span>
                             </div>
                         </div>
 
                         <div style="margin-top:16px;">
-                            <button class="btn-primary btn-sm" id="updateBusinessBtn">Update Business Profile</button>
+                            <button class="btn-primary btn-sm" id="updateParamsBtn" type="button">Update Parameters</button>
                         </div>
                     </div>
 
-                    <!-- Recurring Scan Schedules -->
-                    <div class="card settings-card" style="border-left: 4px solid var(--warning);" id="schedulesSection">
-                        <div class="card-header" style="margin-bottom:12px;">
-                            <h3 style="margin:0;">🔄 Recurring Scan Schedules</h3>
-                            <button class="btn-primary btn-sm" id="addScheduleBtn">
-                                <img src="assets/icons/plus.svg" alt="" class="btn-icon" role="presentation" />
-                                Add Schedule
-                            </button>
-                        </div>
-                        <p class="settings-hint">Configure automatic scans for your clients. Schedules will run at the selected frequency and trigger the AI Visibility Scanner.</p>
+                    <!-- Data Sources -->
+                    <div class="card settings-card" style="border-left: 4px solid var(--warning);">
+                        <h3 class="settings-title">Data Sources</h3>
+                        <p class="settings-hint">Where the engine pulls market and fundamental data from.</p>
 
-                        <div class="activity-container" style="margin-top:8px;">
-                            <table class="activity-table">
-                                <thead>
-                                    <tr>
-                                        <th>Client / Website</th>
-                                        <th>Frequency</th>
-                                        <th>Next Run</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="schedulesTableBody">
-                                    <tr>
-                                        <td colspan="5" style="text-align:center;padding:30px;color:var(--gray-500);">
-                                            <span style="display:block;font-size:32px;margin-bottom:8px;">📋</span>
-                                            No schedules configured yet.<br>
-                                            <span style="font-size:13px;">Click "Add Schedule" to set up your first recurring scan.</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div style="margin-top:12px; display:flex; gap:12px; align-items:center; font-size:13px; color:var(--gray-500);">
-                            <span>💡 <strong>Tip:</strong> Schedules use the same queries and competitors you enter in the <a href="#" onclick="document.querySelector('[data-tab=\'ai-visibility\']')?.click(); return false;" style="color:var(--primary);">FIND</a> tab. When you run a scan with a frequency selected, it creates a schedule automatically.</span>
-                        </div>
-                    </div>
-
-                    <!-- PLAN & BILLING -->
-                    <div class="card settings-card" id="planBillingContainer">
-                        <h3 class="settings-title">💳 Plan &amp; Billing</h3>
-                        <p class="settings-hint">Manage your subscription and view usage.</p>
-
-                        <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin-bottom:16px;">
-                            <div style="flex:1; min-width:200px;">
-                                <label class="settings-label" style="font-size:13px;">Current Plan</label>
-                                <select id="planSelect" class="form-input" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--gray-300); background:var(--bg-input);">
-                                    <option value="">Loading plans...</option>
+                        <div class="settings-form">
+                            <div class="settings-field">
+                                <label class="settings-label">Market data API</label>
+                                <select class="form-input" id="dataMarketSource">
+                                    <option value="default" selected>Default provider</option>
+                                    <option value="alt">Alternate provider</option>
                                 </select>
                             </div>
-                            <div style="display:flex; gap:8px; align-items:center; padding-top:8px; flex-wrap:wrap;">
-                                <span style="font-size:13px; color:var(--gray-600);">Status:</span>
-                                <span id="planStatus" style="font-weight:600; color:var(--gray-500);">Loading...</span>
-                                <span id="planExpiry" style="font-size:13px; color:var(--gray-500);"></span>
+                            <div class="settings-field">
+                                <label class="settings-label">Fundamental data API</label>
+                                <select class="form-input" id="dataFundamentalSource">
+                                    <option value="default" selected>Default provider</option>
+                                    <option value="alt">Alternate provider</option>
+                                </select>
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-label">Economic calendar</label>
+                                <select class="form-input" id="dataCalendarSource">
+                                    <option value="default" selected>Enabled</option>
+                                    <option value="off">Disabled</option>
+                                </select>
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-label">COT data</label>
+                                <select class="form-input" id="dataCotSource">
+                                    <option value="default" selected>Enabled</option>
+                                    <option value="off">Disabled</option>
+                                </select>
                             </div>
                         </div>
 
-                        <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px;">
-                            <button id="changePlanBtn" class="btn-primary btn-sm">Apply Plan Change</button>
-                            <button id="refreshPlanBtn" class="btn-secondary btn-sm">↻ Refresh</button>
-                        </div>
-
-                        <div id="usageSection" style="border-top:1px solid var(--gray-200); padding-top:16px; margin-top:8px; display:none;">
-                            <h4 style="font-size:15px; font-weight:600; margin-bottom:8px;">📊 Usage Tracking</h4>
-                            <div style="display:flex; flex-wrap:wrap; gap:24px; margin-bottom:8px;">
-                                <div><span style="font-weight:500;">Scans Used:</span> <span id="scansUsed">0</span></div>
-                                <div><span style="font-weight:500;">Total Allowed:</span> <span id="scansTotal">0</span></div>
-                                <div><span style="font-weight:500; color:var(--green);">Remaining:</span> <span id="scansRemaining">0</span></div>
-                                <div><span style="font-weight:500;">Reset:</span> <span id="resetDate">N/A</span> (<span id="resetFrequency">yearly</span>)</div>
-                            </div>
-                            <div style="width:100%; height:8px; background:var(--gray-200); border-radius:4px; overflow:hidden;">
-                                <div id="usageProgressBar" style="height:100%; width:0%; background:var(--primary); border-radius:4px; transition: width 0.3s;"></div>
-                            </div>
-                            <p id="usageMessage" style="font-size:12px; color:var(--gray-500); margin-top:4px;">No usage data available.</p>
-                        </div>
-
-                        <div style="border-top:1px solid var(--gray-200); padding-top:16px; margin-top:8px;">
-                            <h4 style="font-size:15px; font-weight:600; margin-bottom:8px;">💳 Payment Method</h4>
-                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                                <span style="font-size:14px; color:var(--gray-700);">Visa ending in 4242</span>
-                                <button class="btn-secondary btn-sm" onclick="window.location.href='payment.html'">Update Payment</button>
-                            </div>
-                        </div>
-
-                        <div style="border-top:1px solid var(--gray-200); padding-top:16px; margin-top:8px;">
-                            <h4 style="font-size:15px; font-weight:600; margin-bottom:8px;">📄 Recent Invoices</h4>
-                            <div style="overflow-x:auto;">
-                                <table class="activity-table" style="width:100%; border-collapse:collapse;">
-                                    <thead>
-                                        <tr>
-                                            <th style="text-align:left; padding:6px 10px; font-size:12px; color:var(--gray-600);">Invoice</th>
-                                            <th style="text-align:left; padding:6px 10px; font-size:12px; color:var(--gray-600);">Date</th>
-                                            <th style="text-align:left; padding:6px 10px; font-size:12px; color:var(--gray-600);">Amount</th>
-                                            <th style="text-align:left; padding:6px 10px; font-size:12px; color:var(--gray-600);">Status</th>
-                                            <th style="text-align:left; padding:6px 10px; font-size:12px; color:var(--gray-600);">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="invoiceTableBody">
-                                        <tr>
-                                            <td style="padding:6px 10px; font-size:13px;"><strong>#INV-001</strong></td>
-                                            <td style="padding:6px 10px; font-size:13px;">Jan 15, 2026</td>
-                                            <td style="padding:6px 10px; font-size:13px;">$79.00</td>
-                                            <td style="padding:6px 10px; font-size:13px;"><span class="badge success">Paid</span></td>
-                                            <td style="padding:6px 10px; font-size:13px;">
-                                                <button class="btn-secondary btn-sm" onclick="downloadInvoice('inv_1')" style="font-size:11px;">PDF</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding:6px 10px; font-size:13px;"><strong>#INV-002</strong></td>
-                                            <td style="padding:6px 10px; font-size:13px;">Feb 15, 2026</td>
-                                            <td style="padding:6px 10px; font-size:13px;">$79.00</td>
-                                            <td style="padding:6px 10px; font-size:13px;"><span class="badge success">Paid</span></td>
-                                            <td style="padding:6px 10px; font-size:13px;">
-                                                <button class="btn-secondary btn-sm" onclick="downloadInvoice('inv_2')" style="font-size:11px;">PDF</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding:6px 10px; font-size:13px;"><strong>#INV-003</strong></td>
-                                            <td style="padding:6px 10px; font-size:13px;">Mar 15, 2026</td>
-                                            <td style="padding:6px 10px; font-size:13px;">$79.00</td>
-                                            <td style="padding:6px 10px; font-size:13px;"><span class="badge success">Paid</span></td>
-                                            <td style="padding:6px 10px; font-size:13px;">
-                                                <button class="btn-secondary btn-sm" onclick="downloadInvoice('inv_3')" style="font-size:11px;">PDF</button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div id="noSubscriptionMessage" style="border-top:1px solid var(--gray-200); padding-top:16px; margin-top:8px; display:none;">
-                            <p style="color:var(--gray-600);">No active subscription. Select a plan and click "Apply Plan Change" to get started.</p>
-                            <p style="font-size:13px; color:var(--gray-500);">💡 You can also select a plan from the <a href="/pricing.html" style="color:var(--primary);">Pricing</a> page.</p>
+                        <div style="margin-top:16px;">
+                            <button class="btn-primary btn-sm" id="updateSourcesBtn" type="button">Update Data Sources</button>
                         </div>
                     </div>
 
                     <!-- Notifications -->
                     <div class="card settings-card">
-                        <h3 class="settings-title">🔔 Notifications</h3>
-                        <p class="settings-hint">Choose how you want to receive updates.</p>
+                        <h3 class="settings-title">Notifications</h3>
+                        <p class="settings-hint">Choose how you want to be notified about registry activity.</p>
                         <div class="notification-options">
-                            <label><input type="checkbox" checked /> Email alerts for score drops</label>
-                            <label><input type="checkbox" checked /> Weekly visibility digest</label>
-                            <label><input type="checkbox" /> Competitor overtake alerts (Slack)</label>
-                            <label><input type="checkbox" checked /> Monthly audit reminders</label>
+                            <label><input type="checkbox" checked /> Notify when a new setup is registered</label>
+                            <label><input type="checkbox" checked /> Notify when a setup is filtered</label>
+                            <label><input type="checkbox" checked /> Daily registry summary</label>
+                            <label><input type="checkbox" /> Weekly digest</label>
                         </div>
                     </div>
 
-                    <!-- Danger Zone -->
+                    <!-- Account -->
                     <div class="card settings-card" style="border-left:4px solid var(--danger);">
-                        <h3 class="settings-title" style="color:var(--danger);">⚠️ Account</h3>
+                        <h3 class="settings-title" style="color:var(--danger);">Account</h3>
                         <p class="settings-hint">Irreversible actions.</p>
-                        <button class="btn-secondary btn-sm settings-danger" id="deleteAccountBtn">Delete Account</button>
-                        <p class="danger-warning" style="font-size:13px; color:var(--red); margin-top:8px;">This action cannot be undone. All data will be permanently deleted.</p>
+                        <button class="btn-secondary btn-sm settings-danger" id="deleteAccountBtn" type="button">Delete Account</button>
+                        <p class="danger-warning" style="font-size:13px; color:var(--red); margin-top:8px;">This action cannot be undone. All registry data will be permanently deleted.</p>
                     </div>
 
                 </div>
@@ -1455,41 +820,27 @@
         </main>
     </div>
 
-    <!-- ========== FULL REPORT MODAL ========== -->
-    <div id="fullReportModal" class="report-modal" style="display:none;">
-        <div class="report-modal-overlay"></div>
-        <div class="report-modal-content">
-            <div class="report-modal-header">
-                <h3>📄 Generating Full Report</h3>
-                <button class="report-modal-close" id="reportModalClose">×</button>
-            </div>
-            <div class="report-modal-body">
-                <p id="reportStatusText">Preparing your report...</p>
-                <div class="report-progress-container">
-                    <div class="report-progress-bar" id="reportProgressBar" style="width: 0%;"></div>
-                </div>
-                <div class="report-progress-label">
-                    <span id="reportProgressPercent">0%</span>
-                    <span id="reportProgressStep">Initializing...</span>
-                </div>
-            </div>
-            <div class="report-modal-footer">
-                <button class="btn-secondary btn-sm" id="reportCancelBtn">Cancel</button>
-                <button class="btn-primary btn-sm" id="reportDownloadBtn" style="display:none;">
-                    📥 Download Report
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== FOOTER ========== -->
     <div id="footer"></div>
 
-    <!-- ========== EXTERNAL SCRIPTS ========== -->
     <script src="js/main.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
-    <script type="module" src="js/dashboard.js"></script>
+    <script>
+        document.querySelectorAll('.sidebar-nav a[data-tab]').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const tab = link.dataset.tab;
+                document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+                link.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
+                document.getElementById('tab-' + tab)?.classList.add('active');
+                document.getElementById('sidebar')?.classList.remove('open');
+            });
+        });
 
+        document.getElementById('adminSidebarToggle')?.addEventListener('click', () => {
+            document.getElementById('sidebar')?.classList.toggle('open');
+        });
+    </script>
 </body>
 </html>
