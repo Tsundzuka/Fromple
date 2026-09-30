@@ -1,5 +1,5 @@
 // ============================================================
-// DASHBOARD - MAIN ORCHESTRATOR
+// PROFILE - MAIN ORCHESTRATOR
 // ============================================================
 // This file loads the user session, sets up tab switching,
 // and dynamically imports the tab modules when needed.
@@ -14,21 +14,18 @@ window.showToast = showToast;
 // ============================================================
 
 let supabaseInstance = null;
-let dashboardUser = null;
+let profileUser = null;
 let currentOrganizationId = null;
-let currentTab = 'dashboard';
+let currentTab = 'overview';
 
 // ============================================================
 // TAB MODULE MAPPING
 // ============================================================
 
 const tabModules = {
-    'dashboard': () => import('./tabs/overview.js'),
-    'ai-visibility': () => import('./tabs/ai-visibility.js'),
-    'upload': () => import('./tabs/uploads.js'),
-    'review': () => import('./tabs/review.js'),
-    'brand-voice': () => import('./tabs/brand-voice.js'),
-    'usage': () => import('./tabs/usage.js'),
+    'overview': () => import('./tabs/overview.js'),
+    'review':   () => import('./tabs/review.js'),
+    'usage':    () => import('./tabs/usage.js'),
     'settings': () => import('./tabs/settings.js'),
 };
 
@@ -39,7 +36,7 @@ const loadedModules = {};
 // INITIALIZATION
 // ============================================================
 
-async function initializeDashboard() {
+async function initializeProfile() {
     try {
         const { supabase } = await import('./supabase-client.js');
         supabaseInstance = supabase;
@@ -47,18 +44,18 @@ async function initializeDashboard() {
         const { data: { session } } = await supabaseInstance.auth.getSession();
 
         if (session) {
-            dashboardUser = session.user;
-            console.log("✅ Authenticated user:", dashboardUser.email);
-            updateUserUI(dashboardUser);
+            profileUser = session.user;
+            console.log("✅ Authenticated user:", profileUser.email);
+            updateUserUI(profileUser);
 
             // Load the default tab (Overview)
-            await loadTab('dashboard');
+            await loadTab('overview');
         } else {
             console.log("👤 Guest user (not logged in)");
             updateGuestUI();
         }
     } catch (error) {
-        console.error("Dashboard initialization error:", error);
+        console.error("Profile initialization error:", error);
         updateGuestUI();
     }
 }
@@ -98,7 +95,7 @@ async function loadTab(tabId) {
     // If already loaded, just refresh
     if (loadedModules[tabId]) {
         if (typeof loadedModules[tabId].refresh === 'function') {
-            await loadedModules[tabId].refresh(supabaseInstance, dashboardUser);
+            await loadedModules[tabId].refresh(supabaseInstance, profileUser);
         }
         return;
     }
@@ -114,7 +111,7 @@ async function loadTab(tabId) {
         loadedModules[tabId] = module;
 
         if (typeof module.init === 'function') {
-            await module.init(supabaseInstance, dashboardUser);
+            await module.init(supabaseInstance, profileUser);
         }
 
         console.log('✅ Tab loaded:', tabId);
@@ -131,17 +128,16 @@ async function loadTab(tabId) {
 function updateGuestUI() {
     const avatarEl = document.querySelector('.user-avatar');
     const nameEl = document.querySelector('.user-name');
-    const planEl = document.getElementById('userPlan');
+    const planEl = document.querySelector('.user-plan');
     if (avatarEl) avatarEl.textContent = '👤';
     if (nameEl) nameEl.textContent = 'Guest';
     if (planEl) planEl.textContent = 'Not Logged In';
 
     const welcomeTitle = document.querySelector('.dashboard-header h1');
     const welcomeSubtitle = document.querySelector('.page-subtitle');
-    if (welcomeTitle) welcomeTitle.textContent = 'Welcome to Fromple';
+    if (welcomeTitle) welcomeTitle.textContent = 'Your Profile';
     if (welcomeSubtitle) {
-        const month = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
-        welcomeSubtitle.innerHTML = `View your content overview for <strong>${month}</strong>. <a href="/login.html" style="color: var(--primary); font-weight: 600;">Log in</a> to access full features.`;
+        welcomeSubtitle.innerHTML = `Log in to view your registry statistics and account settings. <a href="/login.html" style="color: var(--primary); font-weight: 600;">Log in</a>`;
     }
 }
 
@@ -151,17 +147,16 @@ function updateUserUI(user) {
 
     const avatarEl = document.querySelector('.user-avatar');
     const nameEl = document.querySelector('.user-name');
-    const planEl = document.getElementById('userPlan');
+    const planEl = document.querySelector('.user-plan');
     if (avatarEl) avatarEl.textContent = initials;
     if (nameEl) nameEl.textContent = fullName;
     if (planEl) planEl.textContent = 'Loading...';
 
     const welcomeTitle = document.querySelector('.dashboard-header h1');
     const welcomeSubtitle = document.querySelector('.page-subtitle');
-    if (welcomeTitle) welcomeTitle.textContent = `Welcome back, ${fullName}`;
+    if (welcomeTitle) welcomeTitle.textContent = 'Your Profile';
     if (welcomeSubtitle) {
-        const month = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
-        welcomeSubtitle.innerHTML = `Welcome back, ${fullName}. Here's your content overview for <strong>${month}</strong>.`;
+        welcomeSubtitle.innerHTML = `Registry statistics, activity, and account settings for ${fullName}.`;
     }
 
     // Populate personal profile fields (full name and email)
@@ -171,7 +166,7 @@ function updateUserUI(user) {
     if (emailInput) emailInput.value = user.email || '';
 
     // Store user and supabase globally for tab modules that need them
-    window.dashboardUser = user;
+    window.profileUser = user;
     window.supabaseInstance = supabaseInstance;
 }
 
@@ -183,48 +178,23 @@ window.switchTab = switchTab;
 
 // Stub functions for legacy inline onclick handlers.
 // These will be overwritten by the actual implementations when tabs load.
-window.saveBrandVoice = function() {
-    console.warn('saveBrandVoice called before tab loaded');
-    showToast('Brand Voice tab not loaded yet. Please try again.', 'warning');
-};
-
-window.exportUsageData = function() {
-    console.warn('exportUsageData called before tab loaded');
-    showToast('Usage tab not loaded yet. Please try again.', 'warning');
-};
-
-window.downloadInvoice = function(id) {
-    console.warn('downloadInvoice called before tab loaded');
-    showToast('Invoice download functionality not loaded yet.', 'warning');
-};
-
 window.updatePersonalProfile = function() {
     console.warn('updatePersonalProfile called before settings tab loaded');
     showToast('Settings tab not loaded yet. Please try again.', 'warning');
 };
 
-window.updateBusinessProfile = function() {
-    console.warn('updateBusinessProfile called before settings tab loaded');
+window.saveTradingParameters = function() {
+    console.warn('saveTradingParameters called before settings tab loaded');
     showToast('Settings tab not loaded yet. Please try again.', 'warning');
 };
 
-window.saveAllSettings = function() {
-    console.warn('saveAllSettings called before settings tab loaded');
+window.saveDataSources = function() {
+    console.warn('saveDataSources called before settings tab loaded');
     showToast('Settings tab not loaded yet. Please try again.', 'warning');
 };
 
-window.createNewSchedule = function() {
-    console.warn('createNewSchedule called before settings tab loaded');
-    showToast('Settings tab not loaded yet. Please try again.', 'warning');
-};
-
-window.toggleSchedule = function(id) {
-    console.warn('toggleSchedule called before settings tab loaded');
-    showToast('Settings tab not loaded yet. Please try again.', 'warning');
-};
-
-window.deleteSchedule = function(id) {
-    console.warn('deleteSchedule called before settings tab loaded');
+window.saveNotificationPreferences = function() {
+    console.warn('saveNotificationPreferences called before settings tab loaded');
     showToast('Settings tab not loaded yet. Please try again.', 'warning');
 };
 
@@ -233,28 +203,23 @@ window.deleteAccount = function() {
     showToast('Settings tab not loaded yet. Please try again.', 'warning');
 };
 
-window.loadPlanAndBilling = function() {
-    console.warn('loadPlanAndBilling called before settings tab loaded');
-    showToast('Settings tab not loaded yet. Please try again.', 'warning');
+window.exportUsageData = function() {
+    console.warn('exportUsageData called before usage tab loaded');
+    showToast('Usage & Analytics tab not loaded yet. Please try again.', 'warning');
 };
 
-window.changePlan = function() {
-    console.warn('changePlan called before settings tab loaded');
-    showToast('Settings tab not loaded yet. Please try again.', 'warning');
-};
-
-window.viewContent = function(id) {
-    console.warn('viewContent called before review tab loaded');
+window.reviewSetup = function(id) {
+    console.warn('reviewSetup called before review tab loaded');
     showToast('Review tab not loaded yet. Please try again.', 'warning');
 };
 
-window.editContent = function(id) {
-    console.warn('editContent called before review tab loaded');
+window.flagSetup = function(id) {
+    console.warn('flagSetup called before review tab loaded');
     showToast('Review tab not loaded yet. Please try again.', 'warning');
 };
 
-window.publishContent = function(id) {
-    console.warn('publishContent called before review tab loaded');
+window.dismissSetup = function(id) {
+    console.warn('dismissSetup called before review tab loaded');
     showToast('Review tab not loaded yet. Please try again.', 'warning');
 };
 
@@ -263,10 +228,10 @@ window.publishContent = function(id) {
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔵 Dashboard initializing...');
+    console.log('🔵 Profile initializing...');
 
     // Initialize
-    initializeDashboard();
+    initializeProfile();
 
     // Attach click listeners to nav links
     const navLinks = document.querySelectorAll('.sidebar-nav a');
@@ -281,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle hash on load
     const hash = window.location.hash.replace('#', '');
     if (hash) {
-        const validTabs = ['dashboard', 'upload', 'review', 'planner', 'brand-voice', 'billing', 'settings', 'usage', 'ai-visibility'];
+        const validTabs = ['overview', 'review', 'usage', 'settings'];
         if (validTabs.includes(hash)) {
             setTimeout(() => switchTab(hash), 100);
         }
@@ -296,12 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ============================================================
-    // Full Report button is handled by ai-visibility.js
-    // The old quickScanFromPillars button has been removed.
-    // ============================================================
-
-    console.log('✅ Dashboard initialized');
+    console.log('✅ Profile initialized');
 });
 
 // ============================================================
@@ -310,4 +270,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // This allows other modules to access the user and supabase instance
 // without having to re-authenticate.
-export { supabaseInstance, dashboardUser, currentOrganizationId };
+export { supabaseInstance, profileUser, currentOrganizationId };
