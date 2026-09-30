@@ -1164,8 +1164,9 @@
 
 .chart-label text {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    fill: var(--gray-400);
+    font-size: 13px;
+    font-weight: 500;
+    fill: var(--gray-600);
 }
 
 .chart-line {
