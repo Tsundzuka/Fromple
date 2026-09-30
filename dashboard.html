@@ -1285,54 +1285,5 @@
     <script src="js/main.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
-    <script>
-        document.querySelectorAll('.sidebar-nav a[data-tab]').forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                const tab = link.dataset.tab;
-                document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-                link.classList.add('active');
-                document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
-                document.getElementById('tab-' + tab)?.classList.add('active');
-                document.getElementById('sidebar')?.classList.remove('open');
-            });
-        });
-
-        document.getElementById('adminSidebarToggle')?.addEventListener('click', () => {
-            document.getElementById('sidebar')?.classList.toggle('open');
-        });
-
-        // --- Class table selection (mock behaviour; dashboard.js will replace) ---
-        const classRows = document.querySelectorAll('.class-table tbody tr');
-        const selectAll = document.getElementById('classSelectAll');
-
-        classRows.forEach(row => {
-            const cb = row.querySelector('.class-check');
-            cb.addEventListener('change', () => {
-                row.classList.toggle('selected-row', cb.checked);
-            });
-            row.addEventListener('click', (e) => {
-                if (e.target.closest('.col-check')) return;
-                cb.checked = !cb.checked;
-                cb.dispatchEvent(new Event('change'));
-            });
-        });
-
-        selectAll?.addEventListener('change', () => {
-            classRows.forEach(row => {
-                const cb = row.querySelector('.class-check');
-                cb.checked = selectAll.checked;
-                cb.dispatchEvent(new Event('change'));
-            });
-        });
-
-        // --- Timeframe buttons (mock behaviour; dashboard.js will replace) ---
-        document.querySelectorAll('#classTimeframes .timeframe-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('#classTimeframes .timeframe-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
-        });
-    </script>
 </body>
 </html>
