@@ -125,28 +125,6 @@ function generateHeaderHTML(user, isLoggedIn) {
                                 </svg>
                                 Profile
                             </a></li>
-                            <li><a href="${assetPath}settings.html" class="dropdown-item">
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/>
-                                    <path d="M12.5 5.5L13.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                    <path d="M12.5 10.5L13.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                    <path d="M8 3V1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                    <path d="M8 13V14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                    <path d="M3.5 5.5L2.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                    <path d="M3.5 10.5L2.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                </svg>
-                                Settings
-                            </a></li>
-                            <li><a href="${assetPath}dashboard.html?tab=brand-voice" class="dropdown-item">
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8 1V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                    <path d="M8 13V15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                    <path d="M3 8H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                    <path d="M15 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                    <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/>
-                                </svg>
-                                Brand Voice
-                            </a></li>
                         </ul>
                         <div class="dropdown-divider"></div>
                         <ul class="dropdown-menu">
