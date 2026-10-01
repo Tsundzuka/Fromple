@@ -112,7 +112,6 @@
                     </div>
                 </header>
 
-                <!-- KPI CARDS -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon blue">
@@ -152,7 +151,6 @@
                     </div>
                 </div>
 
-                <!-- REGISTERED CLASSES -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Registered Classes</h3>
@@ -367,7 +365,6 @@
                     </div>
                 </div>
 
-                <!-- DUAL-AXIS CHART -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Profitability vs. average pip move</h3>
@@ -483,7 +480,7 @@
                 <header class="dashboard-header">
                     <div>
                         <h1>Data Categorisation</h1>
-                        <p class="page-subtitle">Every condition is grouped into a category so individual contribution can be measured.</p>
+                        <p class="page-subtitle">Each component's contribution to class profitability. Select a class to break down.</p>
                     </div>
                     <div class="dashboard-header-actions">
                         <button class="btn-secondary" type="button" onclick="exportConditions()">Export</button>
@@ -530,57 +527,182 @@
                     </div>
                 </div>
 
+                <!-- COMPONENT VALUATION -->
                 <div class="card">
                     <div class="card-header">
-                        <h3>Categories</h3>
-                        <span class="card-meta">how conditions are grouped</span>
+                        <h3>Component Valuation</h3>
+                        <span class="card-meta" id="componentValuationMeta">All classes &middot; H4</span>
                     </div>
-                    <div class="category-grid">
-                        <div class="category-card">
-                            <div class="category-head">
-                                <span class="category-name">Regime</span>
-                                <span class="category-count">3 conditions</span>
-                            </div>
-                            <p class="category-desc">Broad directional character of the market. Uptrend, downtrend, or consolidating.</p>
+
+                    <div class="class-filter-bar">
+                        <span class="class-filter-label">Breakdown by class</span>
+                        <div class="class-filter-chips" id="classFilterChips">
+                            <button class="class-chip active" type="button" data-class="all">All</button>
+                            <button class="class-chip" type="button" data-class="A">Class A</button>
+                            <button class="class-chip" type="button" data-class="B">Class B</button>
+                            <button class="class-chip" type="button" data-class="C">Class C</button>
+                            <button class="class-chip" type="button" data-class="D">Class D</button>
+                            <button class="class-chip" type="button" data-class="E">Class E</button>
+                            <button class="class-chip" type="button" data-class="F">Class F</button>
+                            <button class="class-chip" type="button" data-class="G">Class G</button>
+                            <button class="class-chip" type="button" data-class="H">Class H</button>
                         </div>
-                        <div class="category-card">
-                            <div class="category-head">
-                                <span class="category-name">Market State</span>
-                                <span class="category-count">8 conditions</span>
+                    </div>
+
+                    <div class="component-grid">
+                        <div class="component-card" data-component="regime">
+                            <div class="component-head">
+                                <span class="component-name">Regime</span>
+                                <span class="component-count" data-field="conditions">3 conditions</span>
                             </div>
-                            <p class="category-desc">Price position relative to support, resistance, range boundaries, and prior swing points. Includes volume, volatility, and momentum characteristics.</p>
+                            <div class="component-value">
+                                <span class="component-edge edge-pos" data-field="edge">+43</span>
+                                <span class="component-value-label">Edge</span>
+                            </div>
+                            <div class="component-split">
+                                <div class="split-item">
+                                    <span class="split-label">Favorable</span>
+                                    <span class="split-value pos" data-field="favorable">84%</span>
+                                </div>
+                                <div class="split-item">
+                                    <span class="split-label">Unfavorable</span>
+                                    <span class="split-value neg" data-field="unfavorable">41%</span>
+                                </div>
+                            </div>
+                            <div class="component-foot">
+                                <span class="component-foot-label">Top contributor</span>
+                                <span class="component-foot-name" data-field="top">Uptrend</span>
+                            </div>
                         </div>
-                        <div class="category-card">
-                            <div class="category-head">
-                                <span class="category-name">Indicators</span>
-                                <span class="category-count">6 conditions</span>
+
+                        <div class="component-card" data-component="market-state">
+                            <div class="component-head">
+                                <span class="component-name">Market State</span>
+                                <span class="component-count" data-field="conditions">8 conditions</span>
                             </div>
-                            <p class="category-desc">Computed signals from predefined indicators — moving averages, RSI, MACD, Bollinger Bands.</p>
+                            <div class="component-value">
+                                <span class="component-edge edge-pos" data-field="edge">+38</span>
+                                <span class="component-value-label">Edge</span>
+                            </div>
+                            <div class="component-split">
+                                <div class="split-item">
+                                    <span class="split-label">Favorable</span>
+                                    <span class="split-value pos" data-field="favorable">76%</span>
+                                </div>
+                                <div class="split-item">
+                                    <span class="split-label">Unfavorable</span>
+                                    <span class="split-value neg" data-field="unfavorable">38%</span>
+                                </div>
+                            </div>
+                            <div class="component-foot">
+                                <span class="component-foot-label">Top contributor</span>
+                                <span class="component-foot-name" data-field="top">Volume high</span>
+                            </div>
                         </div>
-                        <div class="category-card">
-                            <div class="category-head">
-                                <span class="category-name">Economic Calendar</span>
-                                <span class="category-count">4 conditions</span>
+
+                        <div class="component-card" data-component="indicators">
+                            <div class="component-head">
+                                <span class="component-name">Indicators</span>
+                                <span class="component-count" data-field="conditions">6 conditions</span>
                             </div>
-                            <p class="category-desc">Scheduled economic events — proximity to release, importance, and outcome vs. forecast.</p>
+                            <div class="component-value">
+                                <span class="component-edge edge-pos" data-field="edge">+27</span>
+                                <span class="component-value-label">Edge</span>
+                            </div>
+                            <div class="component-split">
+                                <div class="split-item">
+                                    <span class="split-label">Favorable</span>
+                                    <span class="split-value pos" data-field="favorable">71%</span>
+                                </div>
+                                <div class="split-item">
+                                    <span class="split-label">Unfavorable</span>
+                                    <span class="split-value neg" data-field="unfavorable">44%</span>
+                                </div>
+                            </div>
+                            <div class="component-foot">
+                                <span class="component-foot-label">Top contributor</span>
+                                <span class="component-foot-name" data-field="top">MA20 rising</span>
+                            </div>
                         </div>
-                        <div class="category-card">
-                            <div class="category-head">
-                                <span class="category-name">COT</span>
-                                <span class="category-count">5 conditions</span>
+
+                        <div class="component-card" data-component="calendar">
+                            <div class="component-head">
+                                <span class="component-name">Economic Calendar</span>
+                                <span class="component-count" data-field="conditions">4 conditions</span>
                             </div>
-                            <p class="category-desc">Commitment of Traders positioning — net long/short, weekly change, and extreme readings.</p>
+                            <div class="component-value">
+                                <span class="component-edge edge-neg" data-field="edge">−18</span>
+                                <span class="component-value-label">Edge</span>
+                            </div>
+                            <div class="component-split">
+                                <div class="split-item">
+                                    <span class="split-label">Favorable</span>
+                                    <span class="split-value pos" data-field="favorable">48%</span>
+                                </div>
+                                <div class="split-item">
+                                    <span class="split-label">Unfavorable</span>
+                                    <span class="split-value neg" data-field="unfavorable">66%</span>
+                                </div>
+                            </div>
+                            <div class="component-foot">
+                                <span class="component-foot-label">Top contributor</span>
+                                <span class="component-foot-name" data-field="top">CPI within 3 days</span>
+                            </div>
                         </div>
-                        <div class="category-card">
-                            <div class="category-head">
-                                <span class="category-name">Sentiment</span>
-                                <span class="category-count">3 conditions</span>
+
+                        <div class="component-card" data-component="cot">
+                            <div class="component-head">
+                                <span class="component-name">COT</span>
+                                <span class="component-count" data-field="conditions">5 conditions</span>
                             </div>
-                            <p class="category-desc">News events and other non-calendar developments that shape short-term market sentiment.</p>
+                            <div class="component-value">
+                                <span class="component-edge edge-pos" data-field="edge">+5</span>
+                                <span class="component-value-label">Edge</span>
+                            </div>
+                            <div class="component-split">
+                                <div class="split-item">
+                                    <span class="split-label">Favorable</span>
+                                    <span class="split-value pos" data-field="favorable">62%</span>
+                                </div>
+                                <div class="split-item">
+                                    <span class="split-label">Unfavorable</span>
+                                    <span class="split-value neg" data-field="unfavorable">57%</span>
+                                </div>
+                            </div>
+                            <div class="component-foot">
+                                <span class="component-foot-label">Top contributor</span>
+                                <span class="component-foot-name" data-field="top">COT net long</span>
+                            </div>
+                        </div>
+
+                        <div class="component-card" data-component="sentiment">
+                            <div class="component-head">
+                                <span class="component-name">Sentiment</span>
+                                <span class="component-count" data-field="conditions">3 conditions</span>
+                            </div>
+                            <div class="component-value">
+                                <span class="component-edge edge-pos" data-field="edge">+12</span>
+                                <span class="component-value-label">Edge</span>
+                            </div>
+                            <div class="component-split">
+                                <div class="split-item">
+                                    <span class="split-label">Favorable</span>
+                                    <span class="split-value pos" data-field="favorable">58%</span>
+                                </div>
+                                <div class="split-item">
+                                    <span class="split-label">Unfavorable</span>
+                                    <span class="split-value neg" data-field="unfavorable">46%</span>
+                                </div>
+                            </div>
+                            <div class="component-foot">
+                                <span class="component-foot-label">Top contributor</span>
+                                <span class="component-foot-name" data-field="top">News event active</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- ALL CONDITIONS -->
                 <div class="card">
                     <div class="card-header">
                         <h3>All Conditions</h3>
@@ -606,12 +728,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Regime -->
                                 <tr><td>Uptrend</td><td><span class="cat-tag">Regime</span></td><td>7 classes</td><td>2,184</td><td class="activity-time">2h ago</td></tr>
                                 <tr><td>Downtrend</td><td><span class="cat-tag">Regime</span></td><td>5 classes</td><td>1,412</td><td class="activity-time">3h ago</td></tr>
                                 <tr><td>Consolidating</td><td><span class="cat-tag">Regime</span></td><td>4 classes</td><td>1,098</td><td class="activity-time">3h ago</td></tr>
 
-                                <!-- Market State -->
                                 <tr><td>Support holding</td><td><span class="cat-tag">Market State</span></td><td>6 classes</td><td>1,876</td><td class="activity-time">2h ago</td></tr>
                                 <tr><td>Resistance holding</td><td><span class="cat-tag">Market State</span></td><td>4 classes</td><td>1,204</td><td class="activity-time">4h ago</td></tr>
                                 <tr><td>Range position · upper</td><td><span class="cat-tag">Market State</span></td><td>3 classes</td><td>862</td><td class="activity-time">6h ago</td></tr>
@@ -621,7 +741,6 @@
                                 <tr><td>Volatility expanding</td><td><span class="cat-tag">Market State</span></td><td>5 classes</td><td>1,614</td><td class="activity-time">3h ago</td></tr>
                                 <tr><td>Wick rejection</td><td><span class="cat-tag">Market State</span></td><td>2 classes</td><td>512</td><td class="activity-time">10h ago</td></tr>
 
-                                <!-- Indicators -->
                                 <tr><td>MA20 rising</td><td><span class="cat-tag">Indicators</span></td><td>5 classes</td><td>1,806</td><td class="activity-time">2h ago</td></tr>
                                 <tr><td>MA50 rising</td><td><span class="cat-tag">Indicators</span></td><td>4 classes</td><td>1,428</td><td class="activity-time">4h ago</td></tr>
                                 <tr><td>RSI &gt; 55</td><td><span class="cat-tag">Indicators</span></td><td>6 classes</td><td>1,846</td><td class="activity-time">2h ago</td></tr>
@@ -629,20 +748,17 @@
                                 <tr><td>MACD cross</td><td><span class="cat-tag">Indicators</span></td><td>3 classes</td><td>886</td><td class="activity-time">7h ago</td></tr>
                                 <tr><td>Bollinger squeeze</td><td><span class="cat-tag">Indicators</span></td><td>2 classes</td><td>534</td><td class="activity-time">12h ago</td></tr>
 
-                                <!-- Economic Calendar -->
                                 <tr><td>CPI within 3 days</td><td><span class="cat-tag">Economic Calendar</span></td><td>4 classes</td><td>1,024</td><td class="activity-time">6h ago</td></tr>
                                 <tr><td>NFP within 2 days</td><td><span class="cat-tag">Economic Calendar</span></td><td>3 classes</td><td>712</td><td class="activity-time">8h ago</td></tr>
                                 <tr><td>Rate decision imminent</td><td><span class="cat-tag">Economic Calendar</span></td><td>2 classes</td><td>418</td><td class="activity-time">14h ago</td></tr>
                                 <tr><td>No event nearby</td><td><span class="cat-tag">Economic Calendar</span></td><td>5 classes</td><td>1,542</td><td class="activity-time">2h ago</td></tr>
 
-                                <!-- COT -->
                                 <tr><td>COT net long</td><td><span class="cat-tag">COT</span></td><td>4 classes</td><td>1,286</td><td class="activity-time">1d ago</td></tr>
                                 <tr><td>COT net short</td><td><span class="cat-tag">COT</span></td><td>3 classes</td><td>908</td><td class="activity-time">1d ago</td></tr>
                                 <tr><td>COT net long rising</td><td><span class="cat-tag">COT</span></td><td>3 classes</td><td>742</td><td class="activity-time">1d ago</td></tr>
                                 <tr><td>COT net short falling</td><td><span class="cat-tag">COT</span></td><td>2 classes</td><td>486</td><td class="activity-time">1d ago</td></tr>
                                 <tr><td>COT extreme positioning</td><td><span class="cat-tag">COT</span></td><td>2 classes</td><td>364</td><td class="activity-time">1d ago</td></tr>
 
-                                <!-- Sentiment -->
                                 <tr><td>News event active</td><td><span class="cat-tag">Sentiment</span></td><td>3 classes</td><td>648</td><td class="activity-time">4h ago</td></tr>
                                 <tr><td>Sentiment positive shift</td><td><span class="cat-tag">Sentiment</span></td><td>2 classes</td><td>412</td><td class="activity-time">6h ago</td></tr>
                                 <tr><td>Sentiment negative shift</td><td><span class="cat-tag">Sentiment</span></td><td>2 classes</td><td>386</td><td class="activity-time">8h ago</td></tr>
