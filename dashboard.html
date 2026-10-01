@@ -535,18 +535,18 @@
                     </div>
 
                     <div class="class-filter-bar">
-                        <span class="class-filter-label">Breakdown by class</span>
-                        <div class="class-filter-chips" id="classFilterChips">
-                            <button class="class-chip active" type="button" data-class="all">All</button>
-                            <button class="class-chip" type="button" data-class="A">Class A</button>
-                            <button class="class-chip" type="button" data-class="B">Class B</button>
-                            <button class="class-chip" type="button" data-class="C">Class C</button>
-                            <button class="class-chip" type="button" data-class="D">Class D</button>
-                            <button class="class-chip" type="button" data-class="E">Class E</button>
-                            <button class="class-chip" type="button" data-class="F">Class F</button>
-                            <button class="class-chip" type="button" data-class="G">Class G</button>
-                            <button class="class-chip" type="button" data-class="H">Class H</button>
-                        </div>
+                        <label class="class-filter-label" for="classFilterSelect">Breakdown by class</label>
+                        <select class="class-filter-select" id="classFilterSelect">
+                            <option value="all" selected>All classes</option>
+                            <option value="A">Class A · Trend + volume confirmation</option>
+                            <option value="B">Class B · Reversal near resistance</option>
+                            <option value="C">Class C · Trend continuation</option>
+                            <option value="D">Class D · Mean-reversion in range</option>
+                            <option value="E">Class E · Breakout follow-through</option>
+                            <option value="F">Class F · Volatility expansion breakout</option>
+                            <option value="G">Class G · Post-event drift</option>
+                            <option value="H">Class H · New combination</option>
+                        </select>
                     </div>
 
                     <div class="component-grid">
@@ -716,7 +716,7 @@
                             <button class="filter-btn" type="button">Sentiment</button>
                         </div>
                     </div>
-                    <div class="table-wrap">
+                    <div class="table-wrap conditions-table-wrap">
                         <table class="activity-table">
                             <thead>
                                 <tr>
