@@ -1386,7 +1386,7 @@
    DATA CATEGORISATION — COMPONENT VALUATION
    ============================================================ */
 
-/* ---------- Class filter chips ---------- */
+/* ---------- Class filter bar ---------- */
 .class-filter-bar {
     display: flex;
     align-items: center;
@@ -1406,34 +1406,36 @@
     flex-shrink: 0;
 }
 
-.class-filter-chips {
-    display: inline-flex;
-    gap: 5px;
-    flex-wrap: wrap;
-}
-
-.class-chip {
-    padding: 4px 11px;
+.class-filter-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 7px 30px 7px 12px;
     border: 1px solid var(--gray-200);
-    border-radius: 20px;
-    background: transparent;
-    font-size: 11.5px;
+    border-radius: var(--radius);
+    background-color: #fff;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%236B7280' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    font-size: 12.5px;
     font-weight: 500;
-    color: var(--gray-600);
+    font-family: inherit;
+    color: var(--gray-800);
     cursor: pointer;
     transition: var(--transition);
-    font-family: inherit;
+    min-width: 240px;
+    max-width: 100%;
 }
 
-.class-chip:hover {
+.class-filter-select:hover {
     border-color: var(--primary);
-    color: var(--primary);
 }
 
-.class-chip.active {
-    background: var(--primary);
-    color: #fff;
+.class-filter-select:focus {
+    outline: none;
     border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
 }
 
 /* ---------- Component grid + cards ---------- */
@@ -1548,6 +1550,32 @@
     text-overflow: ellipsis;
 }
 
+/* ---------- Conditions table: 7 rows visible, scrollable ---------- */
+.conditions-table-wrap {
+    --conditions-row-h: 42px;
+    --conditions-head-h: 30px;
+    max-height: calc(var(--conditions-head-h) + 7 * var(--conditions-row-h));
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.conditions-table-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
+.conditions-table-wrap::-webkit-scrollbar-track { background: transparent; }
+.conditions-table-wrap::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 4px;
+}
+.conditions-table-wrap::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+
+/* Sticky header inside the conditions scroll container */
+.conditions-table-wrap .activity-table thead th {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+    box-shadow: inset 0 -1px 0 var(--gray-200);
+}
+
 /* ============================================================
    RESPONSIVE
    ============================================================ */
@@ -1621,6 +1649,7 @@
 
     /* Class filter bar */
     .class-filter-bar { gap: 8px; }
+    .class-filter-select { min-width: 100%; width: 100%; }
 
     /* Component grid */
     .component-grid { grid-template-columns: 1fr 1fr; }
