@@ -1383,11 +1383,178 @@
 }
 
 /* ============================================================
+   DATA CATEGORISATION — COMPONENT VALUATION
+   ============================================================ */
+
+/* ---------- Class filter chips ---------- */
+.class-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 2px 0 12px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.class-filter-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-500);
+    flex-shrink: 0;
+}
+
+.class-filter-chips {
+    display: inline-flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.class-chip {
+    padding: 4px 11px;
+    border: 1px solid var(--gray-200);
+    border-radius: 20px;
+    background: transparent;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.class-chip:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.class-chip.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+/* ---------- Component grid + cards ---------- */
+.component-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.component-card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.component-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.component-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.component-count {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gray-400);
+    white-space: nowrap;
+}
+
+.component-value {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.component-edge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.component-value-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-400);
+}
+
+.component-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.split-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.split-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray-500);
+}
+
+.split-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.split-value.pos { color: var(--primary-dark); }
+.split-value.neg { color: #DC2626; }
+
+.component-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px dashed var(--gray-200);
+    gap: 8px;
+}
+
+.component-foot-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray-400);
+    flex-shrink: 0;
+}
+
+.component-foot-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray-700);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 1024px) {
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .grid-2col  { grid-template-columns: 1fr; }
+    .component-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -1452,6 +1619,12 @@
     .timeframe-bar { gap: 6px; }
     .timeframe-meta { margin-left: 0; width: 100%; }
 
+    /* Class filter bar */
+    .class-filter-bar { gap: 8px; }
+
+    /* Component grid */
+    .component-grid { grid-template-columns: 1fr 1fr; }
+
     /* Hide Signals (3) and Last seen (10) */
     .class-table th:nth-child(3),
     .class-table td:nth-child(3),
@@ -1476,6 +1649,9 @@
     .snapshot-grid { grid-template-columns: 1fr; }
 
     .movement-row { grid-template-columns: 1fr; }
+
+    /* Component grid */
+    .component-grid { grid-template-columns: 1fr; }
 
     /* Hide Status (9) */
     .class-table th:nth-child(9),
