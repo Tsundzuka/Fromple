@@ -1408,6 +1408,76 @@
     margin-bottom: 8px;
 }
 
+/* ---------- View toggle (all classes / single class) ---------- */
+.pt-view-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+}
+
+.pt-view-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-500);
+    flex-shrink: 0;
+}
+
+.pt-view-toggle {
+    display: inline-flex;
+    gap: 2px;
+    background: var(--gray-100);
+    padding: 2px;
+    border-radius: 7px;
+}
+
+.pt-view-btn {
+    padding: 5px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.pt-view-btn:hover { color: var(--gray-800); }
+
+.pt-view-btn.active {
+    background: #fff;
+    color: var(--primary-dark);
+    box-shadow: var(--shadow-sm);
+}
+
+.pt-view-class-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pt-view-class-wrap[hidden] { display: none; }
+
+.pt-view-meta {
+    margin-left: auto;
+    font-size: 11.5px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gray-400);
+    white-space: nowrap;
+}
+
 /* ============================================================
    SIGNALS
    ============================================================ */
@@ -1844,6 +1914,11 @@
     .chart-body { height: 220px; grid-template-columns: 40px 1fr 40px; gap: 8px; }
     .chart-x-bar { grid-template-columns: 40px 1fr 40px; gap: 8px; }
     .chart-y-left, .chart-y-right, .chart-x-labels { font-size: 11px; }
+
+    /* Paper trading view toggle */
+    .pt-view-meta { margin-left: 0; width: 100%; }
+    .pt-view-class-wrap { width: 100%; }
+    .pt-view-class-wrap .class-filter-select { min-width: 100%; }
 
     /* Hide Signals (3) and Last seen (10) */
     .class-table th:nth-child(3),
