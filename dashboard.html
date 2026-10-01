@@ -702,64 +702,237 @@
                     </div>
                 </div>
 
-                <!-- ALL CONDITIONS -->
+                <!-- CLASS COMPOSITION -->
                 <div class="card">
                     <div class="card-header">
-                        <h3 id="conditionsTableTitle">All Conditions</h3>
-                        <span class="card-meta" id="conditionsTableMeta">29 conditions &middot; all classes</span>
+                        <h3 id="compositionTableTitle">Class Composition</h3>
+                        <span class="card-meta" id="compositionTableMeta">8 classes &middot; all categories</span>
                     </div>
-                    <div class="table-wrap conditions-table-wrap">
-                        <table class="activity-table">
+                    <div class="table-wrap composition-table-wrap">
+                        <table class="composition-table">
                             <thead>
                                 <tr>
-                                    <th>Condition</th>
-                                    <th>Category</th>
-                                    <th>Used in</th>
-                                    <th>Observations</th>
-                                    <th>Last updated</th>
+                                    <th class="comp-name-col">Class</th>
+                                    <th>Regime</th>
+                                    <th>Market State</th>
+                                    <th>Indicators</th>
+                                    <th>Economic Calendar</th>
+                                    <th>COT</th>
+                                    <th>Sentiment</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Regime -->
-                                <tr data-classes="A,C,E,G,H"><td>Uptrend</td><td><span class="cat-tag">Regime</span></td><td class="used-in">A, C, E, G, H</td><td>2,184</td><td class="activity-time">2h ago</td></tr>
-                                <tr data-classes="B,D"><td>Downtrend</td><td><span class="cat-tag">Regime</span></td><td class="used-in">B, D</td><td>1,412</td><td class="activity-time">3h ago</td></tr>
-                                <tr data-classes="B,D"><td>Consolidating</td><td><span class="cat-tag">Regime</span></td><td class="used-in">B, D</td><td>1,098</td><td class="activity-time">3h ago</td></tr>
+                                <tr data-class="A">
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge">A</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class A</strong>
+                                                <span>Trend + volume confirmation</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="comp-cond">Uptrend</span></td>
+                                    <td>
+                                        <span class="comp-cond">Support holding</span>
+                                        <span class="comp-cond">Volume high</span>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">MA20 rising</span>
+                                        <span class="comp-cond">MA50 rising</span>
+                                    </td>
+                                    <td><span class="comp-cond">No event nearby</span></td>
+                                    <td><span class="comp-empty">—</span></td>
+                                    <td><span class="comp-empty">—</span></td>
+                                </tr>
 
-                                <!-- Market State -->
-                                <tr data-classes="A,C,D,H"><td>Support holding</td><td><span class="cat-tag">Market State</span></td><td class="used-in">A, C, D, H</td><td>1,876</td><td class="activity-time">2h ago</td></tr>
-                                <tr data-classes="B,D"><td>Resistance holding</td><td><span class="cat-tag">Market State</span></td><td class="used-in">B, D</td><td>1,204</td><td class="activity-time">4h ago</td></tr>
-                                <tr data-classes="B,D"><td>Range position · upper</td><td><span class="cat-tag">Market State</span></td><td class="used-in">B, D</td><td>862</td><td class="activity-time">6h ago</td></tr>
-                                <tr data-classes="D"><td>Range position · lower</td><td><span class="cat-tag">Market State</span></td><td class="used-in">D</td><td>794</td><td class="activity-time">6h ago</td></tr>
-                                <tr data-classes="A,C,E,F,G,H"><td>Volume high</td><td><span class="cat-tag">Market State</span></td><td class="used-in">A, C, E, F, G, H</td><td>1,938</td><td class="activity-time">2h ago</td></tr>
-                                <tr data-classes="D"><td>Volume low</td><td><span class="cat-tag">Market State</span></td><td class="used-in">D</td><td>722</td><td class="activity-time">8h ago</td></tr>
-                                <tr data-classes="E,F"><td>Volatility expanding</td><td><span class="cat-tag">Market State</span></td><td class="used-in">E, F</td><td>1,614</td><td class="activity-time">3h ago</td></tr>
-                                <tr data-classes="B"><td>Wick rejection</td><td><span class="cat-tag">Market State</span></td><td class="used-in">B</td><td>512</td><td class="activity-time">10h ago</td></tr>
+                                <tr data-class="B">
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge">B</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class B</strong>
+                                                <span>Reversal near resistance</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">Downtrend</span>
+                                        <span class="comp-cond">Consolidating</span>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">Resistance holding</span>
+                                        <span class="comp-cond">Range position · upper</span>
+                                        <span class="comp-cond">Wick rejection</span>
+                                    </td>
+                                    <td><span class="comp-cond">RSI &lt; 45</span></td>
+                                    <td><span class="comp-cond">Rate decision imminent</span></td>
+                                    <td>
+                                        <span class="comp-cond">COT net short</span>
+                                        <span class="comp-cond">COT extreme positioning</span>
+                                    </td>
+                                    <td><span class="comp-empty">—</span></td>
+                                </tr>
 
-                                <!-- Indicators -->
-                                <tr data-classes="A,C,E,G,H"><td>MA20 rising</td><td><span class="cat-tag">Indicators</span></td><td class="used-in">A, C, E, G, H</td><td>1,806</td><td class="activity-time">2h ago</td></tr>
-                                <tr data-classes="A,E,G"><td>MA50 rising</td><td><span class="cat-tag">Indicators</span></td><td class="used-in">A, E, G</td><td>1,428</td><td class="activity-time">4h ago</td></tr>
-                                <tr data-classes="C,H"><td>RSI &gt; 55</td><td><span class="cat-tag">Indicators</span></td><td class="used-in">C, H</td><td>1,846</td><td class="activity-time">2h ago</td></tr>
-                                <tr data-classes="B,D"><td>RSI &lt; 45</td><td><span class="cat-tag">Indicators</span></td><td class="used-in">B, D</td><td>1,206</td><td class="activity-time">5h ago</td></tr>
-                                <tr data-classes="E,F"><td>MACD cross</td><td><span class="cat-tag">Indicators</span></td><td class="used-in">E, F</td><td>886</td><td class="activity-time">7h ago</td></tr>
-                                <tr data-classes="F"><td>Bollinger squeeze</td><td><span class="cat-tag">Indicators</span></td><td class="used-in">F</td><td>534</td><td class="activity-time">12h ago</td></tr>
+                                <tr data-class="C" class="selected-row">
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge primary">C</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class C</strong>
+                                                <span>Trend continuation, elevated volume</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="comp-cond">Uptrend</span></td>
+                                    <td>
+                                        <span class="comp-cond">Support holding</span>
+                                        <span class="comp-cond">Volume high</span>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">MA20 rising</span>
+                                        <span class="comp-cond">RSI &gt; 55</span>
+                                    </td>
+                                    <td><span class="comp-cond">No event nearby</span></td>
+                                    <td><span class="comp-cond">COT net long</span></td>
+                                    <td><span class="comp-empty">—</span></td>
+                                </tr>
 
-                                <!-- Economic Calendar -->
-                                <tr data-classes="G"><td>CPI within 3 days</td><td><span class="cat-tag">Economic Calendar</span></td><td class="used-in">G</td><td>1,024</td><td class="activity-time">6h ago</td></tr>
-                                <tr data-classes="G"><td>NFP within 2 days</td><td><span class="cat-tag">Economic Calendar</span></td><td class="used-in">G</td><td>712</td><td class="activity-time">8h ago</td></tr>
-                                <tr data-classes="B,E"><td>Rate decision imminent</td><td><span class="cat-tag">Economic Calendar</span></td><td class="used-in">B, E</td><td>418</td><td class="activity-time">14h ago</td></tr>
-                                <tr data-classes="A,C,D,E,H"><td>No event nearby</td><td><span class="cat-tag">Economic Calendar</span></td><td class="used-in">A, C, D, E, H</td><td>1,542</td><td class="activity-time">2h ago</td></tr>
+                                <tr data-class="D">
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge">D</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class D</strong>
+                                                <span>Mean-reversion in range</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">Downtrend</span>
+                                        <span class="comp-cond">Consolidating</span>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">Support holding</span>
+                                        <span class="comp-cond">Resistance holding</span>
+                                        <span class="comp-cond">Range position · upper</span>
+                                        <span class="comp-cond">Range position · lower</span>
+                                        <span class="comp-cond">Volume low</span>
+                                    </td>
+                                    <td><span class="comp-cond">RSI &lt; 45</span></td>
+                                    <td><span class="comp-cond">No event nearby</span></td>
+                                    <td>
+                                        <span class="comp-cond">COT net short</span>
+                                        <span class="comp-cond">COT net short falling</span>
+                                    </td>
+                                    <td><span class="comp-cond">Sentiment negative shift</span></td>
+                                </tr>
 
-                                <!-- COT -->
-                                <tr data-classes="C,G"><td>COT net long</td><td><span class="cat-tag">COT</span></td><td class="used-in">C, G</td><td>1,286</td><td class="activity-time">1d ago</td></tr>
-                                <tr data-classes="B,D"><td>COT net short</td><td><span class="cat-tag">COT</span></td><td class="used-in">B, D</td><td>908</td><td class="activity-time">1d ago</td></tr>
-                                <tr data-classes="G"><td>COT net long rising</td><td><span class="cat-tag">COT</span></td><td class="used-in">G</td><td>742</td><td class="activity-time">1d ago</td></tr>
-                                <tr data-classes="D"><td>COT net short falling</td><td><span class="cat-tag">COT</span></td><td class="used-in">D</td><td>486</td><td class="activity-time">1d ago</td></tr>
-                                <tr data-classes="B"><td>COT extreme positioning</td><td><span class="cat-tag">COT</span></td><td class="used-in">B</td><td>364</td><td class="activity-time">1d ago</td></tr>
+                                <tr data-class="E">
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge">E</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class E</strong>
+                                                <span>Breakout with follow-through</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="comp-cond">Uptrend</span></td>
+                                    <td>
+                                        <span class="comp-cond">Volume high</span>
+                                        <span class="comp-cond">Volatility expanding</span>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">MA20 rising</span>
+                                        <span class="comp-cond">MA50 rising</span>
+                                        <span class="comp-cond">MACD cross</span>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">Rate decision imminent</span>
+                                        <span class="comp-cond">No event nearby</span>
+                                    </td>
+                                    <td><span class="comp-empty">—</span></td>
+                                    <td><span class="comp-cond">News event active</span></td>
+                                </tr>
 
-                                <!-- Sentiment -->
-                                <tr data-classes="E,G"><td>News event active</td><td><span class="cat-tag">Sentiment</span></td><td class="used-in">E, G</td><td>648</td><td class="activity-time">4h ago</td></tr>
-                                <tr data-classes="G"><td>Sentiment positive shift</td><td><span class="cat-tag">Sentiment</span></td><td class="used-in">G</td><td>412</td><td class="activity-time">6h ago</td></tr>
-                                <tr data-classes="D"><td>Sentiment negative shift</td><td><span class="cat-tag">Sentiment</span></td><td class="used-in">D</td><td>386</td><td class="activity-time">8h ago</td></tr>
+                                <tr data-class="F">
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge">F</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class F</strong>
+                                                <span>Volatility expansion breakout</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="comp-empty">—</span></td>
+                                    <td>
+                                        <span class="comp-cond">Volume high</span>
+                                        <span class="comp-cond">Volatility expanding</span>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">MACD cross</span>
+                                        <span class="comp-cond">Bollinger squeeze</span>
+                                    </td>
+                                    <td><span class="comp-empty">—</span></td>
+                                    <td><span class="comp-empty">—</span></td>
+                                    <td><span class="comp-empty">—</span></td>
+                                </tr>
+
+                                <tr data-class="G">
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge">G</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class G</strong>
+                                                <span>Post-event drift</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="comp-cond">Uptrend</span></td>
+                                    <td><span class="comp-cond">Volume high</span></td>
+                                    <td>
+                                        <span class="comp-cond">MA20 rising</span>
+                                        <span class="comp-cond">MA50 rising</span>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">CPI within 3 days</span>
+                                        <span class="comp-cond">NFP within 2 days</span>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">COT net long</span>
+                                        <span class="comp-cond">COT net long rising</span>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">News event active</span>
+                                        <span class="comp-cond">Sentiment positive shift</span>
+                                    </td>
+                                </tr>
+
+                                <tr data-class="H">
+                                    <td>
+                                        <div class="class-cell">
+                                            <div class="class-badge">H</div>
+                                            <div class="class-cell-info">
+                                                <strong>Class H</strong>
+                                                <span>New combination — gathering data</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="comp-cond">Uptrend</span></td>
+                                    <td>
+                                        <span class="comp-cond">Support holding</span>
+                                        <span class="comp-cond">Volume high</span>
+                                    </td>
+                                    <td>
+                                        <span class="comp-cond">MA20 rising</span>
+                                        <span class="comp-cond">RSI &gt; 55</span>
+                                    </td>
+                                    <td><span class="comp-cond">No event nearby</span></td>
+                                    <td><span class="comp-empty">—</span></td>
+                                    <td><span class="comp-empty">—</span></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
