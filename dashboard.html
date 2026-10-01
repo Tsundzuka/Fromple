@@ -527,7 +527,6 @@
                     </div>
                 </div>
 
-                <!-- COMPONENT VALUATION -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Component Valuation</h3>
@@ -702,7 +701,6 @@
                     </div>
                 </div>
 
-                <!-- CLASS COMPOSITION -->
                 <div class="card">
                     <div class="card-header">
                         <h3 id="compositionTableTitle">Class Composition</h3>
@@ -946,7 +944,7 @@
                 <header class="dashboard-header">
                     <div>
                         <h1>Paper Trading</h1>
-                        <p class="page-subtitle">Every detected setup is traded in both directions. These are the live paper experiments.</p>
+                        <p class="page-subtitle">Every detected setup is traded in both directions simultaneously. Movement is measured, not binary outcome.</p>
                     </div>
                     <div class="dashboard-header-actions">
                         <button class="btn-secondary" type="button" onclick="exportTrades()">Export</button>
@@ -954,13 +952,16 @@
                     </div>
                 </header>
 
+                <!-- ============================================================ -->
+                <!-- KPI ROW                                                     -->
+                <!-- ============================================================ -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon blue">
                             <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 19V5M5 12l7-7 7 7" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">14</span>
+                            <span class="stat-value">28</span>
                             <span class="stat-label">Open long trades</span>
                         </div>
                     </div>
@@ -969,8 +970,26 @@
                             <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 5v14M5 12l7 7 7-7" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">14</span>
+                            <span class="stat-value">28</span>
                             <span class="stat-label">Open short trades</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M5 12l5 5L20 7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">1,847</span>
+                            <span class="stat-label">Total closed</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#F59E0B" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">31</span>
+                            <span class="stat-label">Closed today</span>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -991,159 +1010,830 @@
                             <span class="stat-label">Avg adverse</span>
                         </div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M4 6h16M4 12h16M4 18h16" stroke="#14B8A6" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">2.4×</span>
+                            <span class="stat-label">Overall ratio</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 2l3 6 6 .9-4.5 4.2 1.1 6.4L12 16.6 6.4 19.5l1.1-6.4L3 8.9 9 8z" stroke="#7C3AED" stroke-width="2" stroke-linejoin="round"/></svg>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-value">68%</span>
+                            <span class="stat-label">Favorable close rate</span>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- ============================================================ -->
+                <!-- DIRECTIONAL BREAKDOWN                                        -->
+                <!-- ============================================================ -->
+                <div class="grid-2col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Long side performance</h3>
+                            <span class="badge success">1,042 closed</span>
+                        </div>
+                        <div class="metric-grid">
+                            <div class="metric-item">
+                                <span class="metric-label">Avg favorable</span>
+                                <span class="metric-value pos">+82.4</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Avg adverse</span>
+                                <span class="metric-value neg">−34.1</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Ratio</span>
+                                <span class="metric-value pos">2.4×</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Win rate</span>
+                                <span class="metric-value">71%</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Best trade</span>
+                                <span class="metric-value pos">+312.4</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Worst trade</span>
+                                <span class="metric-value neg">−142.8</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Short side performance</h3>
+                            <span class="badge warning">805 closed</span>
+                        </div>
+                        <div class="metric-grid">
+                            <div class="metric-item">
+                                <span class="metric-label">Avg favorable</span>
+                                <span class="metric-value pos">+38.6</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Avg adverse</span>
+                                <span class="metric-value neg">−52.7</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Ratio</span>
+                                <span class="metric-value neg">0.7×</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Win rate</span>
+                                <span class="metric-value">42%</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Best trade</span>
+                                <span class="metric-value pos">+187.2</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Worst trade</span>
+                                <span class="metric-value neg">−198.7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- STATISTICAL SUMMARY + MOVEMENT DISTRIBUTION                  -->
+                <!-- ============================================================ -->
+                <div class="grid-2col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Statistical summary</h3>
+                            <span class="card-meta">1,847 closed experiments</span>
+                        </div>
+                        <div class="stat-list">
+                            <div class="stat-list-item">
+                                <span class="stat-list-label">Mean favorable</span>
+                                <span class="stat-list-value pos">+82.4</span>
+                            </div>
+                            <div class="stat-list-item">
+                                <span class="stat-list-label">Median favorable</span>
+                                <span class="stat-list-value pos">+71.2</span>
+                            </div>
+                            <div class="stat-list-item">
+                                <span class="stat-list-label">Std deviation (fav)</span>
+                                <span class="stat-list-value">42.8</span>
+                            </div>
+                            <div class="stat-list-item">
+                                <span class="stat-list-label">Max favorable</span>
+                                <span class="stat-list-value pos">+312.4</span>
+                            </div>
+                            <div class="stat-list-item">
+                                <span class="stat-list-label">Mean adverse</span>
+                                <span class="stat-list-value neg">−34.1</span>
+                            </div>
+                            <div class="stat-list-item">
+                                <span class="stat-list-label">Median adverse</span>
+                                <span class="stat-list-value neg">−28.4</span>
+                            </div>
+                            <div class="stat-list-item">
+                                <span class="stat-list-label">Std deviation (adv)</span>
+                                <span class="stat-list-value">22.1</span>
+                            </div>
+                            <div class="stat-list-item">
+                                <span class="stat-list-label">Max adverse</span>
+                                <span class="stat-list-value neg">−198.7</span>
+                            </div>
+                            <div class="stat-list-item">
+                                <span class="stat-list-label">Consistency (fav &gt; adv)</span>
+                                <span class="stat-list-value pos">68.2%</span>
+                            </div>
+                            <div class="stat-list-item">
+                                <span class="stat-list-label">Avg duration</span>
+                                <span class="stat-list-value">6h 42m</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Movement distribution</h3>
+                            <span class="card-meta">closed experiments</span>
+                        </div>
+
+                        <div class="dist-block">
+                            <span class="dist-label">Favorable movement (pips)</span>
+                            <div class="histogram histogram-long" aria-hidden="true">
+                                <span style="height: 12%"></span>
+                                <span style="height: 22%"></span>
+                                <span style="height: 38%"></span>
+                                <span style="height: 58%"></span>
+                                <span style="height: 78%"></span>
+                                <span style="height: 94%"></span>
+                                <span style="height: 100%"></span>
+                                <span style="height: 82%"></span>
+                                <span style="height: 62%"></span>
+                                <span style="height: 42%"></span>
+                                <span style="height: 26%"></span>
+                                <span style="height: 14%"></span>
+                            </div>
+                            <div class="histogram-legend">
+                                <span>0</span><span>100</span><span>200</span><span>300+</span>
+                            </div>
+                        </div>
+
+                        <div class="dist-block">
+                            <span class="dist-label">Adverse movement (pips)</span>
+                            <div class="histogram histogram-short" aria-hidden="true">
+                                <span style="height: 8%"></span>
+                                <span style="height: 18%"></span>
+                                <span style="height: 34%"></span>
+                                <span style="height: 56%"></span>
+                                <span style="height: 80%"></span>
+                                <span style="height: 100%"></span>
+                                <span style="height: 88%"></span>
+                                <span style="height: 62%"></span>
+                                <span style="height: 42%"></span>
+                                <span style="height: 26%"></span>
+                                <span style="height: 14%"></span>
+                                <span style="height: 6%"></span>
+                            </div>
+                            <div class="histogram-legend">
+                                <span>0</span><span>50</span><span>100</span><span>150+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- LIVE OPEN EXPERIMENTS                                        -->
+                <!-- ============================================================ -->
                 <div class="card">
                     <div class="card-header">
-                        <h3>Open Paper Trades</h3>
-                        <div class="filter-tabs">
-                            <button class="filter-btn active" type="button">All</button>
-                            <button class="filter-btn" type="button">Long</button>
-                            <button class="filter-btn" type="button">Short</button>
-                        </div>
+                        <h3>Live open experiments</h3>
+                        <span class="card-meta">
+                            <span class="live-dot-inline"></span> 56 open
+                        </span>
                     </div>
                     <div class="table-wrap">
                         <table class="activity-table">
                             <thead>
                                 <tr>
                                     <th>Setup</th>
+                                    <th>Class</th>
                                     <th>Direction</th>
                                     <th>Entry</th>
+                                    <th>Current</th>
                                     <th>Favorable</th>
                                     <th>Adverse</th>
                                     <th>Ratio</th>
                                     <th>Duration</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge primary">C</div>
-                                            <div class="class-cell-info">
-                                                <strong>Signal C-7</strong>
-                                                <span>Trend continuation</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td><strong>Signal G-2</strong></td>
+                                    <td>Class G</td>
+                                    <td><span class="direction-badge long">Long</span></td>
+                                    <td class="mono">1.0887</td>
+                                    <td class="mono">1.0909</td>
+                                    <td class="mono pos">+12.4</td>
+                                    <td class="mono neg">−3.1</td>
+                                    <td><span class="edge-pos">4.0×</span></td>
+                                    <td class="activity-time">18m</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal G-2</strong></td>
+                                    <td>Class G</td>
+                                    <td><span class="direction-badge short">Short</span></td>
+                                    <td class="mono">1.0887</td>
+                                    <td class="mono">1.0909</td>
+                                    <td class="mono pos">+4.2</td>
+                                    <td class="mono neg">−8.9</td>
+                                    <td><span class="edge-neg">0.5×</span></td>
+                                    <td class="activity-time">18m</td>
+                                    <td><span class="status-badge pending">Adverse</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal C-7</strong></td>
+                                    <td>Class C</td>
                                     <td><span class="direction-badge long">Long</span></td>
                                     <td class="mono">1.0934</td>
+                                    <td class="mono">1.0968</td>
                                     <td class="mono pos">+82.4</td>
                                     <td class="mono neg">−34.1</td>
                                     <td><span class="edge-pos">2.4×</span></td>
                                     <td class="activity-time">2h 14m</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge primary">C</div>
-                                            <div class="class-cell-info">
-                                                <strong>Signal C-7</strong>
-                                                <span>Trend continuation</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td><strong>Signal C-7</strong></td>
+                                    <td>Class C</td>
                                     <td><span class="direction-badge short">Short</span></td>
                                     <td class="mono">1.0934</td>
+                                    <td class="mono">1.0968</td>
                                     <td class="mono pos">+31.2</td>
                                     <td class="mono neg">−58.7</td>
                                     <td><span class="edge-neg">0.5×</span></td>
                                     <td class="activity-time">2h 14m</td>
+                                    <td><span class="status-badge pending">Adverse</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">A</div>
-                                            <div class="class-cell-info">
-                                                <strong>Signal A-3</strong>
-                                                <span>Trend + volume</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td><strong>Signal A-3</strong></td>
+                                    <td>Class A</td>
                                     <td><span class="direction-badge long">Long</span></td>
                                     <td class="mono">1.0921</td>
+                                    <td class="mono">1.0947</td>
                                     <td class="mono pos">+46.8</td>
                                     <td class="mono neg">−22.5</td>
                                     <td><span class="edge-pos">2.1×</span></td>
                                     <td class="activity-time">4h 02m</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">A</div>
-                                            <div class="class-cell-info">
-                                                <strong>Signal A-3</strong>
-                                                <span>Trend + volume</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td><strong>Signal A-3</strong></td>
+                                    <td>Class A</td>
                                     <td><span class="direction-badge short">Short</span></td>
                                     <td class="mono">1.0921</td>
+                                    <td class="mono">1.0947</td>
                                     <td class="mono pos">+18.2</td>
                                     <td class="mono neg">−41.0</td>
                                     <td><span class="edge-neg">0.4×</span></td>
                                     <td class="activity-time">4h 02m</td>
+                                    <td><span class="status-badge pending">Adverse</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">G</div>
-                                            <div class="class-cell-info">
-                                                <strong>Signal G-2</strong>
-                                                <span>Post-event drift</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td><strong>Signal E-4</strong></td>
+                                    <td>Class E</td>
                                     <td><span class="direction-badge long">Long</span></td>
-                                    <td class="mono">1.0887</td>
-                                    <td class="mono pos">+94.1</td>
-                                    <td class="mono neg">−28.6</td>
-                                    <td><span class="edge-pos">3.3×</span></td>
-                                    <td class="activity-time">18m</td>
+                                    <td class="mono">1.0862</td>
+                                    <td class="mono">1.0871</td>
+                                    <td class="mono pos">+28.5</td>
+                                    <td class="mono neg">−17.2</td>
+                                    <td><span class="edge-pos">1.7×</span></td>
+                                    <td class="activity-time">9h 18m</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">G</div>
-                                            <div class="class-cell-info">
-                                                <strong>Signal G-2</strong>
-                                                <span>Post-event drift</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td><strong>Signal E-4</strong></td>
+                                    <td>Class E</td>
                                     <td><span class="direction-badge short">Short</span></td>
-                                    <td class="mono">1.0887</td>
-                                    <td class="mono pos">+14.2</td>
-                                    <td class="mono neg">−71.5</td>
-                                    <td><span class="edge-neg">0.2×</span></td>
-                                    <td class="activity-time">18m</td>
+                                    <td class="mono">1.0862</td>
+                                    <td class="mono">1.0871</td>
+                                    <td class="mono pos">+9.4</td>
+                                    <td class="mono neg">−14.6</td>
+                                    <td><span class="edge-neg">0.6×</span></td>
+                                    <td class="activity-time">9h 18m</td>
+                                    <td><span class="status-badge pending">Adverse</span></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
+                <!-- ============================================================ -->
+                <!-- RECENT CLOSED EXPERIMENTS                                    -->
+                <!-- ============================================================ -->
                 <div class="card">
                     <div class="card-header">
-                        <h3>Today's Snapshot</h3>
+                        <h3>Recent closed experiments</h3>
                         <span class="card-meta">last 24 hours</span>
                     </div>
-                    <div class="snapshot-grid">
-                        <div class="snapshot-item">
-                            <span class="snapshot-value">47</span>
-                            <span class="snapshot-label">New experiments opened</span>
+                    <div class="table-wrap">
+                        <table class="activity-table">
+                            <thead>
+                                <tr>
+                                    <th>Setup</th>
+                                    <th>Class</th>
+                                    <th>Direction</th>
+                                    <th>Entry</th>
+                                    <th>Exit</th>
+                                    <th>Favorable</th>
+                                    <th>Adverse</th>
+                                    <th>Ratio</th>
+                                    <th>Duration</th>
+                                    <th>Outcome</th>
+                                    <th>Closed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Signal A-3</strong></td>
+                                    <td>Class A</td>
+                                    <td><span class="direction-badge long">Long</span></td>
+                                    <td class="mono">1.0921</td>
+                                    <td class="mono">1.0947</td>
+                                    <td class="mono pos">+46.8</td>
+                                    <td class="mono neg">−22.5</td>
+                                    <td><span class="edge-pos">2.1×</span></td>
+                                    <td class="activity-time">4h 02m</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
+                                    <td class="activity-time">32m ago</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal A-3</strong></td>
+                                    <td>Class A</td>
+                                    <td><span class="direction-badge short">Short</span></td>
+                                    <td class="mono">1.0921</td>
+                                    <td class="mono">1.0947</td>
+                                    <td class="mono pos">+18.2</td>
+                                    <td class="mono neg">−41.0</td>
+                                    <td><span class="edge-neg">0.4×</span></td>
+                                    <td class="activity-time">4h 02m</td>
+                                    <td><span class="status-badge adverse">Adverse</span></td>
+                                    <td class="activity-time">32m ago</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal H-1</strong></td>
+                                    <td>Class H</td>
+                                    <td><span class="direction-badge long">Long</span></td>
+                                    <td class="mono">1.0804</td>
+                                    <td class="mono">1.0832</td>
+                                    <td class="mono pos">+28.1</td>
+                                    <td class="mono neg">−12.4</td>
+                                    <td><span class="edge-pos">2.3×</span></td>
+                                    <td class="activity-time">1h 42m</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
+                                    <td class="activity-time">1h ago</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal H-1</strong></td>
+                                    <td>Class H</td>
+                                    <td><span class="direction-badge short">Short</span></td>
+                                    <td class="mono">1.0804</td>
+                                    <td class="mono">1.0832</td>
+                                    <td class="mono pos">+6.8</td>
+                                    <td class="mono neg">−19.2</td>
+                                    <td><span class="edge-neg">0.4×</span></td>
+                                    <td class="activity-time">1h 42m</td>
+                                    <td><span class="status-badge adverse">Adverse</span></td>
+                                    <td class="activity-time">1h ago</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal F-2</strong></td>
+                                    <td>Class F</td>
+                                    <td><span class="direction-badge long">Long</span></td>
+                                    <td class="mono">1.1006</td>
+                                    <td class="mono">1.1042</td>
+                                    <td class="mono pos">+58.6</td>
+                                    <td class="mono neg">−24.3</td>
+                                    <td><span class="edge-pos">2.4×</span></td>
+                                    <td class="activity-time">3h 18m</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
+                                    <td class="activity-time">3h ago</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal F-2</strong></td>
+                                    <td>Class F</td>
+                                    <td><span class="direction-badge short">Short</span></td>
+                                    <td class="mono">1.1006</td>
+                                    <td class="mono">1.1042</td>
+                                    <td class="mono pos">+12.4</td>
+                                    <td class="mono neg">−52.8</td>
+                                    <td><span class="edge-neg">0.2×</span></td>
+                                    <td class="activity-time">3h 18m</td>
+                                    <td><span class="status-badge adverse">Adverse</span></td>
+                                    <td class="activity-time">3h ago</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal D-1</strong></td>
+                                    <td>Class D</td>
+                                    <td><span class="direction-badge long">Long</span></td>
+                                    <td class="mono">1.0765</td>
+                                    <td class="mono">1.0749</td>
+                                    <td class="mono pos">+8.2</td>
+                                    <td class="mono neg">−21.6</td>
+                                    <td><span class="edge-neg">0.4×</span></td>
+                                    <td class="activity-time">5h 24m</td>
+                                    <td><span class="status-badge adverse">Adverse</span></td>
+                                    <td class="activity-time">5h ago</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Signal D-1</strong></td>
+                                    <td>Class D</td>
+                                    <td><span class="direction-badge short">Short</span></td>
+                                    <td class="mono">1.0765</td>
+                                    <td class="mono">1.0749</td>
+                                    <td class="mono pos">+34.2</td>
+                                    <td class="mono neg">−11.8</td>
+                                    <td><span class="edge-pos">2.9×</span></td>
+                                    <td class="activity-time">5h 24m</td>
+                                    <td><span class="status-badge completed">Favorable</span></td>
+                                    <td class="activity-time">5h ago</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- PERFORMANCE BY CLASS + DURATION                              -->
+                <!-- ============================================================ -->
+                <div class="grid-2col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Performance by class</h3>
+                            <span class="card-meta">all time</span>
                         </div>
-                        <div class="snapshot-item">
-                            <span class="snapshot-value">31</span>
-                            <span class="snapshot-label">Completed</span>
+                        <div class="table-wrap">
+                            <table class="activity-table">
+                                <thead>
+                                    <tr>
+                                        <th>Class</th>
+                                        <th>Long</th>
+                                        <th>Short</th>
+                                        <th>Long win</th>
+                                        <th>Short win</th>
+                                        <th>Ratio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>G</strong> · Post-event drift</td>
+                                        <td>412</td>
+                                        <td>422</td>
+                                        <td><span class="perf-pill long">72%</span></td>
+                                        <td><span class="perf-pill short">21%</span></td>
+                                        <td><span class="edge-pos">3.3×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>C</strong> · Trend continuation</td>
+                                        <td>318</td>
+                                        <td>303</td>
+                                        <td><span class="perf-pill long">68%</span></td>
+                                        <td><span class="perf-pill short">28%</span></td>
+                                        <td><span class="edge-pos">2.4×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>A</strong> · Trend + volume</td>
+                                        <td>252</td>
+                                        <td>235</td>
+                                        <td><span class="perf-pill long">58%</span></td>
+                                        <td><span class="perf-pill short">34%</span></td>
+                                        <td><span class="edge-pos">1.7×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>F</strong> · Volatility breakout</td>
+                                        <td>46</td>
+                                        <td>42</td>
+                                        <td><span class="perf-pill long">61%</span></td>
+                                        <td><span class="perf-pill short">43%</span></td>
+                                        <td><span class="edge-pos">1.4×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>E</strong> · Breakout follow-through</td>
+                                        <td>204</td>
+                                        <td>198</td>
+                                        <td><span class="perf-pill long">54%</span></td>
+                                        <td><span class="perf-pill short">39%</span></td>
+                                        <td><span class="edge-pos">1.4×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>B</strong> · Reversal near resistance</td>
+                                        <td>158</td>
+                                        <td>154</td>
+                                        <td><span class="perf-pill long">41%</span></td>
+                                        <td><span class="perf-pill short">47%</span></td>
+                                        <td><span class="edge-neg">0.9×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>H</strong> · New combination</td>
+                                        <td>22</td>
+                                        <td>22</td>
+                                        <td><span class="perf-pill long">33%</span></td>
+                                        <td><span class="perf-pill short">30%</span></td>
+                                        <td><span class="edge-neg">0.7×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>D</strong> · Mean-reversion in range</td>
+                                        <td>74</td>
+                                        <td>74</td>
+                                        <td><span class="perf-pill long">22%</span></td>
+                                        <td><span class="perf-pill short">31%</span></td>
+                                        <td><span class="edge-neg">0.6×</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="snapshot-item">
-                            <span class="snapshot-value pos">24</span>
-                            <span class="snapshot-label">Favorable close</span>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Performance by duration</h3>
+                            <span class="card-meta">closed experiments</span>
                         </div>
-                        <div class="snapshot-item">
-                            <span class="snapshot-value neg">7</span>
-                            <span class="snapshot-label">Adverse close</span>
+                        <div class="table-wrap">
+                            <table class="activity-table">
+                                <thead>
+                                    <tr>
+                                        <th>Duration</th>
+                                        <th>Count</th>
+                                        <th>Avg fav</th>
+                                        <th>Avg adv</th>
+                                        <th>Ratio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>&lt; 1h</td>
+                                        <td>218</td>
+                                        <td class="mono pos">+22.4</td>
+                                        <td class="mono neg">−18.6</td>
+                                        <td><span class="edge-pos">1.2×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1h – 4h</td>
+                                        <td>486</td>
+                                        <td class="mono pos">+58.2</td>
+                                        <td class="mono neg">−28.4</td>
+                                        <td><span class="edge-pos">2.1×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4h – 12h</td>
+                                        <td>624</td>
+                                        <td class="mono pos">+94.6</td>
+                                        <td class="mono neg">−38.2</td>
+                                        <td><span class="edge-pos">2.5×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>12h – 24h</td>
+                                        <td>312</td>
+                                        <td class="mono pos">+108.4</td>
+                                        <td class="mono neg">−48.6</td>
+                                        <td><span class="edge-pos">2.2×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1d – 3d</td>
+                                        <td>148</td>
+                                        <td class="mono pos">+124.2</td>
+                                        <td class="mono neg">−62.8</td>
+                                        <td><span class="edge-pos">2.0×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3d – 7d</td>
+                                        <td>48</td>
+                                        <td class="mono pos">+142.6</td>
+                                        <td class="mono neg">−88.4</td>
+                                        <td><span class="edge-pos">1.6×</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>7d +</td>
+                                        <td>11</td>
+                                        <td class="mono pos">+98.2</td>
+                                        <td class="mono neg">−124.6</td>
+                                        <td><span class="edge-neg">0.8×</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- CUMULATIVE MOVEMENT CHART                                    -->
+                <!-- ============================================================ -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Cumulative movement</h3>
+                        <span class="card-meta">all closed experiments &middot; weekly</span>
+                    </div>
+
+                    <div class="chart-legend">
+                        <span class="legend-item"><span class="legend-swatch teal"></span>Cumulative favorable</span>
+                        <span class="legend-item"><span class="legend-swatch amber"></span>Cumulative adverse</span>
+                    </div>
+
+                    <div class="chart-body">
+                        <div class="chart-y-left">
+                            <span>10k</span>
+                            <span>8k</span>
+                            <span>6k</span>
+                            <span>4k</span>
+                            <span>2k</span>
+                            <span>0</span>
+                        </div>
+
+                        <div class="chart-plot">
+                            <svg id="cumulativeChart" viewBox="0 0 960 330" preserveAspectRatio="none" role="img" aria-label="Cumulative favorable and adverse movement over time">
+                                <g class="chart-grid">
+                                    <line x1="0" y1="0"   x2="960" y2="0" />
+                                    <line x1="0" y1="33"  x2="960" y2="33" />
+                                    <line x1="0" y1="66"  x2="960" y2="66" />
+                                    <line x1="0" y1="99"  x2="960" y2="99" />
+                                    <line x1="0" y1="132" x2="960" y2="132" />
+                                    <line x1="0" y1="165" x2="960" y2="165" />
+                                    <line x1="0" y1="198" x2="960" y2="198" />
+                                    <line x1="0" y1="231" x2="960" y2="231" />
+                                    <line x1="0" y1="264" x2="960" y2="264" />
+                                    <line x1="0" y1="297" x2="960" y2="297" />
+                                    <line x1="0" y1="330" x2="960" y2="330" />
+                                </g>
+
+                                <g class="chart-axis">
+                                    <line x1="0" y1="0" x2="0" y2="330" />
+                                    <line x1="960" y1="0" x2="960" y2="330" />
+                                </g>
+
+                                <polyline class="chart-line chart-line-pct"
+                                    points="0,320 106.67,290 213.33,258 320,224 426.67,196 533.33,168 640,138 746.67,108 853.33,80 960,50" />
+                                <g class="chart-points chart-points-pct">
+                                    <circle cx="0" cy="320" r="3.5" />
+                                    <circle cx="106.67" cy="290" r="3.5" />
+                                    <circle cx="213.33" cy="258" r="3.5" />
+                                    <circle cx="320" cy="224" r="3.5" />
+                                    <circle cx="426.67" cy="196" r="3.5" />
+                                    <circle cx="533.33" cy="168" r="3.5" />
+                                    <circle cx="640" cy="138" r="3.5" />
+                                    <circle cx="746.67" cy="108" r="3.5" />
+                                    <circle cx="853.33" cy="80" r="3.5" />
+                                    <circle cx="960" cy="50" r="3.5" />
+                                </g>
+
+                                <polyline class="chart-line chart-line-pips"
+                                    points="0,324 106.67,306 213.33,288 320,268 426.67,250 533.33,232 640,214 746.67,198 853.33,182 960,166" />
+                                <g class="chart-points chart-points-pips">
+                                    <circle cx="0" cy="324" r="3.5" />
+                                    <circle cx="106.67" cy="306" r="3.5" />
+                                    <circle cx="213.33" cy="288" r="3.5" />
+                                    <circle cx="320" cy="268" r="3.5" />
+                                    <circle cx="426.67" cy="250" r="3.5" />
+                                    <circle cx="533.33" cy="232" r="3.5" />
+                                    <circle cx="640" cy="214" r="3.5" />
+                                    <circle cx="746.67" cy="198" r="3.5" />
+                                    <circle cx="853.33" cy="182" r="3.5" />
+                                    <circle cx="960" cy="166" r="3.5" />
+                                </g>
+                            </svg>
+                        </div>
+
+                        <div class="chart-y-right">
+                            <span>10k</span>
+                            <span>8k</span>
+                            <span>6k</span>
+                            <span>4k</span>
+                            <span>2k</span>
+                            <span>0</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-x-bar">
+                        <div class="chart-x-spacer"></div>
+                        <div class="chart-x-labels">
+                            <span>W1</span>
+                            <span>W2</span>
+                            <span>W3</span>
+                            <span>W4</span>
+                            <span>W5</span>
+                            <span>W6</span>
+                            <span>W7</span>
+                            <span>W8</span>
+                            <span>W9</span>
+                            <span>W10</span>
+                        </div>
+                        <div class="chart-x-spacer"></div>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- BEST AND WORST PERFORMERS                                    -->
+                <!-- ============================================================ -->
+                <div class="grid-2col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Best performers</h3>
+                            <span class="badge success">Top 5 by ratio</span>
+                        </div>
+                        <div class="signal-feed">
+                            <div class="signal-item">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Signal G-2 · Long</div>
+                                    <div class="signal-item-desc">Class G · 3.3× ratio · +94.1 / −28.6 · 834 obs</div>
+                                </div>
+                                <span class="signal-item-time">18m</span>
+                            </div>
+                            <div class="signal-item">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Signal D-1 · Short</div>
+                                    <div class="signal-item-desc">Class D · 2.9× ratio · +34.2 / −11.8</div>
+                                </div>
+                                <span class="signal-item-time">5h</span>
+                            </div>
+                            <div class="signal-item">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Signal C-7 · Long</div>
+                                    <div class="signal-item-desc">Class C · 2.4× ratio · +82.4 / −34.1 · 621 obs</div>
+                                </div>
+                                <span class="signal-item-time">2h</span>
+                            </div>
+                            <div class="signal-item">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Signal F-2 · Long</div>
+                                    <div class="signal-item-desc">Class F · 2.4× ratio · +58.6 / −24.3</div>
+                                </div>
+                                <span class="signal-item-time">3h</span>
+                            </div>
+                            <div class="signal-item">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Signal H-1 · Long</div>
+                                    <div class="signal-item-desc">Class H · 2.3× ratio · +28.1 / −12.4</div>
+                                </div>
+                                <span class="signal-item-time">1h</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Worst performers</h3>
+                            <span class="badge warning">Bottom 5 by ratio</span>
+                        </div>
+                        <div class="signal-feed">
+                            <div class="signal-item filtered">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Signal F-2 · Short</div>
+                                    <div class="signal-item-desc">Class F · 0.2× ratio · +12.4 / −52.8</div>
+                                </div>
+                                <span class="signal-item-time">3h</span>
+                            </div>
+                            <div class="signal-item filtered">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Signal H-1 · Short</div>
+                                    <div class="signal-item-desc">Class H · 0.4× ratio · +6.8 / −19.2</div>
+                                </div>
+                                <span class="signal-item-time">1h</span>
+                            </div>
+                            <div class="signal-item filtered">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Signal A-3 · Short</div>
+                                    <div class="signal-item-desc">Class A · 0.4× ratio · +18.2 / −41.0</div>
+                                </div>
+                                <span class="signal-item-time">4h</span>
+                            </div>
+                            <div class="signal-item filtered">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Signal D-1 · Long</div>
+                                    <div class="signal-item-desc">Class D · 0.4× ratio · +8.2 / −21.6</div>
+                                </div>
+                                <span class="signal-item-time">5h</span>
+                            </div>
+                            <div class="signal-item filtered">
+                                <span class="signal-dot-wrap"></span>
+                                <div class="signal-item-info">
+                                    <div class="signal-item-title">Signal C-7 · Short</div>
+                                    <div class="signal-item-desc">Class C · 0.5× ratio · +31.2 / −58.7 · 621 obs</div>
+                                </div>
+                                <span class="signal-item-time">2h</span>
+                            </div>
                         </div>
                     </div>
                 </div>
