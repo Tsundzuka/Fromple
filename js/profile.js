@@ -4,6 +4,7 @@
 // This file loads the user session, sets up tab switching,
 // and dynamically imports the tab modules when needed.
 
+import { requireAuth } from './auth-guard.js';
 import { showToast } from './utils/toast.js';
 
 // Make toast available globally for legacy inline onclick handlers
@@ -47,9 +48,6 @@ async function initializeProfile() {
             profileUser = session.user;
             console.log("✅ Authenticated user:", profileUser.email);
             updateUserUI(profileUser);
-
-            // Load the default tab (Overview)
-            await loadTab('overview');
         } else {
             console.log("👤 Guest user (not logged in)");
             updateGuestUI();
@@ -224,15 +222,10 @@ window.dismissSetup = function(id) {
 };
 
 // ============================================================
-// DOM EVENT BINDING
+// EVENT BINDING
 // ============================================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔵 Profile initializing...');
-
-    // Initialize
-    initializeProfile();
-
+function attachEventListeners() {
     // Attach click listeners to nav links
     const navLinks = document.querySelectorAll('.sidebar-nav a');
     navLinks.forEach(link => {
@@ -243,16 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle hash on load
-    const hash = window.location.hash.replace('#', '');
-    if (hash) {
-        const validTabs = ['overview', 'review', 'usage', 'settings'];
-        if (validTabs.includes(hash)) {
-            setTimeout(() => switchTab(hash), 100);
-        }
-    }
-
-    // Sidebar toggle button
+    // Sidebar toggle button (mobile)
     const toggleBtn = document.getElementById('adminSidebarToggle');
     if (toggleBtn) {
         toggleBtn.addEventListener('click', function() {
@@ -260,14 +244,37 @@ document.addEventListener('DOMContentLoaded', function() {
             if (sidebar) sidebar.classList.toggle('open');
         });
     }
+}
+
+// ============================================================
+// BOOTSTRAP
+// ============================================================
+// Module scripts run after the DOM is parsed, so no
+// DOMContentLoaded listener is needed.
+
+(async function bootstrap() {
+    console.log('🔵 Profile initializing...');
+
+    // 1. Auth guard first — redirects to login if no session
+    await requireAuth();
+
+    // 2. Load session + update UI
+    await initializeProfile();
+
+    // 3. Bind tab clicks + sidebar toggle
+    attachEventListeners();
+
+    // 4. Resolve initial tab from hash, falling back to overview
+    const hash = window.location.hash.replace('#', '');
+    const validTabs = ['overview', 'review', 'usage', 'settings'];
+    const initialTab = validTabs.includes(hash) ? hash : 'overview';
+    await switchTab(initialTab);
 
     console.log('✅ Profile initialized');
-});
+})();
 
 // ============================================================
 // EXPOSE AUTH AND USER FOR OTHER MODULES
 // ============================================================
 
-// This allows other modules to access the user and supabase instance
-// without having to re-authenticate.
 export { supabaseInstance, profileUser, currentOrganizationId };
