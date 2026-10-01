@@ -416,6 +416,7 @@
 .status-badge.completed   { background: #D1FAE5; color: #065F46; }
 .status-badge.in-progress { background: #DBEAFE; color: #1E40AF; }
 .status-badge.pending     { background: #FEF3C7; color: #92400E; }
+.status-badge.adverse     { background: #FEE2E2; color: #991B1B; }
 
 /* ========================================
    FILTER BUTTONS
@@ -1091,7 +1092,7 @@
 .movement-value.pos { color: var(--primary-dark); }
 .movement-value.neg { color: #DC2626; }
 
-/* ---------- Histogram (used in Monitoring) ---------- */
+/* ---------- Histogram (used in Monitoring + Paper Trading) ---------- */
 .histogram {
     display: flex;
     align-items: flex-end;
@@ -1306,6 +1307,105 @@
 .snapshot-label {
     font-size: 11px;
     color: var(--gray-500);
+}
+
+/* ---------- Metric grid (directional comparison) ---------- */
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 11px 12px;
+    background: var(--gray-50);
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-100);
+    min-width: 0;
+}
+
+.metric-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.metric-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--gray-900);
+    line-height: 1.1;
+}
+
+.metric-value.pos { color: var(--primary-dark); }
+.metric-value.neg { color: #DC2626; }
+
+/* ---------- Statistical summary list ---------- */
+.stat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.stat-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--gray-100);
+    gap: 12px;
+}
+
+.stat-list-item:last-child { border-bottom: none; }
+.stat-list-item:first-child { padding-top: 4px; }
+
+.stat-list-label {
+    font-size: 12.5px;
+    color: var(--gray-600);
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stat-list-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-800);
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.stat-list-value.pos { color: var(--primary-dark); }
+.stat-list-value.neg { color: #DC2626; }
+
+/* ---------- Distribution blocks (side-by-side histograms) ---------- */
+.dist-block {
+    margin-bottom: 18px;
+}
+
+.dist-block:last-child { margin-bottom: 0; }
+
+.dist-label {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
 }
 
 /* ============================================================
@@ -1665,6 +1765,7 @@
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .grid-2col  { grid-template-columns: 1fr; }
     .component-grid { grid-template-columns: repeat(2, 1fr); }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -1736,6 +1837,9 @@
     /* Component grid */
     .component-grid { grid-template-columns: 1fr 1fr; }
 
+    /* Metric grid */
+    .metric-grid { grid-template-columns: 1fr 1fr; }
+
     /* Chart */
     .chart-body { height: 220px; grid-template-columns: 40px 1fr 40px; gap: 8px; }
     .chart-x-bar { grid-template-columns: 40px 1fr 40px; gap: 8px; }
@@ -1768,6 +1872,9 @@
 
     /* Component grid */
     .component-grid { grid-template-columns: 1fr; }
+
+    /* Metric grid */
+    .metric-grid { grid-template-columns: 1fr 1fr; }
 
     /* Chart */
     .chart-body { height: 180px; grid-template-columns: 32px 1fr 32px; gap: 6px; }
