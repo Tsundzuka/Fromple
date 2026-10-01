@@ -952,16 +952,12 @@
                     </div>
                 </header>
 
-                <!-- VIEW TOGGLE -->
-                <div class="pt-view-bar">
-                    <span class="pt-view-label">View</span>
-                    <div class="pt-view-toggle" id="ptViewToggle">
-                        <button class="pt-view-btn active" type="button" data-view="all">All classes</button>
-                        <button class="pt-view-btn" type="button" data-view="single">Single class</button>
-                    </div>
-                    <div class="pt-view-class-wrap" id="ptClassWrap" hidden>
-                        <label class="pt-view-label" for="ptClassSelect">Class</label>
+                <!-- CLASS FILTER -->
+                <div class="card">
+                    <div class="class-filter-bar">
+                        <label class="class-filter-label" for="ptClassSelect">Filter by class</label>
                         <select class="class-filter-select" id="ptClassSelect">
+                            <option value="all" selected>All classes</option>
                             <option value="A">Class A · Trend + volume confirmation</option>
                             <option value="B">Class B · Reversal near resistance</option>
                             <option value="C">Class C · Trend continuation</option>
@@ -971,8 +967,8 @@
                             <option value="G">Class G · Post-event drift</option>
                             <option value="H">Class H · New combination</option>
                         </select>
+                        <span class="pt-view-meta" id="ptViewMeta">Showing all classes</span>
                     </div>
-                    <span class="pt-view-meta" id="ptViewMeta">Showing all classes</span>
                 </div>
 
                 <!-- KPI ROW -->
