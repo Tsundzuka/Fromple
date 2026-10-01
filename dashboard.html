@@ -497,7 +497,7 @@
                             <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#14B8A6" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#14B8A6" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#14B8A6" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#14B8A6" stroke-width="2"/></svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">5</span>
+                            <span class="stat-value">6</span>
                             <span class="stat-label">Categories</span>
                         </div>
                     </div>
@@ -506,7 +506,7 @@
                             <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M4 6h16M4 12h16M4 18h10" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">28</span>
+                            <span class="stat-value">29</span>
                             <span class="stat-label">Conditions categorised</span>
                         </div>
                     </div>
@@ -538,38 +538,45 @@
                     <div class="category-grid">
                         <div class="category-card">
                             <div class="category-head">
-                                <span class="category-name">Structure</span>
-                                <span class="category-count">6 conditions</span>
+                                <span class="category-name">Regime</span>
+                                <span class="category-count">3 conditions</span>
                             </div>
-                            <p class="category-desc">Support / resistance state, trend direction, range position, prior swing points.</p>
+                            <p class="category-desc">Broad directional character of the market. Uptrend, downtrend, or consolidating.</p>
                         </div>
                         <div class="category-card">
                             <div class="category-head">
-                                <span class="category-name">Technical</span>
-                                <span class="category-count">5 conditions</span>
-                            </div>
-                            <p class="category-desc">Volume, volatility, momentum, price action characteristics.</p>
-                        </div>
-                        <div class="category-card">
-                            <div class="category-head">
-                                <span class="category-name">Indicator</span>
+                                <span class="category-name">Market State</span>
                                 <span class="category-count">8 conditions</span>
                             </div>
-                            <p class="category-desc">Moving averages, RSI, MACD, Bollinger Bands, and other computed signals.</p>
+                            <p class="category-desc">Price position relative to support, resistance, range boundaries, and prior swing points. Includes volume, volatility, and momentum characteristics.</p>
                         </div>
                         <div class="category-card">
                             <div class="category-head">
-                                <span class="category-name">Calendar</span>
+                                <span class="category-name">Indicators</span>
+                                <span class="category-count">6 conditions</span>
+                            </div>
+                            <p class="category-desc">Computed signals from predefined indicators — moving averages, RSI, MACD, Bollinger Bands.</p>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-head">
+                                <span class="category-name">Economic Calendar</span>
                                 <span class="category-count">4 conditions</span>
                             </div>
-                            <p class="category-desc">Economic events, actual vs. forecast, time relative to release, importance.</p>
+                            <p class="category-desc">Scheduled economic events — proximity to release, importance, and outcome vs. forecast.</p>
                         </div>
                         <div class="category-card">
                             <div class="category-head">
-                                <span class="category-name">Fundamental</span>
+                                <span class="category-name">COT</span>
                                 <span class="category-count">5 conditions</span>
                             </div>
-                            <p class="category-desc">COT positioning, net long/short changes, weekly sentiment shifts.</p>
+                            <p class="category-desc">Commitment of Traders positioning — net long/short, weekly change, and extreme readings.</p>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-head">
+                                <span class="category-name">Sentiment</span>
+                                <span class="category-count">3 conditions</span>
+                            </div>
+                            <p class="category-desc">News events and other non-calendar developments that shape short-term market sentiment.</p>
                         </div>
                     </div>
                 </div>
@@ -579,11 +586,12 @@
                         <h3>All Conditions</h3>
                         <div class="filter-tabs">
                             <button class="filter-btn active" type="button">All</button>
-                            <button class="filter-btn" type="button">Structure</button>
-                            <button class="filter-btn" type="button">Technical</button>
-                            <button class="filter-btn" type="button">Indicator</button>
-                            <button class="filter-btn" type="button">Calendar</button>
-                            <button class="filter-btn" type="button">Fundamental</button>
+                            <button class="filter-btn" type="button">Regime</button>
+                            <button class="filter-btn" type="button">Market State</button>
+                            <button class="filter-btn" type="button">Indicators</button>
+                            <button class="filter-btn" type="button">Economic Calendar</button>
+                            <button class="filter-btn" type="button">COT</button>
+                            <button class="filter-btn" type="button">Sentiment</button>
                         </div>
                     </div>
                     <div class="table-wrap">
@@ -598,36 +606,46 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td>Trend up</td><td><span class="cat-tag">Structure</span></td><td>7 classes</td><td>2,184</td><td class="activity-time">2h ago</td></tr>
-                                <tr><td>Trend down</td><td><span class="cat-tag">Structure</span></td><td>5 classes</td><td>1,412</td><td class="activity-time">3h ago</td></tr>
-                                <tr><td>Support holding</td><td><span class="cat-tag">Structure</span></td><td>6 classes</td><td>1,876</td><td class="activity-time">2h ago</td></tr>
-                                <tr><td>Resistance holding</td><td><span class="cat-tag">Structure</span></td><td>4 classes</td><td>1,204</td><td class="activity-time">4h ago</td></tr>
-                                <tr><td>Range position · upper</td><td><span class="cat-tag">Structure</span></td><td>3 classes</td><td>862</td><td class="activity-time">6h ago</td></tr>
-                                <tr><td>Range position · lower</td><td><span class="cat-tag">Structure</span></td><td>3 classes</td><td>794</td><td class="activity-time">6h ago</td></tr>
+                                <!-- Regime -->
+                                <tr><td>Uptrend</td><td><span class="cat-tag">Regime</span></td><td>7 classes</td><td>2,184</td><td class="activity-time">2h ago</td></tr>
+                                <tr><td>Downtrend</td><td><span class="cat-tag">Regime</span></td><td>5 classes</td><td>1,412</td><td class="activity-time">3h ago</td></tr>
+                                <tr><td>Consolidating</td><td><span class="cat-tag">Regime</span></td><td>4 classes</td><td>1,098</td><td class="activity-time">3h ago</td></tr>
 
-                                <tr><td>Volume high</td><td><span class="cat-tag">Technical</span></td><td>6 classes</td><td>1,938</td><td class="activity-time">2h ago</td></tr>
-                                <tr><td>Volume low</td><td><span class="cat-tag">Technical</span></td><td>3 classes</td><td>722</td><td class="activity-time">8h ago</td></tr>
-                                <tr><td>Volatility expanding</td><td><span class="cat-tag">Technical</span></td><td>5 classes</td><td>1,614</td><td class="activity-time">3h ago</td></tr>
-                                <tr><td>Momentum strong</td><td><span class="cat-tag">Technical</span></td><td>4 classes</td><td>1,102</td><td class="activity-time">5h ago</td></tr>
-                                <tr><td>Wick rejection</td><td><span class="cat-tag">Technical</span></td><td>2 classes</td><td>512</td><td class="activity-time">10h ago</td></tr>
+                                <!-- Market State -->
+                                <tr><td>Support holding</td><td><span class="cat-tag">Market State</span></td><td>6 classes</td><td>1,876</td><td class="activity-time">2h ago</td></tr>
+                                <tr><td>Resistance holding</td><td><span class="cat-tag">Market State</span></td><td>4 classes</td><td>1,204</td><td class="activity-time">4h ago</td></tr>
+                                <tr><td>Range position · upper</td><td><span class="cat-tag">Market State</span></td><td>3 classes</td><td>862</td><td class="activity-time">6h ago</td></tr>
+                                <tr><td>Range position · lower</td><td><span class="cat-tag">Market State</span></td><td>3 classes</td><td>794</td><td class="activity-time">6h ago</td></tr>
+                                <tr><td>Volume high</td><td><span class="cat-tag">Market State</span></td><td>6 classes</td><td>1,938</td><td class="activity-time">2h ago</td></tr>
+                                <tr><td>Volume low</td><td><span class="cat-tag">Market State</span></td><td>3 classes</td><td>722</td><td class="activity-time">8h ago</td></tr>
+                                <tr><td>Volatility expanding</td><td><span class="cat-tag">Market State</span></td><td>5 classes</td><td>1,614</td><td class="activity-time">3h ago</td></tr>
+                                <tr><td>Wick rejection</td><td><span class="cat-tag">Market State</span></td><td>2 classes</td><td>512</td><td class="activity-time">10h ago</td></tr>
 
-                                <tr><td>MA20 rising</td><td><span class="cat-tag">Indicator</span></td><td>5 classes</td><td>1,806</td><td class="activity-time">2h ago</td></tr>
-                                <tr><td>MA50 rising</td><td><span class="cat-tag">Indicator</span></td><td>4 classes</td><td>1,428</td><td class="activity-time">4h ago</td></tr>
-                                <tr><td>RSI &gt; 55</td><td><span class="cat-tag">Indicator</span></td><td>6 classes</td><td>1,846</td><td class="activity-time">2h ago</td></tr>
-                                <tr><td>RSI &lt; 45</td><td><span class="cat-tag">Indicator</span></td><td>4 classes</td><td>1,206</td><td class="activity-time">5h ago</td></tr>
-                                <tr><td>MACD cross</td><td><span class="cat-tag">Indicator</span></td><td>3 classes</td><td>886</td><td class="activity-time">7h ago</td></tr>
-                                <tr><td>Bollinger squeeze</td><td><span class="cat-tag">Indicator</span></td><td>2 classes</td><td>534</td><td class="activity-time">12h ago</td></tr>
+                                <!-- Indicators -->
+                                <tr><td>MA20 rising</td><td><span class="cat-tag">Indicators</span></td><td>5 classes</td><td>1,806</td><td class="activity-time">2h ago</td></tr>
+                                <tr><td>MA50 rising</td><td><span class="cat-tag">Indicators</span></td><td>4 classes</td><td>1,428</td><td class="activity-time">4h ago</td></tr>
+                                <tr><td>RSI &gt; 55</td><td><span class="cat-tag">Indicators</span></td><td>6 classes</td><td>1,846</td><td class="activity-time">2h ago</td></tr>
+                                <tr><td>RSI &lt; 45</td><td><span class="cat-tag">Indicators</span></td><td>4 classes</td><td>1,206</td><td class="activity-time">5h ago</td></tr>
+                                <tr><td>MACD cross</td><td><span class="cat-tag">Indicators</span></td><td>3 classes</td><td>886</td><td class="activity-time">7h ago</td></tr>
+                                <tr><td>Bollinger squeeze</td><td><span class="cat-tag">Indicators</span></td><td>2 classes</td><td>534</td><td class="activity-time">12h ago</td></tr>
 
-                                <tr><td>CPI within 3 days</td><td><span class="cat-tag fund">Calendar</span></td><td>4 classes</td><td>1,024</td><td class="activity-time">6h ago</td></tr>
-                                <tr><td>NFP within 2 days</td><td><span class="cat-tag fund">Calendar</span></td><td>3 classes</td><td>712</td><td class="activity-time">8h ago</td></tr>
-                                <tr><td>Rate decision imminent</td><td><span class="cat-tag fund">Calendar</span></td><td>2 classes</td><td>418</td><td class="activity-time">14h ago</td></tr>
-                                <tr><td>No event nearby</td><td><span class="cat-tag fund">Calendar</span></td><td>5 classes</td><td>1,542</td><td class="activity-time">2h ago</td></tr>
+                                <!-- Economic Calendar -->
+                                <tr><td>CPI within 3 days</td><td><span class="cat-tag">Economic Calendar</span></td><td>4 classes</td><td>1,024</td><td class="activity-time">6h ago</td></tr>
+                                <tr><td>NFP within 2 days</td><td><span class="cat-tag">Economic Calendar</span></td><td>3 classes</td><td>712</td><td class="activity-time">8h ago</td></tr>
+                                <tr><td>Rate decision imminent</td><td><span class="cat-tag">Economic Calendar</span></td><td>2 classes</td><td>418</td><td class="activity-time">14h ago</td></tr>
+                                <tr><td>No event nearby</td><td><span class="cat-tag">Economic Calendar</span></td><td>5 classes</td><td>1,542</td><td class="activity-time">2h ago</td></tr>
 
-                                <tr><td>COT net long</td><td><span class="cat-tag fund">Fundamental</span></td><td>4 classes</td><td>1,286</td><td class="activity-time">1d ago</td></tr>
-                                <tr><td>COT net short</td><td><span class="cat-tag fund">Fundamental</span></td><td>3 classes</td><td>908</td><td class="activity-time">1d ago</td></tr>
-                                <tr><td>COT net long rising</td><td><span class="cat-tag fund">Fundamental</span></td><td>3 classes</td><td>742</td><td class="activity-time">1d ago</td></tr>
-                                <tr><td>COT net short falling</td><td><span class="cat-tag fund">Fundamental</span></td><td>2 classes</td><td>486</td><td class="activity-time">1d ago</td></tr>
-                                <tr><td>COT extreme positioning</td><td><span class="cat-tag fund">Fundamental</span></td><td>2 classes</td><td>364</td><td class="activity-time">1d ago</td></tr>
+                                <!-- COT -->
+                                <tr><td>COT net long</td><td><span class="cat-tag">COT</span></td><td>4 classes</td><td>1,286</td><td class="activity-time">1d ago</td></tr>
+                                <tr><td>COT net short</td><td><span class="cat-tag">COT</span></td><td>3 classes</td><td>908</td><td class="activity-time">1d ago</td></tr>
+                                <tr><td>COT net long rising</td><td><span class="cat-tag">COT</span></td><td>3 classes</td><td>742</td><td class="activity-time">1d ago</td></tr>
+                                <tr><td>COT net short falling</td><td><span class="cat-tag">COT</span></td><td>2 classes</td><td>486</td><td class="activity-time">1d ago</td></tr>
+                                <tr><td>COT extreme positioning</td><td><span class="cat-tag">COT</span></td><td>2 classes</td><td>364</td><td class="activity-time">1d ago</td></tr>
+
+                                <!-- Sentiment -->
+                                <tr><td>News event active</td><td><span class="cat-tag">Sentiment</span></td><td>3 classes</td><td>648</td><td class="activity-time">4h ago</td></tr>
+                                <tr><td>Sentiment positive shift</td><td><span class="cat-tag">Sentiment</span></td><td>2 classes</td><td>412</td><td class="activity-time">6h ago</td></tr>
+                                <tr><td>Sentiment negative shift</td><td><span class="cat-tag">Sentiment</span></td><td>2 classes</td><td>386</td><td class="activity-time">8h ago</td></tr>
                             </tbody>
                         </table>
                     </div>
