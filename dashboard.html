@@ -952,9 +952,30 @@
                     </div>
                 </header>
 
-                <!-- ============================================================ -->
-                <!-- KPI ROW                                                     -->
-                <!-- ============================================================ -->
+                <!-- VIEW TOGGLE -->
+                <div class="pt-view-bar">
+                    <span class="pt-view-label">View</span>
+                    <div class="pt-view-toggle" id="ptViewToggle">
+                        <button class="pt-view-btn active" type="button" data-view="all">All classes</button>
+                        <button class="pt-view-btn" type="button" data-view="single">Single class</button>
+                    </div>
+                    <div class="pt-view-class-wrap" id="ptClassWrap" hidden>
+                        <label class="pt-view-label" for="ptClassSelect">Class</label>
+                        <select class="class-filter-select" id="ptClassSelect">
+                            <option value="A">Class A · Trend + volume confirmation</option>
+                            <option value="B">Class B · Reversal near resistance</option>
+                            <option value="C">Class C · Trend continuation</option>
+                            <option value="D">Class D · Mean-reversion in range</option>
+                            <option value="E">Class E · Breakout follow-through</option>
+                            <option value="F">Class F · Volatility expansion breakout</option>
+                            <option value="G">Class G · Post-event drift</option>
+                            <option value="H">Class H · New combination</option>
+                        </select>
+                    </div>
+                    <span class="pt-view-meta" id="ptViewMeta">Showing all classes</span>
+                </div>
+
+                <!-- KPI ROW -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon blue">
@@ -1030,9 +1051,7 @@
                     </div>
                 </div>
 
-                <!-- ============================================================ -->
-                <!-- DIRECTIONAL BREAKDOWN                                        -->
-                <!-- ============================================================ -->
+                <!-- DIRECTIONAL BREAKDOWN -->
                 <div class="grid-2col">
                     <div class="card">
                         <div class="card-header">
@@ -1101,9 +1120,7 @@
                     </div>
                 </div>
 
-                <!-- ============================================================ -->
-                <!-- STATISTICAL SUMMARY + MOVEMENT DISTRIBUTION                  -->
-                <!-- ============================================================ -->
+                <!-- STATISTICAL SUMMARY + MOVEMENT DISTRIBUTION -->
                 <div class="grid-2col">
                     <div class="card">
                         <div class="card-header">
@@ -1204,9 +1221,7 @@
                     </div>
                 </div>
 
-                <!-- ============================================================ -->
-                <!-- LIVE OPEN EXPERIMENTS                                        -->
-                <!-- ============================================================ -->
+                <!-- LIVE OPEN EXPERIMENTS -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Live open experiments</h3>
@@ -1332,9 +1347,7 @@
                     </div>
                 </div>
 
-                <!-- ============================================================ -->
-                <!-- RECENT CLOSED EXPERIMENTS                                    -->
-                <!-- ============================================================ -->
+                <!-- RECENT CLOSED EXPERIMENTS -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Recent closed experiments</h3>
@@ -1467,10 +1480,8 @@
                     </div>
                 </div>
 
-                <!-- ============================================================ -->
-                <!-- PERFORMANCE BY CLASS + DURATION                              -->
-                <!-- ============================================================ -->
-                <div class="grid-2col">
+                <!-- PERFORMANCE BY CLASS + DURATION -->
+                <div class="grid-2col" id="ptClassPerfGroup">
                     <div class="card">
                         <div class="card-header">
                             <h3>Performance by class</h3>
@@ -1630,9 +1641,7 @@
                     </div>
                 </div>
 
-                <!-- ============================================================ -->
-                <!-- CUMULATIVE MOVEMENT CHART                                    -->
-                <!-- ============================================================ -->
+                <!-- CUMULATIVE MOVEMENT CHART -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Cumulative movement</h3>
@@ -1735,10 +1744,8 @@
                     </div>
                 </div>
 
-                <!-- ============================================================ -->
-                <!-- BEST AND WORST PERFORMERS                                    -->
-                <!-- ============================================================ -->
-                <div class="grid-2col">
+                <!-- BEST AND WORST PERFORMERS -->
+                <div class="grid-2col" id="ptLeaderboards">
                     <div class="card">
                         <div class="card-header">
                             <h3>Best performers</h3>
