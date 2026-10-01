@@ -12,11 +12,6 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/pages/dashboard.css" />
     <link rel="stylesheet" href="css/admin.css" />
-
-    <script type="module">
-        import { requireAuth } from './js/auth-guard.js';
-        await requireAuth();
-    </script>
 </head>
 <body>
 
@@ -32,7 +27,7 @@
 
         <aside class="sidebar" id="sidebar">
             <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-tab="dashboard">
+                <a href="#" class="nav-item active" data-tab="overview">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="7" height="7" rx="1.5" />
                         <rect x="14" y="3" width="7" height="7" rx="1.5" />
@@ -99,7 +94,7 @@
             <!-- ============================================================ -->
             <!-- TAB 1: OVERVIEW                                              -->
             <!-- ============================================================ -->
-            <section class="tab-content active" id="tab-dashboard">
+            <section class="tab-content active" id="tab-overview">
                 <header class="dashboard-header">
                     <div>
                         <h1>Overview</h1>
@@ -825,22 +820,6 @@
     <script src="js/main.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
-    <script>
-        document.querySelectorAll('.sidebar-nav a[data-tab]').forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                const tab = link.dataset.tab;
-                document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-                link.classList.add('active');
-                document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
-                document.getElementById('tab-' + tab)?.classList.add('active');
-                document.getElementById('sidebar')?.classList.remove('open');
-            });
-        });
-
-        document.getElementById('adminSidebarToggle')?.addEventListener('click', () => {
-            document.getElementById('sidebar')?.classList.toggle('open');
-        });
-    </script>
+    <script type="module" src="js/profile.js"></script>
 </body>
 </html>
