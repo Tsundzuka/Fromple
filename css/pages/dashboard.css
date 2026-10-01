@@ -1140,34 +1140,59 @@
 .edge-neg { background: #FEE2E2; color: #B91C1C; }
 
 /* ---------- Dual-axis line chart ---------- */
-.line-chart-wrap {
-    width: 100%;
-    overflow-x: auto;
+.chart-body {
+    display: grid;
+    grid-template-columns: 48px 1fr 48px;
+    gap: 10px;
+    height: 280px;
+    align-items: stretch;
+    margin-top: 4px;
 }
 
-.line-chart {
-    width: 100%;
-    height: auto;
-    min-width: 440px;
-    display: block;
-}
-
-.chart-grid line {
-    stroke: var(--gray-100);
-    stroke-width: 1;
-}
-
-.chart-axis line {
-    stroke: var(--gray-300);
-    stroke-width: 1;
-}
-
-.chart-label text {
+.chart-y-left,
+.chart-y-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
-    fill: var(--gray-600);
+    color: var(--gray-600);
+    line-height: 1;
 }
+
+.chart-y-left  { align-items: flex-end; text-align: right; }
+.chart-y-right { align-items: flex-start; text-align: left; }
+
+.chart-plot {
+    min-width: 0;
+    position: relative;
+}
+
+.chart-plot svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.chart-x-bar {
+    display: grid;
+    grid-template-columns: 48px 1fr 48px;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.chart-x-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray-600);
+}
+
+.chart-grid line { stroke: var(--gray-100); stroke-width: 1; }
+.chart-axis line { stroke: var(--gray-300); stroke-width: 1; }
 
 .chart-line {
     fill: none;
@@ -1386,7 +1411,7 @@
    DATA CATEGORISATION — COMPONENT VALUATION
    ============================================================ */
 
-/* ---------- Class filter bar ---------- */
+/* ---------- Class filter bar + dropdown ---------- */
 .class-filter-bar {
     display: flex;
     align-items: center;
@@ -1550,30 +1575,87 @@
     text-overflow: ellipsis;
 }
 
-/* ---------- Conditions table: 7 rows visible, scrollable ---------- */
-.conditions-table-wrap {
-    --conditions-row-h: 42px;
-    --conditions-head-h: 30px;
-    max-height: calc(var(--conditions-head-h) + 7 * var(--conditions-row-h));
+/* ============================================================
+   DATA CATEGORISATION — CLASS COMPOSITION TABLE
+   ============================================================ */
+
+.composition-table-wrap {
+    max-height: 640px;
     overflow-y: auto;
     overflow-x: auto;
 }
 
-.conditions-table-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
-.conditions-table-wrap::-webkit-scrollbar-track { background: transparent; }
-.conditions-table-wrap::-webkit-scrollbar-thumb {
+.composition-table-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
+.composition-table-wrap::-webkit-scrollbar-track { background: transparent; }
+.composition-table-wrap::-webkit-scrollbar-thumb {
     background: var(--gray-300);
     border-radius: 4px;
 }
-.conditions-table-wrap::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+.composition-table-wrap::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
 
-/* Sticky header inside the conditions scroll container */
-.conditions-table-wrap .activity-table thead th {
+.composition-table {
+    width: 100%;
+    min-width: 1180px;
+    border-collapse: collapse;
+    font-size: 12.5px;
+}
+
+.composition-table thead th {
+    text-align: left;
+    padding: 9px 12px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-500);
+    white-space: nowrap;
+    background: #fff;
     position: sticky;
     top: 0;
-    background: #fff;
     z-index: 2;
     box-shadow: inset 0 -1px 0 var(--gray-200);
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.composition-table tbody tr {
+    border-bottom: 1px solid var(--gray-100);
+    transition: var(--transition);
+}
+
+.composition-table tbody tr:last-child { border-bottom: none; }
+.composition-table tbody tr:hover { background: var(--gray-50); }
+.composition-table tbody tr.selected-row { background: var(--primary-lightest); }
+.composition-table tbody tr.selected-row:hover { background: var(--primary-light); }
+
+.composition-table td {
+    padding: 12px;
+    vertical-align: top;
+    color: var(--gray-700);
+    min-width: 150px;
+}
+
+.composition-table td:first-child {
+    min-width: 220px;
+    vertical-align: middle;
+}
+
+.comp-cond {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    margin: 0 3px 4px 0;
+    border-radius: 8px;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    white-space: nowrap;
+}
+
+.comp-empty {
+    display: inline-block;
+    color: var(--gray-300);
+    font-size: 13px;
+    padding: 3px 0;
 }
 
 /* ============================================================
@@ -1654,6 +1736,11 @@
     /* Component grid */
     .component-grid { grid-template-columns: 1fr 1fr; }
 
+    /* Chart */
+    .chart-body { height: 220px; grid-template-columns: 40px 1fr 40px; gap: 8px; }
+    .chart-x-bar { grid-template-columns: 40px 1fr 40px; gap: 8px; }
+    .chart-y-left, .chart-y-right, .chart-x-labels { font-size: 11px; }
+
     /* Hide Signals (3) and Last seen (10) */
     .class-table th:nth-child(3),
     .class-table td:nth-child(3),
@@ -1681,6 +1768,11 @@
 
     /* Component grid */
     .component-grid { grid-template-columns: 1fr; }
+
+    /* Chart */
+    .chart-body { height: 180px; grid-template-columns: 32px 1fr 32px; gap: 6px; }
+    .chart-x-bar { grid-template-columns: 32px 1fr 32px; gap: 6px; }
+    .chart-y-left, .chart-y-right, .chart-x-labels { font-size: 10px; }
 
     /* Hide Status (9) */
     .class-table th:nth-child(9),
