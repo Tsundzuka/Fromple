@@ -1408,68 +1408,7 @@
     margin-bottom: 8px;
 }
 
-/* ---------- View toggle (all classes / single class) ---------- */
-.pt-view-bar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    padding: 10px 14px;
-    background: #fff;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-    margin-bottom: 16px;
-}
-
-.pt-view-label {
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--gray-500);
-    flex-shrink: 0;
-}
-
-.pt-view-toggle {
-    display: inline-flex;
-    gap: 2px;
-    background: var(--gray-100);
-    padding: 2px;
-    border-radius: 7px;
-}
-
-.pt-view-btn {
-    padding: 5px 12px;
-    border: none;
-    background: transparent;
-    border-radius: 5px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--gray-500);
-    cursor: pointer;
-    transition: var(--transition);
-    font-family: inherit;
-    white-space: nowrap;
-}
-
-.pt-view-btn:hover { color: var(--gray-800); }
-
-.pt-view-btn.active {
-    background: #fff;
-    color: var(--primary-dark);
-    box-shadow: var(--shadow-sm);
-}
-
-.pt-view-class-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.pt-view-class-wrap[hidden] { display: none; }
-
+/* ---------- Paper trading meta ---------- */
 .pt-view-meta {
     margin-left: auto;
     font-size: 11.5px;
@@ -1829,6 +1768,333 @@
 }
 
 /* ============================================================
+   SIGNAL GENERATION
+   ============================================================ */
+
+/* ---------- Current market observation ---------- */
+.obs-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.obs-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 11px 12px;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    min-width: 0;
+    position: relative;
+}
+
+.obs-cell.obs-matched {
+    border-left: 3px solid var(--primary);
+    padding-left: 9px;
+}
+
+.obs-cell.obs-partial {
+    border-left: 3px solid var(--warning);
+    padding-left: 9px;
+}
+
+.obs-cell-cat {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray-500);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.obs-cell-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-800);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.obs-cell-note {
+    font-size: 10px;
+    color: var(--gray-400);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.03em;
+}
+
+/* ---------- Nearest registered class ---------- */
+.obs-nearest {
+    background: var(--primary-lightest);
+    border: 1px solid var(--primary-light);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+}
+
+.obs-nearest-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.obs-nearest-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--primary-dark);
+}
+
+.obs-nearest-match {
+    font-size: 11.5px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--primary-dark);
+    font-weight: 500;
+}
+
+.obs-nearest-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.obs-nearest-stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--gray-600);
+}
+
+.obs-nearest-stats strong {
+    color: var(--gray-800);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+}
+
+/* ---------- Live signal cards ---------- */
+.live-signal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.live-signal-card {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.live-signal-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+.live-signal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-100);
+    flex-wrap: wrap;
+}
+
+.live-signal-id {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.live-signal-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    letter-spacing: 0.02em;
+}
+
+.live-signal-class {
+    font-size: 12px;
+    color: var(--gray-500);
+}
+
+.live-signal-meta {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.live-signal-body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.live-signal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.live-signal-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-500);
+}
+
+.live-signal-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.live-signal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.live-signal-field-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.live-signal-field-value {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--gray-800);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.live-signal-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.confirm-chip {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+}
+
+.confirm-chip.on {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+.confirm-chip.off {
+    background: var(--gray-100);
+    color: var(--gray-400);
+    text-decoration: line-through;
+    text-decoration-color: var(--gray-300);
+}
+
+.live-signal-foot {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    background: var(--gray-50);
+    border-top: 1px solid var(--gray-100);
+    font-size: 11.5px;
+    color: var(--gray-600);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.live-signal-foot strong {
+    color: var(--gray-800);
+    font-weight: 600;
+}
+
+/* ---------- Signal registry table ---------- */
+.signal-registry-wrap {
+    --sig-row-h: 54px;
+    --sig-head-h: 34px;
+    max-height: calc(var(--sig-head-h) + 7 * var(--sig-row-h));
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.signal-registry-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
+.signal-registry-wrap::-webkit-scrollbar-track { background: transparent; }
+.signal-registry-wrap::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 4px;
+}
+.signal-registry-wrap::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+
+.signal-registry-table td {
+    padding: 12px 10px;
+    font-size: 12.5px;
+}
+
+.signal-registry-table thead th {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+    box-shadow: inset 0 -1px 0 var(--gray-200);
+    padding: 9px 10px;
+    font-size: 10px;
+}
+
+.signal-registry-table tbody tr { cursor: pointer; }
+.signal-registry-table tbody tr:hover { background: var(--gray-50); }
+
+.signal-registry-table td.num-wins   { color: var(--primary-dark); font-weight: 500; }
+.signal-registry-table td.num-losses { color: #B91C1C; font-weight: 500; }
+
+.sig-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    letter-spacing: 0.02em;
+}
+
+/* Numeric columns get centered in registry table */
+.signal-registry-table th:nth-child(4),
+.signal-registry-table th:nth-child(5),
+.signal-registry-table th:nth-child(6),
+.signal-registry-table th:nth-child(7),
+.signal-registry-table td:nth-child(4),
+.signal-registry-table td:nth-child(5),
+.signal-registry-table td:nth-child(6),
+.signal-registry-table td:nth-child(7) {
+    text-align: center;
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 1024px) {
@@ -1836,6 +2102,8 @@
     .grid-2col  { grid-template-columns: 1fr; }
     .component-grid { grid-template-columns: repeat(2, 1fr); }
     .metric-grid { grid-template-columns: repeat(2, 1fr); }
+    .obs-grid { grid-template-columns: repeat(3, 1fr); }
+    .live-signal-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -1915,12 +2183,23 @@
     .chart-x-bar { grid-template-columns: 40px 1fr 40px; gap: 8px; }
     .chart-y-left, .chart-y-right, .chart-x-labels { font-size: 11px; }
 
-    /* Paper trading view toggle */
+    /* Paper trading meta */
     .pt-view-meta { margin-left: 0; width: 100%; }
-    .pt-view-class-wrap { width: 100%; }
-    .pt-view-class-wrap .class-filter-select { min-width: 100%; }
 
-    /* Hide Signals (3) and Last seen (10) */
+    /* Observation grid */
+    .obs-grid { grid-template-columns: repeat(2, 1fr); }
+
+    /* Live signal */
+    .live-signal-grid { grid-template-columns: repeat(2, 1fr); }
+    .live-signal-foot { gap: 12px; font-size: 11px; }
+    .obs-nearest-stats { gap: 12px; font-size: 11px; }
+
+    /* Signal registry */
+    .signal-registry-wrap {
+        --sig-row-h: 62px;
+    }
+
+    /* Hide Signals (3) and Last seen (10) on class table */
     .class-table th:nth-child(3),
     .class-table td:nth-child(3),
     .class-table th:nth-child(10),
@@ -1955,6 +2234,12 @@
     .chart-body { height: 180px; grid-template-columns: 32px 1fr 32px; gap: 6px; }
     .chart-x-bar { grid-template-columns: 32px 1fr 32px; gap: 6px; }
     .chart-y-left, .chart-y-right, .chart-x-labels { font-size: 10px; }
+
+    /* Observation grid */
+    .obs-grid { grid-template-columns: 1fr 1fr; }
+
+    /* Live signal */
+    .live-signal-grid { grid-template-columns: 1fr; }
 
     /* Hide Status (9) */
     .class-table th:nth-child(9),
