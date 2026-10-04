@@ -1,0 +1,63 @@
+# ============================================================
+# .github/workflows/fetch_cot.yml
+# ============================================================
+# Runs the CFTC COT fetch pipeline once per week.
+#
+# COT reports are published Friday afternoons (US Eastern),
+# usually around 15:30 ET (19:30 or 20:30 UTC depending on DST).
+# We fire at 21:00 UTC Friday — comfortably after publication
+# in either DST regime — and again at 21:00 UTC Saturday as a
+# safety net in case the Friday release was delayed.
+#
+# The script is idempotent: re-running only upserts the latest
+# report for each contract. Weekend re-run costs nothing.
+# ============================================================
+
+name: fetch_cot
+
+on:
+  schedule:
+    # Friday 21:00 UTC
+    - cron: '0 21 * * 5'
+    # Saturday 21:00 UTC (safety net)
+    - cron: '0 21 * * 6'
+
+  workflow_dispatch:
+
+concurrency:
+  group: fetch_cot
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run COT fetch
+        env:
+          SUPABASE_URL:              ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TWELVEDATA_API_KEY:        ${{ secrets.TWELVEDATA_API_KEY }}
+          UPSTASH_REDIS_REST_URL:    ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN:  ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+        run: |
+          python -m src.fetch_cot
+
+      - name: Log completion
+        if: always()
+        run: echo "fetch_cot finished at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
