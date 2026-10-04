@@ -1,0 +1,14 @@
+# ============================================================
+# FROMPLE PIPELINE — Python dependencies
+# ============================================================
+# Constraint: 32-bit Windows. No pandas, no numpy.
+# All numeric work uses plain lists and dicts.
+
+requests==2.32.3
+python-dotenv==1.0.1
+supabase==2.9.1
+upstash-redis==1.1.0
+
+# NOTE: the `twelvedata` Python SDK is intentionally NOT included
+# because it depends on pandas. The pipeline calls the Twelve Data
+# REST API directly with `requests`.
