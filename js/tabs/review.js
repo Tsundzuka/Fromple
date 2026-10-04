@@ -1,220 +1,270 @@
 // ============================================================
 // tabs/review.js - Review Tab
 // ============================================================
-// Handles the Review tab: loading generated content, viewing, editing, publishing.
+// Setups that need attention before being surfaced as signals,
+// plus configurable review thresholds stored in localStorage.
 
 let supabase = null;
 let user = null;
 
 // ============================================================
+// THRESHOLD DEFAULTS
+// ============================================================
+
+const THRESHOLD_DEFAULTS = {
+    minObs: 100,
+    ratioFloor: 1.5,
+    similarity: 0.75,
+    holdWindow: 48, // hours
+};
+
+const LS_KEY = 'fromple.reviewThresholds';
+
+// ============================================================
 // INIT & REFRESH
 // ============================================================
 
-export async function init(supabaseClient, dashboardUser) {
+export async function init(supabaseClient, profileUser) {
     supabase = supabaseClient;
-    user = dashboardUser;
+    user = profileUser;
 
     console.log('🔵 Review tab initialized');
 
-    await loadReviewContent();
+    hydrateThresholds();
+    attachThresholdControls();
+
+    await loadReviewSetups();
 }
 
-export async function refresh(supabaseClient, dashboardUser) {
+export async function refresh(supabaseClient, profileUser) {
     supabase = supabaseClient;
-    user = dashboardUser;
+    user = profileUser;
 
     console.log('🔄 Refreshing Review tab');
-    await loadReviewContent();
+
+    hydrateThresholds();
+    await loadReviewSetups();
 }
 
 // ============================================================
-// LOAD REVIEW CONTENT
+// THRESHOLDS
 // ============================================================
 
-async function loadReviewContent() {
+function getThresholds() {
     try {
-        const { data: { session } } = await supabase.auth.getSession();
-
-        if (!session) {
-            console.log('Not logged in');
-            return;
-        }
-
-        const { data: content, error } = await supabase
-            .from('content_history')
-            .select('*')
-            .eq('user_id', session.user.id)
-            .order('created_at', { ascending: false })
-            .limit(10);
-
-        if (error) {
-            console.error('Error fetching content:', error);
-            return;
-        }
-
-        const reviewGrid = document.querySelector('.review-grid');
-        if (!reviewGrid) return;
-
-        if (!content || content.length === 0) {
-            reviewGrid.innerHTML = `
-                <div style="grid-column: 1/-1; text-align:center;padding:60px;color:var(--gray-500);">
-                    <div style="font-size:48px;margin-bottom:16px;">📝</div>
-                    <h3>No content generated yet</h3>
-                    <p>Go to <a href="/service-detail.html" style="color: var(--primary);">Services</a> to generate your first piece of content.</p>
-                </div>
-            `;
-            return;
-        }
-
-        reviewGrid.innerHTML = content.map(item => {
-            const featureName = item.feature_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-            const statusMap = {
-                'processing': 'warning',
-                'completed': 'success',
-                'failed': 'danger',
-                'review': 'info',
-                'published': 'success'
-            };
-            const statusClass = statusMap[item.status] || 'warning';
-            const statusLabel = item.status || 'draft';
-
-            let contentPreview = 'No content available';
-            if (item.generated_content && Array.isArray(item.generated_content) && item.generated_content.length > 0) {
-                const selectedIdx = item.selected_version || 0;
-                const version = item.generated_content[selectedIdx];
-                contentPreview = version?.content || item.generated_content[0]?.content || 'No content available';
-                if (contentPreview.length > 120) {
-                    contentPreview = contentPreview.substring(0, 120) + '...';
-                }
-            }
-
-            const date = new Date(item.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-
-            return `
-                <div class="card review-card">
-                    <div class="card-header">
-                        <h3>${featureName}</h3>
-                        <span class="badge ${statusClass}">${statusLabel}</span>
-                    </div>
-                    <p class="review-text">"${contentPreview}"</p>
-                    <div style="font-size:12px;color:var(--gray-500);margin:8px 0;">${date}</div>
-                    <div class="review-actions">
-                        <button class="btn-primary btn-sm" data-content-id="${item.id}" data-action="view">View</button>
-                        <button class="btn-secondary btn-sm" data-content-id="${item.id}" data-action="edit">Edit</button>
-                        <button class="btn-secondary btn-sm" data-content-id="${item.id}" data-action="publish">Publish</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        // Attach event listeners to action buttons
-        reviewGrid.querySelectorAll('[data-action]').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const id = this.dataset.contentId;
-                const action = this.dataset.action;
-                handleContentAction(id, action);
-            });
-        });
-
-    } catch (error) {
-        console.error('Error loading review content:', error);
+        const raw = localStorage.getItem(LS_KEY);
+        if (!raw) return { ...THRESHOLD_DEFAULTS };
+        const parsed = JSON.parse(raw);
+        return { ...THRESHOLD_DEFAULTS, ...parsed };
+    } catch {
+        return { ...THRESHOLD_DEFAULTS };
     }
 }
 
-// ============================================================
-// HANDLE CONTENT ACTIONS
-// ============================================================
-
-function handleContentAction(id, action) {
-    console.log(`📝 Content action: ${action} on ${id}`);
-
-    switch (action) {
-        case 'view':
-            viewContent(id);
-            break;
-        case 'edit':
-            editContent(id);
-            break;
-        case 'publish':
-            publishContent(id);
-            break;
-        default:
-            console.warn('Unknown action:', action);
+function saveThresholds(t) {
+    try {
+        localStorage.setItem(LS_KEY, JSON.stringify(t));
+    } catch (err) {
+        console.warn('Could not save thresholds:', err.message);
     }
 }
 
-// ============================================================
-// VIEW CONTENT
-// ============================================================
+function hydrateThresholds() {
+    const t = getThresholds();
 
-function viewContent(id) {
-    console.log('View content:', id);
-    // Option 1: Navigate to a detail page
-    window.location.href = `dashboard.html?view=${id}`;
+    const minObs     = document.getElementById('reviewMinObs');
+    const ratioFloor = document.getElementById('reviewRatioFloor');
+    const similarity = document.getElementById('reviewSimilarity');
+    const holdWindow = document.getElementById('reviewHoldWindow');
 
-    // Option 2: Open a modal (if you have one)
-    // showContentModal(id);
+    if (minObs)     minObs.value     = t.minObs;
+    if (ratioFloor) ratioFloor.value = t.ratioFloor;
+    if (similarity) similarity.value = t.similarity;
+    if (holdWindow) holdWindow.value = String(t.holdWindow);
+}
 
-    // Option 3: Redirect to a dedicated content detail page
-    // window.location.href = `/content-detail.html?id=${id}`;
+function readThresholdsFromUI() {
+    return {
+        minObs:     Number(document.getElementById('reviewMinObs')?.value)     || THRESHOLD_DEFAULTS.minObs,
+        ratioFloor: Number(document.getElementById('reviewRatioFloor')?.value) || THRESHOLD_DEFAULTS.ratioFloor,
+        similarity: Number(document.getElementById('reviewSimilarity')?.value) || THRESHOLD_DEFAULTS.similarity,
+        holdWindow: Number(document.getElementById('reviewHoldWindow')?.value) || THRESHOLD_DEFAULTS.holdWindow,
+    };
+}
+
+function attachThresholdControls() {
+    const btn = document.getElementById('saveReviewThresholds');
+    if (!btn || btn.dataset.bound) return;
+
+    btn.addEventListener('click', async () => {
+        const t = readThresholdsFromUI();
+        saveThresholds(t);
+        showToast('Review thresholds saved.', 'success');
+        await loadReviewSetups();
+    });
+
+    btn.dataset.bound = 'true';
 }
 
 // ============================================================
-// EDIT CONTENT
+// REVIEW SETUPS
 // ============================================================
 
-function editContent(id) {
-    console.log('Edit content:', id);
-    // This could open a modal or navigate to an edit page
-    // For now, show a placeholder message
-    showToast('Edit functionality coming soon.', 'info');
+async function loadReviewSetups() {
+    const tbody = document.querySelector('#tab-review .table-wrap tbody');
+    if (!tbody) return;
 
-    // Future implementation:
-    // const content = await fetchContent(id);
-    // openEditModal(content);
-}
-
-// ============================================================
-// PUBLISH CONTENT
-// ============================================================
-
-async function publishContent(id) {
-    console.log('Publish content:', id);
+    const thresholds = getThresholds();
+    let rows = [];
 
     try {
-        // Confirm with user
-        if (!confirm('Are you sure you want to publish this content?')) return;
+        // Fetch candidate signals that may need review
+        const { data, error } = await supabase
+            .from('signals')
+            .select(`
+                id,
+                signal_code,
+                recurrences,
+                wins,
+                losses,
+                avg_favorable,
+                avg_adverse,
+                status,
+                last_fired,
+                classes:class_id ( class_code )
+            `)
+            .order('last_fired', { ascending: false })
+            .limit(50);
 
-        // Update the content status in the database
-        const { error } = await supabase
-            .from('content_history')
-            .update({
-                status: 'published',
-                published: true,
-                published_at: new Date().toISOString()
-            })
-            .eq('id', id);
-
-        if (error) {
-            console.error('Error publishing content:', error);
-            showToast('Failed to publish content: ' + error.message, 'error');
-            return;
-        }
-
-        showToast('Content published successfully! ✅', 'success');
-        await refresh(supabase, user);
-
-    } catch (error) {
-        console.error('Error publishing content:', error);
-        showToast('Failed to publish content. Please try again.', 'error');
+        if (error) throw error;
+        rows = data || [];
+    } catch (err) {
+        console.warn('Could not load review setups:', err.message);
     }
+
+    // Filter in-memory using thresholds
+    const needsReview = rows.filter(r => {
+        if (r.status === 'filtered') return true;
+        if ((r.recurrences || 0) < thresholds.minObs) return true;
+        const ratio = computeRatio(r);
+        if (ratio != null && ratio < thresholds.ratioFloor) return true;
+        return false;
+    }).slice(0, 20);
+
+    // Update the badge
+    const badge = document.querySelector('#tab-review .badge.warning');
+    if (badge) {
+        badge.textContent = `${needsReview.length} pending`;
+    }
+
+    if (needsReview.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" style="text-align:center;padding:40px;color:var(--gray-500);">
+                    Nothing to review — all setups are within thresholds.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = needsReview.map(r => {
+        const classCode = r.classes?.class_code || '—';
+        const signalCode = r.signal_code || '—';
+        const reason = describeReason(r, thresholds);
+        const reasonBadge = reason.badge;
+
+        return `
+            <tr>
+                <td>
+                    <div class="class-cell">
+                        <div class="class-badge">${escapeHtml(classCode)}</div>
+                        <div class="class-cell-info">
+                            <strong>Class ${escapeHtml(classCode)} · ${escapeHtml(signalCode)}</strong>
+                            <span>${escapeHtml(describeClassLine(r))}</span>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="status-badge ${reasonBadge.cls}">${escapeHtml(reasonBadge.label)}</span></td>
+                <td>${formatNumber(r.recurrences || 0)}</td>
+                <td class="activity-time">${timeAgo(r.last_fired)}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function describeReason(r, thresholds) {
+    const recurrences = r.recurrences || 0;
+    const ratio = computeRatio(r);
+
+    if (r.status === 'filtered' || (ratio != null && ratio < thresholds.ratioFloor)) {
+        return {
+            badge: { cls: 'pending', label: 'Low ratio' },
+        };
+    }
+    if (recurrences < thresholds.minObs) {
+        return {
+            badge: { cls: 'pending', label: 'Insufficient history' },
+        };
+    }
+    if (recurrences < 100) {
+        return {
+            badge: { cls: 'in-progress', label: 'New setup' },
+        };
+    }
+    return {
+        badge: { cls: 'pending', label: 'Needs review' },
+    };
+}
+
+function describeClassLine(r) {
+    const wins = r.wins || 0;
+    const losses = r.losses || 0;
+    if (wins + losses === 0) return 'No closed outcomes yet';
+    const ratio = computeRatio(r);
+    if (ratio != null) return `${formatNumber(wins)}W / ${formatNumber(losses)}L · ratio ${ratio.toFixed(2)}×`;
+    return `${formatNumber(wins)}W / ${formatNumber(losses)}L`;
+}
+
+function computeRatio(r) {
+    const fav = Number(r.avg_favorable);
+    const adv = Number(r.avg_adverse);
+    if (!isFinite(fav) || !isFinite(adv) || adv === 0) return null;
+    return fav / Math.abs(adv);
 }
 
 // ============================================================
-// EXPOSE FUNCTIONS TO WINDOW (for legacy onclick handlers)
+// HELPERS
 // ============================================================
 
-// These are kept for backward compatibility if the HTML uses onclick="viewContent('id')"
-window.viewContent = viewContent;
-window.editContent = editContent;
-window.publishContent = publishContent;
+function formatNumber(n) {
+    if (n == null || isNaN(n)) return '0';
+    return Number(n).toLocaleString();
+}
+
+function timeAgo(dateInput) {
+    if (!dateInput) return '—';
+    const date = new Date(dateInput);
+    if (isNaN(date.getTime())) return '—';
+    const secs = Math.floor((Date.now() - date.getTime()) / 1000);
+    if (secs < 60) return secs + 's ago';
+    const mins = Math.floor(secs / 60);
+    if (mins < 60) return mins + 'm ago';
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + 'h ago';
+    return Math.floor(hrs / 24) + 'd ago';
+}
+
+function escapeHtml(s) {
+    return String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function showToast(msg, type) {
+    if (window.showToast) window.showToast(msg, type);
+    else console.log(`[${type}] ${msg}`);
+}
