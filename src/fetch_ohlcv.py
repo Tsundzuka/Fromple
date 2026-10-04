@@ -12,15 +12,19 @@
 #   2. Load active sessions from Supabase
 #   3. For each session whose UTC window contains "now":
 #         for each timeframe enabled on that session:
-#             fetch bars from Twelve Data
-#             write to Redis
-#             increment api_usage
+#             compute when the next bar is due
+#             if not due → skip (no API call)
+#             if due     → fetch, save, stamp last-bar time
 #   4. Stamp system_state.last_successful_run
+#
+# The per-timeframe guard means an M15 fetch only runs once
+# every 15 minutes, H1 once an hour, H4 once every 4 hours —
+# even though the workflow wakes every 5 minutes.
 
 import logging
 import sys
 import time
-from datetime import datetime, time as dtime, timezone
+from datetime import datetime, time as dtime, timedelta, timezone
 from typing import Any
 
 import requests
@@ -72,18 +76,100 @@ TWELVEDATA_INTERVAL_MAP = {
 
 
 # ------------------------------------------------------------
+# Timeframe → minutes (for the fetch guard)
+# ------------------------------------------------------------
+TIMEFRAME_MINUTES = {
+    "M1":  1,
+    "M5":  5,
+    "M15": 15,
+    "M30": 30,
+    "H1":  60,
+    "H2":  120,
+    "H4":  240,
+    "H6":  360,
+    "H8":  480,
+    "H12": 720,
+    "D1":  1440,
+    "W1":  10080,
+}
+
+
+# ------------------------------------------------------------
 # Rate limiting
 # ------------------------------------------------------------
 # Twelve Data free tier: 8 requests/minute. We sleep between
-# calls to stay comfortably under that. Adjust if you upgrade.
+# calls that actually reach the API.
 SECONDS_BETWEEN_CALLS = 8
 
 
-# ------------------------------------------------------------
+# ============================================================
+# FETCH GUARD
+# ============================================================
+# We store the newest bar's `datetime` under
+#   run:{symbol}:{tf}:last_bar_dt
+# and only call the API when the current time has moved past
+# the next scheduled bar boundary.
+# ============================================================
+
+def _last_bar_key(symbol: str, timeframe: str) -> str:
+    return f"run:{symbol}:{timeframe}:last_bar_dt"
+
+
+def _parse_bar_datetime(value: str) -> datetime | None:
+    """
+    Twelve Data returns bar datetimes as 'YYYY-MM-DD HH:MM:SS'
+    for intraday, or 'YYYY-MM-DD' for daily/weekly.
+    """
+    if not value:
+        return None
+    s = str(value).strip()
+
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%d"):
+        try:
+            dt = datetime.strptime(s, fmt)
+            return dt.replace(tzinfo=timezone.utc)
+        except ValueError:
+            continue
+
+    return None
+
+
+def is_fetch_due(symbol: str, timeframe: str, now_utc: datetime) -> bool:
+    """
+    Return True if the next bar boundary has passed since the
+    last recorded bar. First fetch of the day always returns True.
+    """
+    tf_minutes = TIMEFRAME_MINUTES.get(timeframe)
+    if not tf_minutes:
+        return False
+
+    last_raw = rds.get_json(_last_bar_key(symbol, timeframe))
+    if not last_raw:
+        return True
+
+    last_dt = _parse_bar_datetime(last_raw if isinstance(last_raw, str)
+                                   else str(last_raw))
+    if last_dt is None:
+        return True
+
+    next_boundary = last_dt + timedelta(minutes=tf_minutes)
+    return now_utc >= next_boundary
+
+
+def stamp_last_bar(symbol: str, timeframe: str, bars: list[dict]) -> None:
+    """Record the newest bar's datetime for future guard checks."""
+    if not bars:
+        return
+    newest = bars[-1].get("datetime")
+    if newest:
+        # Store as a raw JSON string
+        rds.set_json(_last_bar_key(symbol, timeframe), str(newest))
+
+
+# ============================================================
 # Session window check
-# ------------------------------------------------------------
+# ============================================================
 def _parse_time(value: Any) -> dtime | None:
-    """Parse an 'HH:MM' or 'HH:MM:SS' string into a time object."""
     if value is None:
         return None
     s = str(value)
@@ -99,31 +185,18 @@ def _parse_time(value: Any) -> dtime | None:
 
 
 def is_within_window(now_utc: datetime, start: dtime | None, end: dtime | None) -> bool:
-    """
-    Return True if now_utc is inside the session window.
-    Handles overnight windows (start > end).
-    """
     if start is None or end is None:
         return False
-
     t = now_utc.timetz()
-
     if start <= end:
-        # Normal window, e.g. 08:00 – 17:00
         return start <= t <= end
-    else:
-        # Overnight window, e.g. 23:00 – 08:00
-        return t >= start or t <= end
+    return t >= start or t <= end
 
 
-# ------------------------------------------------------------
+# ============================================================
 # Twelve Data fetch
-# ------------------------------------------------------------
+# ============================================================
 def fetch_bars(symbol: str, timeframe: str, outputsize: int) -> list[dict]:
-    """
-    Fetch OHLCV bars from Twelve Data. Returns a list of dicts
-    sorted oldest → newest. Returns [] on failure.
-    """
     td_symbol = TWELVEDATA_SYMBOL_MAP.get(symbol)
     if not td_symbol:
         log.warning("No Twelve Data mapping for symbol: %s", symbol)
@@ -150,15 +223,16 @@ def fetch_bars(symbol: str, timeframe: str, outputsize: int) -> list[dict]:
             resp.raise_for_status()
             payload = resp.json()
         except requests.RequestException as e:
-            log.warning("Twelve Data request failed (%s attempt %d): %s", symbol, attempt, e)
+            log.warning("Twelve Data request failed (%s attempt %d): %s",
+                        symbol, attempt, e)
             if attempt == 1:
                 time.sleep(3)
                 continue
             return []
 
-        # Twelve Data returns {"code": 429, "message": "..."} on rate limit
         if isinstance(payload, dict) and payload.get("status") == "error":
-            log.warning("Twelve Data error for %s %s: %s", symbol, timeframe, payload.get("message"))
+            log.warning("Twelve Data error for %s %s: %s",
+                        symbol, timeframe, payload.get("message"))
             if attempt == 1:
                 time.sleep(10)
                 continue
@@ -169,7 +243,6 @@ def fetch_bars(symbol: str, timeframe: str, outputsize: int) -> list[dict]:
             log.warning("Twelve Data returned no bars for %s %s", symbol, timeframe)
             return []
 
-        # Normalise into our shape. Twelve Data returns strings.
         bars: list[dict] = []
         for v in values:
             try:
@@ -189,22 +262,16 @@ def fetch_bars(symbol: str, timeframe: str, outputsize: int) -> list[dict]:
     return []
 
 
-# ------------------------------------------------------------
+# ============================================================
 # Main pipeline
-# ------------------------------------------------------------
+# ============================================================
 def run() -> int:
-    """
-    Execute one fetch cycle. Returns the number of successful
-    (symbol, timeframe) fetches performed.
-    """
     log.info("=== fetch_ohlcv starting ===")
 
-    # 1. Gate on system_state
     if not sb.is_pipeline_running():
         log.info("Pipeline is stopped (system_state.is_running = false). Exiting.")
         return 0
 
-    # 2. Load sessions
     sessions = sb.get_active_sessions()
     if not sessions:
         log.info("No active sessions. Exiting.")
@@ -213,7 +280,7 @@ def run() -> int:
     now_utc = datetime.now(timezone.utc)
     log.info("Current UTC time: %s", now_utc.strftime("%Y-%m-%d %H:%M:%S"))
 
-    # 3. Filter sessions that are within their window right now
+    # Filter to in-window sessions
     due_sessions: list[dict] = []
     for s in sessions:
         start = _parse_time(s.get("start_utc"))
@@ -228,10 +295,12 @@ def run() -> int:
         log.info("No instruments in their tradeable window. Exiting.")
         return 0
 
-    log.info("In-window instruments: %s", ", ".join(s.get("symbol", "?") for s in due_sessions))
+    log.info("In-window instruments: %s",
+             ", ".join(s.get("symbol", "?") for s in due_sessions))
 
-    # 4. For each session, fetch every enabled timeframe
     fetched = 0
+    skipped = 0
+
     for s in due_sessions:
         symbol = s.get("symbol")
         timeframes = s.get("timeframes") or []
@@ -239,25 +308,32 @@ def run() -> int:
             continue
 
         for tf in timeframes:
+            # --- Fetch guard ---
+            if not is_fetch_due(symbol, tf, now_utc):
+                log.debug("Not due yet: %s %s — skipping", symbol, tf)
+                skipped += 1
+                continue
+
             log.info("Fetching %s %s (%d bars)…", symbol, tf, config.BARS_PER_FETCH)
             bars = fetch_bars(symbol, tf, config.BARS_PER_FETCH)
 
             if bars:
                 rds.save_bars(symbol, tf, bars)
-                log.info("  ✔ Saved %d bars to Redis: %s", len(bars), rds.bars_key(symbol, tf))
+                stamp_last_bar(symbol, tf, bars)
+                log.info("  ✔ Saved %d bars: %s", len(bars), rds.bars_key(symbol, tf))
                 fetched += 1
             else:
                 log.warning("  ✘ No bars written for %s %s", symbol, tf)
 
-            # Increment usage regardless of success (Twelve Data counts the call)
+            # Only count a call against quota if we actually made one
             sb.increment_api_usage(provider="twelvedata", by=1, limit_value=800)
 
-            # Rate limit
+            # Rate limit only when we actually hit the API
             time.sleep(SECONDS_BETWEEN_CALLS)
 
-    # 5. Stamp successful run
     sb.mark_successful_run()
-    log.info("=== fetch_ohlcv finished: %d fetches ===", fetched)
+    log.info("=== fetch_ohlcv finished: %d fetched, %d skipped (not due) ===",
+             fetched, skipped)
     return fetched
 
 
