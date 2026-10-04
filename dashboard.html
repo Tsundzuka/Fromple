@@ -12,6 +12,118 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/pages/dashboard.css" />
     <link rel="stylesheet" href="css/admin.css" />
+
+    <style>
+        /* ============================================================
+           DISTRIBUTED SETTINGS — inline styles
+           ============================================================ */
+
+        /* Sidebar pipeline + API */
+        .sb-pipeline { padding: 12px 14px; border-bottom: 1px solid var(--gray-200); }
+        .sb-pipeline-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .sb-pipeline-label { font-size: 12px; font-weight: 600; color: var(--gray-700); }
+        .sb-api-head { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray-600); margin-bottom: 4px; }
+        .sb-api-name { font-weight: 500; }
+        .sb-api-bar { height: 4px; background: var(--gray-100); border-radius: 2px; overflow: hidden; }
+        .sb-api-fill { height: 100%; background: var(--primary); transition: width .3s, background .3s; }
+        .sb-api-fill.warning { background: #F59E0B; }
+        .sb-api-fill.danger  { background: #EF4444; }
+
+        /* Toggle switch */
+        .toggle-switch { position: relative; display: inline-block; width: 38px; height: 22px; cursor: pointer; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; inset: 0; background: var(--gray-300); border-radius: 22px; transition: background .2s; }
+        .toggle-slider::before {
+            content: ''; position: absolute; height: 16px; width: 16px;
+            left: 3px; top: 3px; background: #fff; border-radius: 50%;
+            transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2);
+        }
+        .toggle-switch input:checked + .toggle-slider { background: var(--primary); }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); }
+        .toggle-switch input:disabled + .toggle-slider { opacity: .5; cursor: not-allowed; }
+
+        /* Instrument bar */
+        .instrument-bar { display: flex; align-items: center; gap: 12px; padding: 12px 16px; flex-wrap: wrap; border-top: 1px solid var(--gray-100); }
+        .instrument-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+        .chip-check {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 10px; border: 1px solid var(--gray-200);
+            border-radius: 12px; font-size: 11px; cursor: pointer;
+            background: #fff; color: var(--gray-600); user-select: none;
+        }
+        .chip-check input { margin: 0; }
+        .chip-check:has(input:checked) { background: #F0FDFA; color: #0D9488; border-color: var(--primary); }
+
+        /* Small buttons */
+        .btn-ghost-sm {
+            background: none; border: none; color: var(--primary); font-size: 12px;
+            font-weight: 600; cursor: pointer; padding: 4px 8px; border-radius: 6px;
+        }
+        .btn-ghost-sm:hover { background: #F0FDFA; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+        /* Session editor */
+        .session-editor { padding: 0 16px 16px; }
+        .session-table td { vertical-align: middle; }
+        .session-editor-foot { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; }
+        .session-table .time-input { padding: 4px 6px; font-size: 12px; width: 88px; }
+        .mini-tf-grid { display: flex; gap: 6px; flex-wrap: wrap; }
+        .mini-tf-grid label { font-size: 11px; display: flex; align-items: center; gap: 3px; color: var(--gray-600); }
+
+        /* Data source strip */
+        .data-source-strip {
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+            padding: 12px 16px; margin-bottom: 12px;
+            background: var(--gray-50, #F9FAFB); border-radius: 8px;
+        }
+        .ds-item { display: flex; align-items: center; gap: 6px; }
+        .ds-name { font-size: 12px; font-weight: 600; color: var(--gray-700); }
+        .ds-spacer { flex: 1; }
+
+        /* Forms (compact) */
+        .form-input, .form-select {
+            padding: 6px 8px; border: 1px solid var(--gray-200);
+            border-radius: 6px; font-size: 12px; background: #fff;
+            font-family: inherit; color: var(--gray-800);
+        }
+        .form-input-sm, .form-select-sm { padding: 4px 6px; font-size: 12px; }
+        .form-input:focus, .form-select:focus { outline: 2px solid var(--primary); outline-offset: -1px; border-color: var(--primary); }
+        .param-label { font-size: 11px; color: var(--gray-500); text-transform: uppercase; letter-spacing: .04em; font-weight: 600; }
+        .settings-inline-note { font-size: 11px; color: var(--gray-500); }
+        .settings-inline-note strong { color: var(--gray-700); }
+        .settings-inline-note .neg { color: #EF4444; }
+
+        /* Parameter strip */
+        .param-strip {
+            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+            padding: 10px 0; margin-top: 12px;
+            border-top: 1px solid var(--gray-100);
+        }
+        .param-item { display: flex; align-items: center; gap: 4px; }
+        .param-unit { font-size: 11px; color: var(--gray-400); }
+        .param-spacer { flex: 1; }
+
+        /* Filter divider */
+        .filter-divider { width: 1px; height: 20px; background: var(--gray-200); margin: 0 6px; }
+
+        /* API usage grid */
+        .api-usage-grid {
+            display: grid; gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            padding: 4px 0;
+        }
+        .api-card {
+            padding: 12px 14px; border: 1px solid var(--gray-200);
+            border-radius: 8px; background: #fff;
+        }
+        .api-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .api-name { font-weight: 600; font-size: 13px; }
+        .usage-meter { height: 6px; background: var(--gray-100); border-radius: 3px; overflow: hidden; }
+        .usage-fill { height: 100%; background: var(--primary); transition: width .3s, background .3s; }
+        .usage-fill.warning { background: #F59E0B; }
+        .usage-fill.danger  { background: #EF4444; }
+        .api-card-foot { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: var(--gray-500); }
+    </style>
 </head>
 <body>
 
@@ -65,6 +177,24 @@
             </nav>
 
             <div class="sidebar-footer">
+
+                <div class="sb-pipeline">
+                    <div class="sb-pipeline-head">
+                        <span class="sb-pipeline-label">Pipeline</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="sbPipelineToggle" />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="sb-api" data-provider="twelvedata">
+                        <div class="sb-api-head">
+                            <span class="sb-api-name">Twelve Data</span>
+                            <span class="sb-api-count mono" data-usage-text>— / 800</span>
+                        </div>
+                        <div class="sb-api-bar"><div class="sb-api-fill" data-usage-fill style="width: 0%"></div></div>
+                    </div>
+                </div>
+
                 <div class="sidebar-usage-summary">
                     <div class="sidebar-usage-header">
                         <span class="sidebar-usage-label">Registry load</span>
@@ -179,6 +309,42 @@
                             <button class="timeframe-btn" type="button" data-tf="W1">W1</button>
                         </div>
                         <span class="timeframe-meta" id="classSelectionInfo">All classes &middot; 8</span>
+                    </div>
+
+                    <!-- Instrument chips + session editor -->
+                    <div class="instrument-bar">
+                        <span class="timeframe-label">Instrument</span>
+                        <div class="instrument-chips" id="classInstruments">
+                            <label class="chip-check"><input type="checkbox" value="EUR/USD" checked />EUR/USD</label>
+                            <label class="chip-check"><input type="checkbox" value="AUD/USD" checked />AUD/USD</label>
+                            <label class="chip-check"><input type="checkbox" value="USD/CHF" checked />USD/CHF</label>
+                            <label class="chip-check"><input type="checkbox" value="USD/CAD" checked />USD/CAD</label>
+                            <label class="chip-check"><input type="checkbox" value="DXY" checked />DXY</label>
+                        </div>
+                        <span class="timeframe-meta"></span>
+                        <button class="btn-ghost-sm" type="button" id="sessionToggleBtn">Sessions &amp; hours ▾</button>
+                    </div>
+
+                    <div class="session-editor" id="sessionEditor" hidden>
+                        <table class="activity-table session-table">
+                            <thead>
+                                <tr>
+                                    <th class="col-check"></th>
+                                    <th>Instrument</th>
+                                    <th>Start (UTC)</th>
+                                    <th>End (UTC)</th>
+                                    <th>Timeframes</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sessionTableBody"></tbody>
+                        </table>
+                        <div class="session-editor-foot">
+                            <span class="settings-inline-note">
+                                Daily Twelve Data credits: <strong id="sessionCreditEstimate">~510</strong> of 800
+                            </span>
+                            <button class="btn-primary btn-sm" type="button" id="saveSessionsBtn">Save sessions</button>
+                        </div>
                     </div>
 
                     <div class="table-wrap class-table-wrap">
@@ -486,6 +652,56 @@
                         </select>
                     </div>
 
+                    <!-- Data source strip + indicators -->
+                    <div class="data-source-strip" id="dataSourceStrip">
+                        <div class="ds-item" data-source="cot">
+                            <label class="toggle-switch"><input type="checkbox" checked data-ds-toggle /><span class="toggle-slider"></span></label>
+                            <span class="ds-name">COT</span>
+                            <select class="form-select form-select-sm" data-ds-value>
+                                <option value="26">26w</option>
+                                <option value="52" selected>52w</option>
+                                <option value="104">104w</option>
+                                <option value="all">All</option>
+                            </select>
+                        </div>
+                        <div class="ds-item" data-source="calendar">
+                            <label class="toggle-switch"><input type="checkbox" checked data-ds-toggle /><span class="toggle-slider"></span></label>
+                            <span class="ds-name">Calendar</span>
+                            <select class="form-select form-select-sm" data-ds-value>
+                                <option value="1">1d</option>
+                                <option value="3" selected>3d</option>
+                                <option value="7">7d</option>
+                                <option value="14">14d</option>
+                            </select>
+                        </div>
+                        <div class="ds-item" data-source="news">
+                            <label class="toggle-switch"><input type="checkbox" checked data-ds-toggle /><span class="toggle-slider"></span></label>
+                            <span class="ds-name">News</span>
+                            <select class="form-select form-select-sm" data-ds-value>
+                                <option value="6">6h</option>
+                                <option value="12" selected>12h</option>
+                                <option value="24">24h</option>
+                                <option value="72">72h</option>
+                            </select>
+                        </div>
+                        <div class="ds-item" data-source="sentiment">
+                            <label class="toggle-switch"><input type="checkbox" checked data-ds-toggle /><span class="toggle-slider"></span></label>
+                            <span class="ds-name">Sentiment</span>
+                            <input type="number" class="form-input form-input-sm mono" data-ds-value value="0.3" step="0.1" min="0" max="1" style="width: 62px;" />
+                        </div>
+                        <div class="ds-spacer"></div>
+                        <button class="btn-ghost-sm" type="button" id="indicatorToggleBtn">Indicators ▾</button>
+                    </div>
+
+                    <div class="indicator-editor" id="indicatorEditor" hidden>
+                        <table class="activity-table">
+                            <thead>
+                                <tr><th class="col-check"></th><th>Indicator</th><th>Parameters</th><th>Role</th></tr>
+                            </thead>
+                            <tbody id="indicatorTableBody"></tbody>
+                        </table>
+                    </div>
+
                     <div class="component-grid">
                         <div class="component-card" data-component="regime">
                             <div class="component-head"><span class="component-name">Regime</span><span class="component-count" data-field="conditions">3 conditions</span></div>
@@ -676,6 +892,32 @@
                             <option value="H">Class H · New combination</option>
                         </select>
                         <span class="pt-view-meta" id="ptViewMeta">Showing all classes</span>
+                    </div>
+
+                    <!-- Paper trading parameters -->
+                    <div class="param-strip">
+                        <div class="param-item">
+                            <label class="param-label">Forward</label>
+                            <input type="number" class="form-input form-input-sm mono" value="24" min="1" data-param="forward_window" />
+                            <span class="param-unit">bars</span>
+                        </div>
+                        <div class="param-item">
+                            <label class="param-label">Threshold</label>
+                            <input type="number" class="form-input form-input-sm mono" value="25" min="1" data-param="threshold_pips" />
+                            <span class="param-unit">pips</span>
+                        </div>
+                        <div class="param-item">
+                            <label class="param-label">Ratio floor</label>
+                            <input type="number" class="form-input form-input-sm mono" value="1.5" step="0.1" data-param="ratio_floor" />
+                            <span class="param-unit">×</span>
+                        </div>
+                        <div class="param-item">
+                            <label class="param-label">Min obs</label>
+                            <input type="number" class="form-input form-input-sm mono" value="100" min="1" data-param="min_observations" />
+                            <span class="param-unit">obs</span>
+                        </div>
+                        <div class="param-spacer"></div>
+                        <span class="settings-inline-note" id="paperParamsStatus"></span>
                     </div>
                 </div>
 
@@ -920,7 +1162,6 @@
                     </div>
                 </header>
 
-                <!-- TIMEFRAME + CLASS FILTERS -->
                 <div class="card">
                     <div class="timeframe-bar">
                         <span class="timeframe-label">Timeframe</span>
@@ -954,10 +1195,22 @@
                             <option value="H">Class H · New combination</option>
                         </select>
                         <span class="pt-view-meta" id="sgViewMeta">Showing all classes</span>
+
+                        <div class="filter-divider"></div>
+                        <label class="param-label">Status</label>
+                        <select class="form-select form-select-sm" id="sgStatusFilter">
+                            <option value="all" selected>All</option>
+                            <option value="active">Active</option>
+                            <option value="watching">Watching</option>
+                            <option value="filtered">Filtered</option>
+                        </select>
+                        <label class="param-label">Min obs</label>
+                        <input type="number" class="form-input form-input-sm mono" id="sgMinObs" value="0" min="0" style="width: 62px;" />
+                        <label class="param-label">Ratio ≥</label>
+                        <input type="number" class="form-input form-input-sm mono" id="sgMinRatio" value="0" step="0.1" min="0" style="width: 62px;" />
                     </div>
                 </div>
 
-                <!-- KPI ROW -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon blue">
@@ -1009,7 +1262,6 @@
                     </div>
                 </div>
 
-                <!-- SIGNAL REGISTRY -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Signal registry</h3>
@@ -1225,7 +1477,6 @@
                     </div>
                 </div>
 
-                <!-- CURRENT OBSERVATION -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Current market observation</h3>
@@ -1258,7 +1509,6 @@
                     </div>
                 </div>
 
-                <!-- LIVE SIGNALS -->
                 <div class="card">
                     <div class="card-header"><h3>Live signals</h3><span class="card-meta">12 active</span></div>
                     <div class="live-signal-list">
@@ -1383,7 +1633,6 @@
                     </div>
                 </div>
 
-                <!-- RECENT SIGNALS -->
                 <div class="card">
                     <div class="card-header"><h3>Recent signals</h3><span class="card-meta">last 24 hours</span></div>
                     <div class="table-wrap">
@@ -1522,7 +1771,6 @@
                     </div>
                 </div>
 
-                <!-- INTERPRETATION -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Interpretation · Cl-G-Si-21</h3>
@@ -1539,163 +1787,4 @@
                         This signal has recurred 24 times over the past 12 days with a win rate
                         of 75% (18 wins / 6 losses). Across 834 historical observations,
                         Class G's long side has shown a mean favorable of +94.1 against a mean
-                        adverse of −28.6, a ratio of 3.3×. Historically this class has not been
-                        tradeable on the short side.
-                    </p>
-                </div>
-
-                <!-- FILTERED -->
-                <div class="card">
-                    <div class="card-header"><h3>Filtered signals</h3><span class="badge warning">3 today</span></div>
-                    <div class="signal-feed">
-                        <div class="signal-item filtered">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-D-Si-06 · Class D · Short</div>
-                                <div class="signal-item-desc">Mean-reversion in range · 12 recurrences · 33% win rate · below 1.5× ratio floor (0.6×)</div>
-                            </div>
-                            <span class="signal-item-time">6h ago</span>
-                        </div>
-                        <div class="signal-item filtered">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-H-Si-01 · Class H · Long</div>
-                                <div class="signal-item-desc">New combination — gathering data · 3 recurrences · below 100 observation floor</div>
-                            </div>
-                            <span class="signal-item-time">1d ago</span>
-                        </div>
-                        <div class="signal-item filtered">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-F-Si-02 · Class F · Long</div>
-                                <div class="signal-item-desc">Volatility expansion breakout · short ratio 0.7× · below 1.5× ratio floor</div>
-                            </div>
-                            <span class="signal-item-time">3h ago</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- TAB 5: MONITORING                                            -->
-            <!-- ============================================================ -->
-            <section class="tab-content" id="tab-monitoring">
-                <header class="dashboard-header">
-                    <div>
-                        <h1>Monitoring</h1>
-                        <p class="page-subtitle">Watching open positions and tracked setups in real time.</p>
-                    </div>
-                    <div class="dashboard-header-actions">
-                        <button class="btn-secondary" type="button" onclick="configureAlerts()">Configure Alerts</button>
-                    </div>
-                </header>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="#14B8A6" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="#14B8A6" stroke-width="2"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">8</span><span class="stat-label">Watched setups</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 17l5-6 4 4 9-10" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">24</span><span class="stat-label">Favorable so far</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 7l5 6 4-4 9 10" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">7</span><span class="stat-label">Adverse so far</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#7C3AED" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">31</span><span class="stat-label">Closed today</span></div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header"><h3>Open Positions</h3><span class="card-meta"><span class="live-dot-inline"></span> live</span></div>
-                    <div class="table-wrap">
-                        <table class="activity-table">
-                            <thead><tr><th>Signal</th><th>Direction</th><th>Age</th><th>Favorable</th><th>Adverse</th><th>Status</th></tr></thead>
-                            <tbody>
-                                <tr><td><strong>Cl-G-Si-21</strong></td><td><span class="direction-badge long">Long</span></td><td class="activity-time">18m</td><td class="mono pos">+12.4</td><td class="mono neg">−3.1</td><td><span class="status-badge completed">Favorable</span></td></tr>
-                                <tr><td><strong>Cl-C-Si-17</strong></td><td><span class="direction-badge long">Long</span></td><td class="activity-time">2h 14m</td><td class="mono pos">+82.4</td><td class="mono neg">−34.1</td><td><span class="status-badge completed">Favorable</span></td></tr>
-                                <tr><td><strong>Cl-C-Si-17</strong></td><td><span class="direction-badge short">Short</span></td><td class="activity-time">2h 14m</td><td class="mono pos">+31.2</td><td class="mono neg">−58.7</td><td><span class="status-badge pending">Adverse</span></td></tr>
-                                <tr><td><strong>Cl-A-Si-12</strong></td><td><span class="direction-badge long">Long</span></td><td class="activity-time">4h 02m</td><td class="mono pos">+46.8</td><td class="mono neg">−22.5</td><td><span class="status-badge completed">Favorable</span></td></tr>
-                                <tr><td><strong>Cl-A-Si-12</strong></td><td><span class="direction-badge short">Short</span></td><td class="activity-time">4h 02m</td><td class="mono pos">+18.2</td><td class="mono neg">−41.0</td><td><span class="status-badge pending">Adverse</span></td></tr>
-                                <tr><td><strong>Cl-E-Si-11</strong></td><td><span class="direction-badge long">Long</span></td><td class="activity-time">9h 18m</td><td class="mono pos">+28.5</td><td class="mono neg">−17.2</td><td><span class="status-badge completed">Favorable</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header"><h3>Alert Feed</h3><span class="badge info">3 new</span></div>
-                    <div class="signal-feed">
-                        <div class="signal-item new">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-G-Si-21 crossed +10 favorable</div>
-                                <div class="signal-item-desc">Long side reached the first favorable threshold</div>
-                            </div>
-                            <span class="signal-item-time">just now</span>
-                        </div>
-                        <div class="signal-item new">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-C-Si-17 short adverse crossed −50</div>
-                                <div class="signal-item-desc">Short side adverse movement exceeding historical mean</div>
-                            </div>
-                            <span class="signal-item-time">34m ago</span>
-                        </div>
-                        <div class="signal-item new">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-A-Si-12 long closed favorable</div>
-                                <div class="signal-item-desc">Position closed at +46.8 favorable / −22.5 adverse</div>
-                            </div>
-                            <span class="signal-item-time">1h ago</span>
-                        </div>
-                        <div class="signal-item">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-H-Si-01 registered</div>
-                                <div class="signal-item-desc">Combination not previously seen — 3 recurrences so far</div>
-                            </div>
-                            <span class="signal-item-time">3h ago</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid-2col">
-                    <div class="card">
-                        <div class="card-header"><h3>Watched Setups</h3><span class="card-meta">8 active</span></div>
-                        <div class="signal-feed">
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Class G · Cl-G-Si-21</div><div class="signal-item-desc">Post-event drift · long favored</div></div><span class="signal-item-time">18m</span></div>
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Class C · Cl-C-Si-17</div><div class="signal-item-desc">Trend continuation · long favored</div></div><span class="signal-item-time">2h</span></div>
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Class A · Cl-A-Si-12</div><div class="signal-item-desc">Trend + volume · long favored</div></div><span class="signal-item-time">4h</span></div>
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Class E · Cl-E-Si-11</div><div class="signal-item-desc">Breakout follow-through · long favored</div></div><span class="signal-item-time">9h</span></div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header"><h3>Today's Movement</h3><span class="card-meta">last 24 hours</span></div>
-                        <div class="movement-row">
-                            <div class="movement-stat"><span class="movement-label">Total favorable</span><span class="movement-value pos">+612.8</span></div>
-                            <div class="movement-stat"><span class="movement-label">Total adverse</span><span class="movement-value neg">−218.4</span></div>
-                        </div>
-                        <div class="histogram histogram-long" aria-hidden="true">
-                            <span style="height: 12%"></span><span style="height: 18%"></span><span style="height: 26%"></span><span style="height: 38%"></span><span style="height: 52%"></span><span style="height: 68%"></span><span style="height: 82%"></span><span style="height: 94%"></span><span style="height: 100%"></span><span style="height: 86%"></span><span style="height: 66%"></span><span style="height: 46%"></span><span style="height: 30%"></span><span style="height: 18%"></span><span style="height: 10%"></span><span style="height: 5%"></span>
-                        </div>
-                        <div class="histogram-legend"><span>0</span><span>25</span><span>50</span><span>75+</span></div>
-                    </div>
-                </div>
-            </section>
-
-        </main>
-    </div>
-
-    <div id="footer"></div>
-
-    <script src="js/main.js"></script>
-    <script src="js/header.js"></script>
-    <script src="js/footer.js"></script>
-    <script type="module" src="js/dashboard.js"></script>
-</body>
-</html>
+                        adverse of −28.6, a ratio of 3.3×. Historically this
