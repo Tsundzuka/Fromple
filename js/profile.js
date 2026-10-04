@@ -168,7 +168,7 @@ function updateUserUI(user) {
 }
 
 // ============================================================
-// PIPELINE STATE (sidebar + Overview toggle)
+// PIPELINE STATE (sidebar + Overview + Settings)
 // ============================================================
 
 async function loadSystemState() {
@@ -213,7 +213,7 @@ async function loadSystemState() {
             lastRun.textContent = updatedAt ? timeAgo(new Date(updatedAt)) : '—';
         }
 
-        // Settings tab status (if present)
+        // Settings tab status block
         const sysDot = document.getElementById('sysStatusDot');
         const sysLabel = document.getElementById('sysStatusLabel');
         const sysSub = document.getElementById('sysStatusSub');
@@ -238,11 +238,10 @@ async function loadSystemState() {
 async function setPipelineRunning(isRunning) {
     if (!supabaseInstance) return;
 
-    // Disable both toggles during write
     const sbToggle = document.getElementById('sbPipelineToggle');
     const ovToggle = document.getElementById('ovPipelineToggle');
-    if (sbToggle) sbToggle.disabled = true;
-    if (ovToggle) ovToggle.disabled = true;
+    const sysToggle = document.getElementById('sysPipelineToggle');
+    [sbToggle, ovToggle, sysToggle].forEach(t => { if (t) t.disabled = true; });
 
     try {
         const { error } = await supabaseInstance
@@ -252,28 +251,26 @@ async function setPipelineRunning(isRunning) {
 
         if (error) throw error;
 
-        // Reflect on both
         if (sbToggle) sbToggle.checked = isRunning;
         if (ovToggle) ovToggle.checked = isRunning;
+        if (sysToggle) sysToggle.checked = isRunning;
 
         showToast(isRunning ? 'Pipeline started.' : 'Pipeline stopped.', 'success');
 
-        // Refresh usage shortly after
         setTimeout(loadApiUsage, 500);
     } catch (err) {
         console.error('Failed to toggle pipeline:', err);
-        // Revert both
         if (sbToggle) sbToggle.checked = !isRunning;
         if (ovToggle) ovToggle.checked = !isRunning;
+        if (sysToggle) sysToggle.checked = !isRunning;
         showToast('Could not update pipeline state: ' + (err.message || err), 'error');
     } finally {
-        if (sbToggle) sbToggle.disabled = false;
-        if (ovToggle) ovToggle.disabled = false;
+        [sbToggle, ovToggle, sysToggle].forEach(t => { if (t) t.disabled = false; });
     }
 }
 
 // ============================================================
-// API USAGE (sidebar mini-bar + Overview + Settings)
+// API USAGE
 // ============================================================
 
 const PROVIDERS = {
@@ -301,7 +298,6 @@ async function loadApiUsage() {
             if (!usage[row.provider]) usage[row.provider] = row;
         });
     } catch (err) {
-        // Table may not exist yet — degrade gracefully
         console.warn('api_usage not available:', err.message);
     }
 
@@ -345,7 +341,6 @@ function renderOverviewUsage(usage) {
 }
 
 function renderSettingsUsage(usage) {
-    // Update every card in the Settings / Usage tab that carries data-provider
     document.querySelectorAll('.api-card[data-provider]').forEach(card => {
         const key = card.dataset.provider;
         const cfg = PROVIDERS[key];
@@ -373,7 +368,7 @@ function renderSettingsUsage(usage) {
         }
     });
 
-    // Show quota warning in Settings if TD > 80%
+    // Quota warning banner in Settings
     const td = usage['twelvedata'];
     const warning = document.getElementById('sysQuotaWarning');
     if (warning) {
@@ -383,7 +378,7 @@ function renderSettingsUsage(usage) {
 }
 
 // ============================================================
-// SYSTEM CONTROLS — attach both toggles
+// SYSTEM CONTROLS
 // ============================================================
 
 function attachSystemControls() {
@@ -441,12 +436,11 @@ function timeAgo(date) {
 }
 
 // ============================================================
-// GLOBALS (for inline onclick handlers and legacy compatibility)
+// GLOBALS (for inline onclick handlers)
 // ============================================================
 
 window.switchTab = switchTab;
 
-// Stub functions — overwritten by tabs when they load
 window.updatePersonalProfile = function() {
     showToast('Settings tab not loaded yet. Please try again.', 'warning');
 };
@@ -488,7 +482,6 @@ window.dismissSetup = function() {
 // ============================================================
 
 function attachEventListeners() {
-    // Sidebar nav
     const navLinks = document.querySelectorAll('.sidebar-nav a');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -498,7 +491,6 @@ function attachEventListeners() {
         });
     });
 
-    // Sidebar toggle (mobile)
     const toggleBtn = document.getElementById('adminSidebarToggle');
     if (toggleBtn) {
         toggleBtn.addEventListener('click', function() {
@@ -515,22 +507,16 @@ function attachEventListeners() {
 (async function bootstrap() {
     console.log('🔵 Profile initializing...');
 
-    // 1. Auth guard — redirects to login if no session
     await requireAuth();
-
-    // 2. Load session + update UI
     await initializeProfile();
 
-    // 3. Bind tab clicks + sidebar toggle
     attachEventListeners();
 
-    // 4. Wire pipeline toggle + API usage (sidebar + Overview)
     attachSystemControls();
     await loadSystemState();
     await loadApiUsage();
     startPolling();
 
-    // 5. Stop polling when the page is hidden
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             stopPolling();
@@ -541,7 +527,6 @@ function attachEventListeners() {
         }
     });
 
-    // 6. Resolve initial tab from hash
     const hash = window.location.hash.replace('#', '');
     const validTabs = ['overview', 'review', 'usage', 'settings'];
     const initialTab = validTabs.includes(hash) ? hash : 'overview';
