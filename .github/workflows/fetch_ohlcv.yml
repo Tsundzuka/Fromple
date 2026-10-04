@@ -1,0 +1,65 @@
+# ============================================================
+# .github/workflows/fetch_ohlcv.yml
+# ============================================================
+# Runs the OHLCV fetch pipeline on a schedule.
+#
+# Cron fires every 5 minutes within a broad envelope covering
+# all tradeable windows. The script itself decides which
+# instruments are in-session and whether the pipeline is
+# running — so a wake-up outside an active window costs
+# nothing but a few seconds of runner time.
+#
+# Envelope: 22:00 UTC through 21:59 UTC, Monday to Friday.
+# This spans EUR/USD, AUD/USD, USD/CHF, USD/CAD, and DXY windows
+# with margin on both sides. Nothing fires on weekends.
+# ============================================================
+
+name: fetch_ohlcv
+
+on:
+  schedule:
+    # Every 5 minutes, 22:00–21:59 UTC, Monday–Friday
+    - cron: '*/5 22,23,0-21 * * 1-5'
+
+  # Allow manual runs from the Actions tab for testing
+  workflow_dispatch:
+
+# Prevent overlapping runs. If a cycle is still going when the
+# next cron fires, the new one waits.
+concurrency:
+  group: fetch_ohlcv
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run OHLCV fetch
+        env:
+          SUPABASE_URL:              ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TWELVEDATA_API_KEY:        ${{ secrets.TWELVEDATA_API_KEY }}
+          UPSTASH_REDIS_REST_URL:    ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN:  ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+        run: |
+          python -m src.fetch_ohlcv
+
+      - name: Log completion
+        if: always()
+        run: echo "fetch_ohlcv finished at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
