@@ -1,0 +1,38 @@
+# ============================================================
+# FROMPLE — .gitignore
+# ============================================================
+
+# --- Environment & secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Node / Vercel ---
+node_modules/
+.vercel/
+.next/
+.npm/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.log
+
+# --- Local scratch ---
+/tmp/
+/scratch/
+*.local
