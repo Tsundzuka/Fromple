@@ -453,20 +453,16 @@
    ACTIVITY TABLE — UNIVERSAL 7-ROW SCROLL
    ======================================== */
 .table-wrap {
-    /* Both scrollbars, 7 rows visible by default */
     overflow-y: auto;
     overflow-x: auto;
     margin: 0 -17px;
     padding: 0 17px;
     min-width: 0;
-
-    /* Row-height knobs — override per table below */
     --table-row-h: 44px;
     --table-head-h: 34px;
     max-height: calc(var(--table-head-h) + 7 * var(--table-row-h));
 }
 
-/* Consistent scrollbar styling for every table */
 .table-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
 .table-wrap::-webkit-scrollbar-track { background: transparent; }
 .table-wrap::-webkit-scrollbar-thumb {
@@ -475,7 +471,6 @@
 }
 .table-wrap::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
 
-/* Sticky headers on every scrollable table */
 .table-wrap thead th {
     position: sticky;
     top: 0;
@@ -714,14 +709,15 @@
 }
 
 /* ========================================
-   TOGGLE SWITCH
+   TOGGLE SWITCH (compact base + large variant)
    ======================================== */
 .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 44px;
-    height: 24px;
+    width: 40px;
+    height: 22px;
     flex-shrink: 0;
+    cursor: pointer;
 }
 
 .toggle-switch input {
@@ -742,8 +738,8 @@
 .toggle-slider::before {
     content: "";
     position: absolute;
-    height: 18px;
-    width: 18px;
+    height: 16px;
+    width: 16px;
     left: 3px;
     top: 3px;
     background: #fff;
@@ -757,7 +753,27 @@
 }
 
 .toggle-switch input:checked + .toggle-slider::before {
-    transform: translateX(20px);
+    transform: translateX(18px);
+}
+
+.toggle-switch input:disabled + .toggle-slider {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Large variant */
+.toggle-switch.toggle-lg {
+    width: 56px;
+    height: 30px;
+}
+
+.toggle-switch.toggle-lg .toggle-slider::before {
+    height: 24px;
+    width: 24px;
+}
+
+.toggle-switch.toggle-lg input:checked + .toggle-slider::before {
+    transform: translateX(26px);
 }
 
 /* ========================================
@@ -1031,7 +1047,6 @@
     white-space: nowrap;
 }
 
-/* Per-table row heights */
 .class-table-wrap {
     --table-row-h: 52px;
     --table-head-h: 30px;
@@ -2052,6 +2067,531 @@
 }
 
 /* ============================================================
+   PROFILE ENRICHMENT — PIPELINE, API, DATA SOURCES, INDICATORS
+   ============================================================ */
+
+/* ---------- Sidebar pipeline + API block ---------- */
+.sb-pipeline {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.sb-pipeline-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.sb-pipeline-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.sb-api {
+    display: block;
+}
+
+.sb-api-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--gray-600);
+    margin-bottom: 4px;
+}
+
+.sb-api-name {
+    font-weight: 500;
+}
+
+.sb-api-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gray-500);
+}
+
+.sb-api-bar {
+    height: 4px;
+    background: var(--gray-100);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.sb-api-fill {
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+.sb-api-fill.warning { background: #F59E0B; }
+.sb-api-fill.danger  { background: #EF4444; }
+
+/* ---------- Overview pipeline strip ---------- */
+.pipeline-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    background: #fff;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow);
+}
+
+.pipeline-strip-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+}
+
+.pipeline-strip-status {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.pipeline-strip-status strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.pipeline-strip-status span {
+    font-size: 12px;
+    color: var(--gray-500);
+}
+
+.pipeline-strip-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.pipeline-strip-meta {
+    display: flex;
+    gap: 18px;
+}
+
+.pipeline-strip-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pipeline-strip-meta-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-400);
+}
+
+.pipeline-strip-meta-value {
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gray-700);
+}
+
+/* ---------- System status dot ---------- */
+.sys-status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gray-400);
+    flex-shrink: 0;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.sys-status-dot.on {
+    background: #10B981;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.18);
+}
+
+/* ---------- Settings: system control row ---------- */
+.sys-control-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 16px 18px;
+    background: var(--gray-50);
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+}
+
+.sys-control-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+}
+
+.sys-control-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.sys-control-text strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 2px;
+}
+
+.sys-control-text span {
+    font-size: 12px;
+    color: var(--gray-500);
+}
+
+.sys-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.sys-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sys-meta-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-400);
+}
+
+.sys-meta-value {
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gray-700);
+}
+
+/* ---------- Quota warning ---------- */
+.quota-warning {
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: #FEF3C7;
+    border-left: 3px solid #F59E0B;
+    border-radius: var(--radius);
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    color: #78350F;
+}
+
+.quota-warning strong {
+    font-weight: 600;
+}
+
+/* ---------- Instrument / session table ---------- */
+.inst-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.inst-table th,
+.inst-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.inst-table th {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--gray-50);
+}
+
+.inst-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.inst-table input[type="time"] {
+    padding: 4px 6px;
+    border: 1px solid var(--gray-200);
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    width: 88px;
+    color: var(--gray-800);
+    background: #fff;
+}
+
+.inst-table input[type="time"]:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: -1px;
+    border-color: var(--primary);
+}
+
+/* ---------- Multi-checkbox grid ---------- */
+.mini-tf-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mini-tf-grid label {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    color: var(--gray-600);
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.mini-tf-grid input {
+    margin: 0;
+    accent-color: var(--primary);
+}
+
+/* ---------- Inline note ---------- */
+.settings-inline-note {
+    font-size: 12px;
+    color: var(--gray-500);
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.settings-inline-note strong {
+    color: var(--gray-700);
+}
+
+.settings-inline-note strong.neg {
+    color: #EF4444;
+}
+
+/* ---------- API usage grid ---------- */
+.api-usage-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.api-card {
+    padding: 14px 16px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    transition: var(--transition);
+}
+
+.api-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+.api-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 8px;
+}
+
+.api-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--gray-800);
+}
+
+.api-card-tag {
+    font-size: 10px;
+    color: var(--gray-500);
+    padding: 2px 6px;
+    background: var(--gray-100);
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+}
+
+.usage-meter {
+    height: 6px;
+    background: var(--gray-100);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.usage-fill {
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+.usage-fill.warning { background: #F59E0B; }
+.usage-fill.danger  { background: #EF4444; }
+
+.api-card-foot {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--gray-500);
+}
+
+.api-card-foot .mono {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* ---------- Data source block ---------- */
+.ds-block {
+    padding: 16px 18px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    margin-bottom: 12px;
+    background: #fff;
+}
+
+.ds-block:last-child {
+    margin-bottom: 0;
+}
+
+.ds-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    gap: 10px;
+}
+
+.ds-head-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ds-head-info strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 2px;
+}
+
+.ds-head-info span {
+    font-size: 11px;
+    color: var(--gray-500);
+}
+
+.ds-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+/* ---------- Chip multi-select ---------- */
+.chip-multi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.chip-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    font-size: 11px;
+    cursor: pointer;
+    background: #fff;
+    color: var(--gray-600);
+    user-select: none;
+    transition: all 0.15s;
+}
+
+.chip-check input {
+    margin: 0;
+    accent-color: var(--primary);
+}
+
+.chip-check:has(input:checked) {
+    background: #F0FDFA;
+    color: #0D9488;
+    border-color: var(--primary);
+}
+
+/* ---------- Indicator table ---------- */
+.ind-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ind-table th,
+.ind-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.ind-table th {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--gray-50);
+}
+
+.ind-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ---------- Form input mono variant ---------- */
+.form-input.mono,
+.form-select.mono {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.form-select {
+    padding: 9px 11px;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-family: inherit;
+    background: #fff;
+    color: var(--gray-800);
+    cursor: pointer;
+    transition: var(--transition);
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%236B7280' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    padding-right: 30px;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 1024px) {
@@ -2143,7 +2683,6 @@
     .live-signal-foot { gap: 12px; font-size: 11px; }
     .obs-nearest-stats { gap: 12px; font-size: 11px; }
 
-    /* Mobile rows are taller due to text wrapping — override per table */
     .signal-registry-wrap { --table-row-h: 62px; }
 
     .class-table th:nth-child(3),
@@ -2151,6 +2690,48 @@
     .class-table th:nth-child(10),
     .class-table td:nth-child(10) {
         display: none;
+    }
+
+    /* Profile enrichment responsive */
+    .pipeline-strip {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pipeline-strip-right {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .pipeline-strip-meta {
+        justify-content: space-between;
+    }
+
+    .sys-control-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .api-usage-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ds-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .inst-table {
+        font-size: 12px;
+    }
+
+    .inst-table th,
+    .inst-table td {
+        padding: 8px 8px;
+    }
+
+    .inst-table input[type="time"] {
+        width: 76px;
     }
 }
 
@@ -2187,6 +2768,15 @@
 
     .class-cell-info span { display: none; }
 
-    /* Table-wrap margin adjusts for narrower card padding */
     .table-wrap { margin: 0 -12px; padding: 0 12px; }
+
+    .pipeline-strip-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .settings-inline-note {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
