@@ -7,19 +7,22 @@
 #
 # Entry point: python -m src.fetch_ohlcv
 #
-# Flow:
-#   1. Exit immediately if system_state.is_running = false
-#   2. Load active sessions from Supabase
-#   3. For each session whose UTC window contains "now":
-#         for each timeframe enabled on that session:
-#             compute when the next bar is due
-#             if not due → skip (no API call)
-#             if due     → fetch, save, stamp last-bar time
-#   4. Stamp system_state.last_successful_run
+# Dynamic configuration (no hardcoded symbols or timeframes):
+#   - instruments table  → symbol → provider_symbol
+#   - timeframes table   → code → provider_interval + duration_minutes
+#   - sessions table     → user-controlled enabled instruments + timeframes
 #
-# The per-timeframe guard means an M15 fetch only runs once
-# every 15 minutes, H1 once an hour, H4 once every 4 hours —
-# even though the workflow wakes every 5 minutes.
+# Flow:
+#   1. Exit if system_state.is_running = false
+#   2. Load instruments + timeframes registries
+#   3. Load active sessions
+#   4. For each session in its UTC window:
+#         for each timeframe enabled on that session:
+#             check fetch guard (skip if not due)
+#             fetch bars from Twelve Data
+#             save to Redis
+#             stamp last-bar time
+#   5. Stamp system_state.last_successful_run
 
 import logging
 import sys
@@ -45,60 +48,8 @@ log = logging.getLogger("fetch_ohlcv")
 
 
 # ------------------------------------------------------------
-# Symbol mapping (Supabase symbol → Twelve Data symbol)
-# ------------------------------------------------------------
-TWELVEDATA_SYMBOL_MAP = {
-    "EUR/USD": "EUR/USD",
-    "AUD/USD": "AUD/USD",
-    "USD/CHF": "USD/CHF",
-    "USD/CAD": "USD/CAD",
-    "DXY":     "DXY",
-}
-
-
-# ------------------------------------------------------------
-# Timeframe mapping (Supabase tf → Twelve Data interval)
-# ------------------------------------------------------------
-TWELVEDATA_INTERVAL_MAP = {
-    "M1":  "1min",
-    "M5":  "5min",
-    "M15": "15min",
-    "M30": "30min",
-    "H1":  "1h",
-    "H2":  "2h",
-    "H4":  "4h",
-    "H6":  "6h",
-    "H8":  "8h",
-    "H12": "12h",
-    "D1":  "1day",
-    "W1":  "1week",
-}
-
-
-# ------------------------------------------------------------
-# Timeframe → minutes (for the fetch guard)
-# ------------------------------------------------------------
-TIMEFRAME_MINUTES = {
-    "M1":  1,
-    "M5":  5,
-    "M15": 15,
-    "M30": 30,
-    "H1":  60,
-    "H2":  120,
-    "H4":  240,
-    "H6":  360,
-    "H8":  480,
-    "H12": 720,
-    "D1":  1440,
-    "W1":  10080,
-}
-
-
-# ------------------------------------------------------------
 # Rate limiting
 # ------------------------------------------------------------
-# Twelve Data free tier: 8 requests/minute. We sleep between
-# calls that actually reach the API.
 SECONDS_BETWEEN_CALLS = 8
 
 
@@ -109,17 +60,12 @@ SECONDS_BETWEEN_CALLS = 8
 #   run:{symbol}:{tf}:last_bar_dt
 # and only call the API when the current time has moved past
 # the next scheduled bar boundary.
-# ============================================================
 
 def _last_bar_key(symbol: str, timeframe: str) -> str:
     return f"run:{symbol}:{timeframe}:last_bar_dt"
 
 
 def _parse_bar_datetime(value: str) -> datetime | None:
-    """
-    Twelve Data returns bar datetimes as 'YYYY-MM-DD HH:MM:SS'
-    for intraday, or 'YYYY-MM-DD' for daily/weekly.
-    """
     if not value:
         return None
     s = str(value).strip()
@@ -134,40 +80,36 @@ def _parse_bar_datetime(value: str) -> datetime | None:
     return None
 
 
-def is_fetch_due(symbol: str, timeframe: str, now_utc: datetime) -> bool:
+def is_fetch_due(symbol: str, timeframe: str, duration_minutes: int, now_utc: datetime) -> bool:
     """
     Return True if the next bar boundary has passed since the
     last recorded bar. First fetch of the day always returns True.
     """
-    tf_minutes = TIMEFRAME_MINUTES.get(timeframe)
-    if not tf_minutes:
+    if duration_minutes <= 0:
         return False
 
     last_raw = rds.get_json(_last_bar_key(symbol, timeframe))
     if not last_raw:
         return True
 
-    last_dt = _parse_bar_datetime(last_raw if isinstance(last_raw, str)
-                                   else str(last_raw))
+    last_dt = _parse_bar_datetime(last_raw if isinstance(last_raw, str) else str(last_raw))
     if last_dt is None:
         return True
 
-    next_boundary = last_dt + timedelta(minutes=tf_minutes)
+    next_boundary = last_dt + timedelta(minutes=duration_minutes)
     return now_utc >= next_boundary
 
 
 def stamp_last_bar(symbol: str, timeframe: str, bars: list[dict]) -> None:
-    """Record the newest bar's datetime for future guard checks."""
     if not bars:
         return
     newest = bars[-1].get("datetime")
     if newest:
-        # Store as a raw JSON string
         rds.set_json(_last_bar_key(symbol, timeframe), str(newest))
 
 
 # ============================================================
-# Session window check
+# SESSION WINDOW CHECK
 # ============================================================
 def _parse_time(value: Any) -> dtime | None:
     if value is None:
@@ -194,23 +136,21 @@ def is_within_window(now_utc: datetime, start: dtime | None, end: dtime | None) 
 
 
 # ============================================================
-# Twelve Data fetch
+# TWELVE DATA FETCH
 # ============================================================
-def fetch_bars(symbol: str, timeframe: str, outputsize: int) -> list[dict]:
-    td_symbol = TWELVEDATA_SYMBOL_MAP.get(symbol)
-    if not td_symbol:
-        log.warning("No Twelve Data mapping for symbol: %s", symbol)
-        return []
-
-    td_interval = TWELVEDATA_INTERVAL_MAP.get(timeframe)
-    if not td_interval:
-        log.warning("No Twelve Data mapping for timeframe: %s", timeframe)
-        return []
-
+def fetch_bars(
+    provider_symbol: str,
+    provider_interval: str,
+    outputsize: int,
+) -> list[dict]:
+    """
+    Fetch OHLCV bars from Twelve Data. Returns a list of dicts
+    sorted oldest → newest. Returns [] on failure.
+    """
     url = f"{config.TWELVEDATA_BASE_URL}/time_series"
     params = {
-        "symbol":     td_symbol,
-        "interval":   td_interval,
+        "symbol":     provider_symbol,
+        "interval":   provider_interval,
         "outputsize": outputsize,
         "apikey":     config.TWELVEDATA_API_KEY,
         "order":      "ASC",
@@ -224,15 +164,15 @@ def fetch_bars(symbol: str, timeframe: str, outputsize: int) -> list[dict]:
             payload = resp.json()
         except requests.RequestException as e:
             log.warning("Twelve Data request failed (%s attempt %d): %s",
-                        symbol, attempt, e)
+                        provider_symbol, attempt, e)
             if attempt == 1:
                 time.sleep(3)
                 continue
             return []
 
         if isinstance(payload, dict) and payload.get("status") == "error":
-            log.warning("Twelve Data error for %s %s: %s",
-                        symbol, timeframe, payload.get("message"))
+            log.warning("Twelve Data error for %s: %s",
+                        provider_symbol, payload.get("message"))
             if attempt == 1:
                 time.sleep(10)
                 continue
@@ -240,7 +180,7 @@ def fetch_bars(symbol: str, timeframe: str, outputsize: int) -> list[dict]:
 
         values = payload.get("values") if isinstance(payload, dict) else None
         if not values:
-            log.warning("Twelve Data returned no bars for %s %s", symbol, timeframe)
+            log.warning("Twelve Data returned no bars for %s", provider_symbol)
             return []
 
         bars: list[dict] = []
@@ -255,7 +195,7 @@ def fetch_bars(symbol: str, timeframe: str, outputsize: int) -> list[dict]:
                     "volume":   float(v.get("volume") or 0),
                 })
             except (KeyError, ValueError, TypeError) as e:
-                log.warning("Skipping malformed bar for %s: %s", symbol, e)
+                log.warning("Skipping malformed bar for %s: %s", provider_symbol, e)
 
         return bars
 
@@ -263,7 +203,7 @@ def fetch_bars(symbol: str, timeframe: str, outputsize: int) -> list[dict]:
 
 
 # ============================================================
-# Main pipeline
+# MAIN PIPELINE
 # ============================================================
 def run() -> int:
     log.info("=== fetch_ohlcv starting ===")
@@ -272,6 +212,21 @@ def run() -> int:
         log.info("Pipeline is stopped (system_state.is_running = false). Exiting.")
         return 0
 
+    # 1. Load dynamic registries
+    instruments = sb.get_active_instruments()
+    timeframes  = sb.get_timeframe_map()
+
+    if not instruments:
+        log.warning("No active instruments found. Exiting.")
+        return 0
+    if not timeframes:
+        log.warning("No active timeframes found. Exiting.")
+        return 0
+
+    log.info("Registries: %d instruments, %d timeframes",
+             len(instruments), len(timeframes))
+
+    # 2. Load sessions
     sessions = sb.get_active_sessions()
     if not sessions:
         log.info("No active sessions. Exiting.")
@@ -280,7 +235,7 @@ def run() -> int:
     now_utc = datetime.now(timezone.utc)
     log.info("Current UTC time: %s", now_utc.strftime("%Y-%m-%d %H:%M:%S"))
 
-    # Filter to in-window sessions
+    # 3. Filter to in-window sessions
     due_sessions: list[dict] = []
     for s in sessions:
         start = _parse_time(s.get("start_utc"))
@@ -303,19 +258,34 @@ def run() -> int:
 
     for s in due_sessions:
         symbol = s.get("symbol")
-        timeframes = s.get("timeframes") or []
-        if not symbol or not timeframes:
+        tf_codes = s.get("timeframes") or []
+        if not symbol or not tf_codes:
             continue
 
-        for tf in timeframes:
-            # --- Fetch guard ---
-            if not is_fetch_due(symbol, tf, now_utc):
+        provider_symbol = instruments.get(symbol)
+        if not provider_symbol:
+            log.warning("No provider_symbol registered for %s — skipping", symbol)
+            continue
+
+        for tf in tf_codes:
+            tf_meta = timeframes.get(tf)
+            if not tf_meta:
+                log.warning("Unknown timeframe '%s' for %s — skipping", tf, symbol)
+                continue
+
+            provider_interval = tf_meta["provider_interval"]
+            duration_minutes  = tf_meta["duration_minutes"]
+
+            # Fetch guard
+            if not is_fetch_due(symbol, tf, duration_minutes, now_utc):
                 log.debug("Not due yet: %s %s — skipping", symbol, tf)
                 skipped += 1
                 continue
 
-            log.info("Fetching %s %s (%d bars)…", symbol, tf, config.BARS_PER_FETCH)
-            bars = fetch_bars(symbol, tf, config.BARS_PER_FETCH)
+            log.info("Fetching %s (%s) %s (%s, %d bars)…",
+                     symbol, provider_symbol, tf, provider_interval, config.BARS_PER_FETCH)
+
+            bars = fetch_bars(provider_symbol, provider_interval, config.BARS_PER_FETCH)
 
             if bars:
                 rds.save_bars(symbol, tf, bars)
@@ -325,10 +295,7 @@ def run() -> int:
             else:
                 log.warning("  ✘ No bars written for %s %s", symbol, tf)
 
-            # Only count a call against quota if we actually made one
             sb.increment_api_usage(provider="twelvedata", by=1, limit_value=800)
-
-            # Rate limit only when we actually hit the API
             time.sleep(SECONDS_BETWEEN_CALLS)
 
     sb.mark_successful_run()
