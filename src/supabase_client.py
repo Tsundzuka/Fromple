@@ -13,7 +13,7 @@
 # inserted row directly from res.data instead.
 
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Any
 
 from supabase import create_client, Client
@@ -55,6 +55,10 @@ def _first_row(resp) -> dict | None:
     return data
 
 
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
 # ------------------------------------------------------------
 # SYSTEM STATE
 # ------------------------------------------------------------
@@ -83,8 +87,8 @@ def mark_successful_run() -> None:
             _get()
             .table("system_state")
             .update({
-                "last_successful_run": datetime.now(timezone.utc).isoformat(),
-                "updated_at": datetime.now(timezone.utc).isoformat(),
+                "last_successful_run": _now_iso(),
+                "updated_at": _now_iso(),
             })
             .eq("id", 1)
             .execute()
@@ -218,7 +222,7 @@ def upsert_setting(user_id: str, key: str, value: Any) -> None:
                     "user_id": user_id,
                     "key": key,
                     "value": value,
-                    "updated_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": _now_iso(),
                 },
                 on_conflict="user_id,key",
             )
@@ -260,7 +264,7 @@ def increment_api_usage(provider: str, by: int = 1, limit_value: int = 0) -> Non
                 .table("api_usage")
                 .update({
                     "used": new_used,
-                    "updated_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": _now_iso(),
                 })
                 .eq("id", row["id"])
                 .execute()
@@ -300,6 +304,273 @@ def upsert_cot_reports(rows: list[dict]) -> int:
     except Exception as e:
         log.error("upsert_cot_reports failed: %s", e)
         return 0
+
+
+# ============================================================
+# AUXILIARY DATA
+# ============================================================
+# Four external feeds feeding into the registry:
+#   - FRED          → macro_rates
+#   - Finnhub cal   → calendar_events
+#   - Finnhub news  → news_items
+#   - FXNewsBias    → sentiment_scores
+#
+# Each section provides:
+#   - an upsert writer (idempotent on the natural key)
+#   - a "recently fetched?" guard so scripts can exit early
+#   - a reader for conditions.py / class_engine.py
+# ============================================================
+
+
+# ------------------------------------------------------------
+# FRED — macro rates
+# ------------------------------------------------------------
+def upsert_macro_rates(rows: list[dict]) -> int:
+    """Upsert FRED observations. Natural key: (series_id, observation_date)."""
+    if not rows:
+        return 0
+    try:
+        (
+            _get()
+            .table("macro_rates")
+            .upsert(rows, on_conflict="series_id,observation_date")
+            .execute()
+        )
+        return len(rows)
+    except Exception as e:
+        log.error("upsert_macro_rates failed: %s", e)
+        return 0
+
+
+def macro_fetched_within(hours: int) -> bool:
+    """True if any macro_rates row was fetched within the last N hours."""
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
+    try:
+        res = (
+            _get()
+            .table("macro_rates")
+            .select("id")
+            .gte("fetched_at", cutoff)
+            .limit(1)
+            .execute()
+        )
+        return bool(res.data)
+    except Exception as e:
+        log.warning("macro_fetched_within failed: %s", e)
+        return False
+
+
+def get_latest_macro_rates() -> dict[str, dict]:
+    """
+    Return {series_id: {'value': float, 'observation_date': str}} for
+    the most recent observation of each series. Used by conditions.py.
+    """
+    try:
+        res = (
+            _get()
+            .table("macro_rates")
+            .select("series_id, value, observation_date")
+            .order("observation_date", desc=True)
+            .execute()
+        )
+        out: dict[str, dict] = {}
+        for row in (res.data or []):
+            sid = row.get("series_id")
+            if sid and sid not in out:
+                out[sid] = {
+                    "value": row.get("value"),
+                    "observation_date": row.get("observation_date"),
+                }
+        return out
+    except Exception as e:
+        log.warning("get_latest_macro_rates failed: %s", e)
+        return {}
+
+
+# ------------------------------------------------------------
+# FINNHUB — economic calendar
+# ------------------------------------------------------------
+def upsert_calendar_events(rows: list[dict]) -> int:
+    """Upsert economic calendar events. Natural key: (event_name, currency, event_time)."""
+    if not rows:
+        return 0
+    try:
+        (
+            _get()
+            .table("calendar_events")
+            .upsert(rows, on_conflict="event_name,currency,event_time")
+            .execute()
+        )
+        return len(rows)
+    except Exception as e:
+        log.error("upsert_calendar_events failed: %s", e)
+        return 0
+
+
+def calendar_fetched_within(hours: int) -> bool:
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
+    try:
+        res = (
+            _get()
+            .table("calendar_events")
+            .select("id")
+            .gte("fetched_at", cutoff)
+            .limit(1)
+            .execute()
+        )
+        return bool(res.data)
+    except Exception as e:
+        log.warning("calendar_fetched_within failed: %s", e)
+        return False
+
+
+def get_calendar_window(start_iso: str, end_iso: str) -> list[dict]:
+    """
+    Return calendar events with event_time in [start_iso, end_iso].
+    Used by conditions.py to detect nearby high-impact events.
+    """
+    try:
+        res = (
+            _get()
+            .table("calendar_events")
+            .select("event_name, currency, impact, event_time, forecast, previous, actual")
+            .gte("event_time", start_iso)
+            .lte("event_time", end_iso)
+            .order("event_time")
+            .execute()
+        )
+        return res.data or []
+    except Exception as e:
+        log.warning("get_calendar_window failed: %s", e)
+        return []
+
+
+# ------------------------------------------------------------
+# FINNHUB — news
+# ------------------------------------------------------------
+def upsert_news_items(rows: list[dict]) -> int:
+    """Upsert news items. Natural key: url."""
+    if not rows:
+        return 0
+    try:
+        (
+            _get()
+            .table("news_items")
+            .upsert(rows, on_conflict="url")
+            .execute()
+        )
+        return len(rows)
+    except Exception as e:
+        log.error("upsert_news_items failed: %s", e)
+        return 0
+
+
+def news_fetched_within(hours: int) -> bool:
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
+    try:
+        res = (
+            _get()
+            .table("news_items")
+            .select("id")
+            .gte("fetched_at", cutoff)
+            .limit(1)
+            .execute()
+        )
+        return bool(res.data)
+    except Exception as e:
+        log.warning("news_fetched_within failed: %s", e)
+        return False
+
+
+def get_recent_news(since_iso: str) -> list[dict]:
+    """
+    Return news items published since the given ISO timestamp.
+    Used by conditions.py to detect active news windows.
+    """
+    try:
+        res = (
+            _get()
+            .table("news_items")
+            .select("headline, source, url, category, published_at, related_symbols")
+            .gte("published_at", since_iso)
+            .order("published_at", desc=True)
+            .execute()
+        )
+        return res.data or []
+    except Exception as e:
+        log.warning("get_recent_news failed: %s", e)
+        return []
+
+
+# ------------------------------------------------------------
+# FXNEWSBIAS — sentiment scores
+# ------------------------------------------------------------
+def upsert_sentiment_scores(rows: list[dict]) -> int:
+    """Upsert sentiment scores. Natural key: (currency, generated_at)."""
+    if not rows:
+        return 0
+    try:
+        (
+            _get()
+            .table("sentiment_scores")
+            .upsert(rows, on_conflict="currency,generated_at")
+            .execute()
+        )
+        return len(rows)
+    except Exception as e:
+        log.error("upsert_sentiment_scores failed: %s", e)
+        return 0
+
+
+def sentiment_exists(generated_at: str) -> bool:
+    """
+    True if any sentiment row already exists for this cycle.
+    Used by fetch_sentiment.py to skip redundant API calls when
+    the 3-hour cycle has not advanced.
+    """
+    if not generated_at:
+        return False
+    try:
+        res = (
+            _get()
+            .table("sentiment_scores")
+            .select("id")
+            .eq("generated_at", generated_at)
+            .limit(1)
+            .execute()
+        )
+        return bool(res.data)
+    except Exception as e:
+        log.warning("sentiment_exists(%s) failed: %s", generated_at, e)
+        return False
+
+
+def get_latest_sentiment() -> dict[str, dict]:
+    """
+    Return {currency: {'score': int, 'bias': str, 'generated_at': str}}
+    for the most recent cycle of each currency. Used by conditions.py.
+    """
+    try:
+        res = (
+            _get()
+            .table("sentiment_scores")
+            .select("currency, score, bias, generated_at")
+            .order("generated_at", desc=True)
+            .execute()
+        )
+        out: dict[str, dict] = {}
+        for row in (res.data or []):
+            cur = row.get("currency")
+            if cur and cur not in out:
+                out[cur] = {
+                    "score": int(row.get("score") or 0),
+                    "bias": row.get("bias"),
+                    "generated_at": row.get("generated_at"),
+                }
+        return out
+    except Exception as e:
+        log.warning("get_latest_sentiment failed: %s", e)
+        return {}
 
 
 # ------------------------------------------------------------
@@ -357,7 +628,7 @@ def touch_class(class_id: str) -> None:
                 .table("classes")
                 .update({
                     "occurrences": new_count,
-                    "last_seen": datetime.now(timezone.utc).isoformat(),
+                    "last_seen": _now_iso(),
                 })
                 .eq("id", class_id)
                 .execute()
@@ -444,7 +715,7 @@ def list_open_experiments(expired_only: bool = False) -> list[dict]:
             .eq("status", "open")
         )
         if expired_only:
-            q = q.lte("expires_at", datetime.now(timezone.utc).isoformat())
+            q = q.lte("expires_at", _now_iso())
         res = q.execute()
         return res.data or []
     except Exception as e:
@@ -467,7 +738,7 @@ def close_open_experiment(
                 "favorable_pips": favorable_pips,
                 "adverse_pips": adverse_pips,
                 "observation_id": observation_id,
-                "updated_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": _now_iso(),
             })
             .eq("id", experiment_id)
             .execute()
