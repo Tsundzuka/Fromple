@@ -6,6 +6,11 @@
 #
 # Entry point: python -m src.class_engine
 #
+# Per-bar guard: occurrences increment once per new bar, not
+# once per pipeline cycle. A cycle runs every 5 minutes; bars
+# arrive every 5 minutes (M5) or slower. Without the guard,
+# a single H1 bar would increment the class 12 times.
+#
 # Defining elements (class identity):
 #   regime.*     — uptrend / downtrend / consolidating
 #   state.*      — support, resistance, range position, volume,
@@ -42,8 +47,26 @@ log = logging.getLogger("class_engine")
 # ------------------------------------------------------------
 # Defining vs variation prefixes
 # ------------------------------------------------------------
-DEFINING_PREFIXES = ("regime.", "state.", "cot.", "sentiment.")
+DEFINING_PREFIXES  = ("regime.", "state.", "cot.", "sentiment.")
 VARIATION_PREFIXES = ("ind.", "cal.", "news.")
+
+
+# ============================================================
+# PER-BAR GUARD
+# ============================================================
+# Distinct key from signal_engine's guard so both stages can
+# process the same bar without blocking each other.
+
+def _class_bar_key(symbol: str, timeframe: str) -> str:
+    return f"run:{symbol}:{timeframe}:last_class_bar"
+
+
+def class_bar_already_processed(symbol: str, timeframe: str, bar_dt: str) -> bool:
+    return rds.get_json(_class_bar_key(symbol, timeframe)) == bar_dt
+
+
+def mark_class_bar_processed(symbol: str, timeframe: str, bar_dt: str) -> None:
+    rds.set_json(_class_bar_key(symbol, timeframe), bar_dt)
 
 
 # ============================================================
@@ -54,10 +77,6 @@ def build_fingerprint(conditions: dict) -> str:
     """
     Build a stable fingerprint from the defining elements that
     are TRUE. Sorted alphabetically so the string is deterministic.
-
-    Only defining keys (regime / state / cot / sentiment) are used.
-    Indicators and calendar are variations — they describe the
-    occurrence, not the class.
     """
     active_defining = sorted(
         k for k, v in conditions.items()
@@ -78,10 +97,7 @@ def build_variation_snapshot(conditions: dict) -> dict:
 
 
 def split_conditions(conditions: dict) -> dict:
-    """
-    Split the conditions dict into its four defining buckets.
-    Used when writing a new class row.
-    """
+    """Split the conditions dict into its four defining buckets."""
     regime = None
     for r in ("uptrend", "downtrend", "consolidating"):
         if conditions.get(f"regime.{r}"):
@@ -119,10 +135,6 @@ def split_conditions(conditions: dict) -> dict:
 # ============================================================
 
 def to_class_code(n: int) -> str:
-    """
-    Convert an index (0-based) to an alphabetic class code.
-    0 → A, 1 → B, …, 25 → Z, 26 → AA, 27 → AB, …
-    """
     n += 1
     result = ""
     while n > 0:
@@ -133,7 +145,6 @@ def to_class_code(n: int) -> str:
 
 
 def next_available_code(existing_codes: set[str]) -> str:
-    """Return the smallest unused alphabetic code."""
     i = 0
     while True:
         code = to_class_code(i)
@@ -147,10 +158,6 @@ def next_available_code(existing_codes: set[str]) -> str:
 # ============================================================
 
 def fetch_existing_classes(symbol: str, timeframe: str, version: int = 1) -> list[dict]:
-    """
-    Fetch every class for (symbol, timeframe, version).
-    Compared against the incoming fingerprint in Python.
-    """
     try:
         res = (
             sb._get()
@@ -168,10 +175,6 @@ def fetch_existing_classes(symbol: str, timeframe: str, version: int = 1) -> lis
 
 
 def reconstruct_fingerprint(row: dict) -> str:
-    """
-    Rebuild the fingerprint from a stored class row. Uses the
-    same canonical form the engine produces live.
-    """
     parts: list[str] = []
 
     regime = row.get("regime")
@@ -199,7 +202,6 @@ def find_matching_class(
     fingerprint: str,
     version: int = 1,
 ) -> dict | None:
-    """Return the class row whose fingerprint matches, or None."""
     classes = fetch_existing_classes(symbol, timeframe, version)
     for row in classes:
         if reconstruct_fingerprint(row) == fingerprint:
@@ -218,7 +220,6 @@ def create_new_class(
     existing_codes: set[str],
     version: int = 1,
 ) -> dict | None:
-    """Create a new class row with the next available code."""
     split = split_conditions(conditions)
     code = next_available_code(existing_codes)
 
@@ -246,14 +247,6 @@ def create_new_class(
 # ============================================================
 
 def run() -> int:
-    """
-    Execute one class-matching cycle. For every (symbol, timeframe)
-    with conditions in Redis:
-      - if a class matches → touch it
-      - else → create a new one
-
-    Returns the number of pairs processed.
-    """
     log.info("=== class_engine starting ===")
 
     if not sb.is_pipeline_running():
@@ -266,6 +259,7 @@ def run() -> int:
         return 0
 
     processed = 0
+    skipped = 0
 
     for s in sessions:
         symbol = s.get("symbol")
@@ -284,26 +278,8 @@ def run() -> int:
                 log.debug("Empty fingerprint for %s %s — skipping", symbol, tf)
                 continue
 
-            match = find_matching_class(symbol, tf, fingerprint, version=1)
-
-            if match:
-                sb.touch_class(match["id"])
-                log.info("  ✔ %s %s → Class %s (matched)",
-                         symbol, tf, match["class_code"])
-            else:
-                existing = fetch_existing_classes(symbol, tf, version=1)
-                existing_codes = {row["class_code"] for row in existing}
-                created = create_new_class(
-                    symbol, tf, conditions, existing_codes, version=1,
-                )
-                if created:
-                    log.info("  ✔ %s %s → Class %s (new)",
-                             symbol, tf, created["class_code"])
-                else:
-                    log.warning("  ✘ %s %s → failed to create class",
-                                symbol, tf)
-
-            # Stash the fingerprint in Redis for the signal engine
+            # Always stash the fingerprint — the signal engine
+            # reads it every cycle regardless of bar freshness.
             rds.set_json(
                 f"run:{symbol}:{tf}:fingerprint",
                 {
@@ -312,9 +288,48 @@ def run() -> int:
                 },
             )
 
+            # --- Per-bar guard ---
+            bars = rds.load_bars(symbol, tf)
+            if not bars:
+                log.debug("No bars for %s %s — skipping", symbol, tf)
+                continue
+            last_bar_dt = bars[-1].get("datetime")
+            if not last_bar_dt:
+                continue
+
+            if class_bar_already_processed(symbol, tf, last_bar_dt):
+                log.debug("Bar already processed for %s %s — skipping increment",
+                          symbol, tf)
+                skipped += 1
+                continue
+
+            # --- Actual class matching / incrementing ---
+            match = find_matching_class(symbol, tf, fingerprint, version=1)
+
+            if match:
+                sb.touch_class(match["id"])
+                log.info("  ✔ %s %s → Class %s (matched, occurrences → %d)",
+                         symbol, tf, match["class_code"],
+                         (match.get("occurrences") or 0) + 1)
+            else:
+                existing = fetch_existing_classes(symbol, tf, version=1)
+                existing_codes = {row["class_code"] for row in existing}
+                created = create_new_class(
+                    symbol, tf, conditions, existing_codes, version=1,
+                )
+                if created:
+                    log.info("  ✔ %s %s → Class %s (new, occurrences = 1)",
+                             symbol, tf, created["class_code"])
+                else:
+                    log.warning("  ✘ %s %s → failed to create class",
+                                symbol, tf)
+                    continue
+
+            mark_class_bar_processed(symbol, tf, last_bar_dt)
             processed += 1
 
-    log.info("=== class_engine finished: %d pairs processed ===", processed)
+    log.info("=== class_engine finished: %d processed, %d skipped (same bar) ===",
+             processed, skipped)
     return processed
 
 
