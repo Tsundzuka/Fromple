@@ -7,6 +7,10 @@
 # IMPORTANT: supabase-py's .maybe_single().execute() returns
 # None (not an object with .data = None) when no row matches.
 # Every read that uses maybe_single is guarded accordingly.
+#
+# IMPORTANT: some supabase-py versions do not support chaining
+# .insert().select().single(). All write helpers read the
+# inserted row directly from res.data instead.
 
 import logging
 from datetime import datetime, timezone
@@ -33,6 +37,16 @@ def _get() -> Client:
 
 def _maybe_row(resp) -> dict | None:
     """Safely extract a single row from a maybe_single response."""
+    if resp is None:
+        return None
+    data = getattr(resp, "data", None)
+    if isinstance(data, list):
+        return data[0] if data else None
+    return data
+
+
+def _first_row(resp) -> dict | None:
+    """Extract the first row from a standard insert/upsert response."""
     if resp is None:
         return None
     data = getattr(resp, "data", None)
@@ -122,6 +136,25 @@ def get_active_instruments() -> dict[str, str]:
     except Exception as e:
         log.warning("get_active_instruments failed: %s", e)
         return {}
+
+
+def get_instrument_pip_value(symbol: str) -> float:
+    """Return the pip_value for a symbol, or 0.0001 as a safe default."""
+    try:
+        res = (
+            _get()
+            .table("instruments")
+            .select("pip_value")
+            .eq("symbol", symbol)
+            .maybe_single()
+            .execute()
+        )
+        row = _maybe_row(res)
+        if row and row.get("pip_value") is not None:
+            return float(row["pip_value"])
+    except Exception as e:
+        log.warning("get_instrument_pip_value(%s) failed: %s", symbol, e)
+    return 0.0001
 
 
 # ------------------------------------------------------------
@@ -297,11 +330,9 @@ def create_class(payload: dict) -> dict | None:
             _get()
             .table("classes")
             .insert(payload)
-            .select("*")
-            .single()
             .execute()
         )
-        return _maybe_row(res)
+        return _first_row(res)
     except Exception as e:
         log.error("create_class failed: %s", e)
         return None
@@ -341,11 +372,9 @@ def upsert_signal(payload: dict) -> dict | None:
             _get()
             .table("signals")
             .upsert(payload, on_conflict="signal_code")
-            .select("*")
-            .single()
             .execute()
         )
-        return _maybe_row(res)
+        return _first_row(res)
     except Exception as e:
         log.error("upsert_signal failed: %s", e)
         return None
@@ -357,11 +386,9 @@ def insert_observation(payload: dict) -> dict | None:
             _get()
             .table("observations")
             .insert(payload)
-            .select("*")
-            .single()
             .execute()
         )
-        return _maybe_row(res)
+        return _first_row(res)
     except Exception as e:
         log.error("insert_observation failed: %s", e)
         return None
@@ -400,11 +427,9 @@ def insert_open_experiment(payload: dict) -> dict | None:
             _get()
             .table("open_experiments")
             .insert(payload)
-            .select("*")
-            .single()
             .execute()
         )
-        return _maybe_row(res)
+        return _first_row(res)
     except Exception as e:
         log.error("insert_open_experiment failed: %s", e)
         return None
