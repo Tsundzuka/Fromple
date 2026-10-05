@@ -158,11 +158,11 @@ async function updatePersonalProfile() {
 // ============================================================
 
 const DEFAULT_SESSIONS = {
-    'EUR/USD': { start_utc: '08:00:00', end_utc: '17:00:00', active: true, timeframes: ['M15','H1','H4'] },
-    'AUD/USD': { start_utc: '23:00:00', end_utc: '08:00:00', active: true, timeframes: ['M15','H1','H4'] },
-    'USD/CHF': { start_utc: '13:00:00', end_utc: '21:00:00', active: true, timeframes: ['M15','H1','H4'] },
-    'USD/CAD': { start_utc: '12:00:00', end_utc: '21:00:00', active: true, timeframes: ['M15','H1','H4'] },
-    'DXY':     { start_utc: '07:30:00', end_utc: '17:00:00', active: true, timeframes: ['M15','H1','H4'] },
+    'EUR/USD': { start_utc: '08:00:00', end_utc: '17:00:00', active: true, timeframes: ['M5'] },
+    'AUD/USD': { start_utc: '23:00:00', end_utc: '08:00:00', active: true, timeframes: ['M5'] },
+    'USD/CHF': { start_utc: '13:00:00', end_utc: '21:00:00', active: true, timeframes: ['M5'] },
+    'USD/CAD': { start_utc: '12:00:00', end_utc: '21:00:00', active: true, timeframes: ['M5'] },
+    'DXY':     { start_utc: '07:30:00', end_utc: '17:00:00', active: true, timeframes: ['M5'] },
 };
 
 const ALL_TFS = ['M5','M15','H1','H4'];
@@ -186,7 +186,7 @@ async function loadSessions() {
                 active:    !!row.active,
                 timeframes: Array.isArray(row.timeframes)
                     ? row.timeframes
-                    : (DEFAULT_SESSIONS[sym]?.timeframes || ['M15','H1','H4']),
+                    : (DEFAULT_SESSIONS[sym]?.timeframes || ['M5']),
             };
         });
     } catch (err) {
@@ -254,11 +254,20 @@ function readSessionsFromUI() {
 async function saveSessions() {
     if (!supabase) return;
 
+    // Need the current user id for the composite primary key
+    const { data: { session } } = await supabase.auth.getSession();
+    const userId = session?.user?.id;
+    if (!userId) {
+        showToast('Not authenticated.', 'error');
+        return;
+    }
+
     const payload = Object.entries(readSessionsFromUI()).map(([symbol, s]) => ({
+        user_id:    userId,
         symbol,
-        start_utc: s.start_utc,
-        end_utc:   s.end_utc,
-        active:    s.active,
+        start_utc:  s.start_utc,
+        end_utc:    s.end_utc,
+        active:     s.active,
         timeframes: s.timeframes,
         updated_at: new Date().toISOString(),
     }));
@@ -269,7 +278,7 @@ async function saveSessions() {
     try {
         const { error } = await supabase
             .from('sessions')
-            .upsert(payload, { onConflict: 'symbol' });
+            .upsert(payload, { onConflict: 'user_id,symbol' });
 
         if (error) throw error;
 
@@ -425,7 +434,6 @@ function loadNotifications() {
         console.warn('Could not read notifications:', err.message);
     }
 
-    // Notification options live in .notification-options with 4 checkboxes
     const container = document.querySelector('#tab-settings .notification-options');
     if (!container) return;
 
@@ -500,21 +508,18 @@ function deleteAccount() {
 // ============================================================
 
 function attachEventListeners() {
-    // Personal profile
     const personalBtn = document.getElementById('updatePersonalBtn');
     if (personalBtn && !personalBtn.dataset.bound) {
         personalBtn.addEventListener('click', updatePersonalProfile);
         personalBtn.dataset.bound = 'true';
     }
 
-    // Trading params
     const paramsBtn = document.getElementById('updateParamsBtn');
     if (paramsBtn && !paramsBtn.dataset.bound) {
         paramsBtn.addEventListener('click', saveTradingParams);
         paramsBtn.dataset.bound = 'true';
     }
 
-    // Instruments
     const instSaveBtn = document.getElementById('saveInstrumentsBtn');
     if (instSaveBtn && !instSaveBtn.dataset.bound) {
         instSaveBtn.addEventListener('click', saveSessions);
@@ -532,7 +537,6 @@ function attachEventListeners() {
         instAll.dataset.bound = 'true';
     }
 
-    // Live update credit estimate as user interacts
     const instBody = document.getElementById('instTableBody');
     if (instBody && !instBody.dataset.bound) {
         instBody.addEventListener('change', recalcCreditEstimate);
@@ -540,7 +544,6 @@ function attachEventListeners() {
         instBody.dataset.bound = 'true';
     }
 
-    // Indicators
     const indSaveBtn = document.getElementById('saveIndicatorsBtn');
     if (indSaveBtn && !indSaveBtn.dataset.bound) {
         indSaveBtn.addEventListener('click', saveIndicators);
@@ -557,21 +560,18 @@ function attachEventListeners() {
         indAll.dataset.bound = 'true';
     }
 
-    // Notifications — save on any checkbox change
     const notifContainer = document.querySelector('#tab-settings .notification-options');
     if (notifContainer && !notifContainer.dataset.bound) {
         notifContainer.addEventListener('change', saveNotifications);
         notifContainer.dataset.bound = 'true';
     }
 
-    // Save all
     const saveAllBtn = document.getElementById('saveAllSettingsBtn');
     if (saveAllBtn && !saveAllBtn.dataset.bound) {
         saveAllBtn.addEventListener('click', saveAll);
         saveAllBtn.dataset.bound = 'true';
     }
 
-    // Delete account
     const delBtn = document.getElementById('deleteAccountBtn');
     if (delBtn && !delBtn.dataset.bound) {
         delBtn.addEventListener('click', deleteAccount);
