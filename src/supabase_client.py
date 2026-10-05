@@ -3,6 +3,10 @@
 # ============================================================
 # Thin wrapper around supabase-py. Every method is scoped to a
 # specific pipeline need — no generic query builder leaks out.
+#
+# IMPORTANT: supabase-py's .maybe_single().execute() returns
+# None (not an object with .data = None) when no row matches.
+# Every read that uses maybe_single is guarded accordingly.
 
 import logging
 from datetime import datetime, timezone
@@ -27,6 +31,16 @@ def _get() -> Client:
     return _client
 
 
+def _maybe_row(resp) -> dict | None:
+    """Safely extract a single row from a maybe_single response."""
+    if resp is None:
+        return None
+    data = getattr(resp, "data", None)
+    if isinstance(data, list):
+        return data[0] if data else None
+    return data
+
+
 # ------------------------------------------------------------
 # SYSTEM STATE
 # ------------------------------------------------------------
@@ -41,7 +55,8 @@ def is_pipeline_running() -> bool:
             .maybe_single()
             .execute()
         )
-        return bool(res.data and res.data.get("is_running"))
+        row = _maybe_row(res)
+        return bool(row and row.get("is_running"))
     except Exception as e:
         log.warning("is_pipeline_running failed: %s", e)
         return False
@@ -84,6 +99,62 @@ def get_active_sessions() -> list[dict]:
 
 
 # ------------------------------------------------------------
+# INSTRUMENTS (canonical registry)
+# ------------------------------------------------------------
+def get_active_instruments() -> dict[str, str]:
+    """
+    Return {symbol: provider_symbol} for every active instrument.
+    Example: {'EUR/USD': 'EUR/USD', 'DXY': 'DXY'}
+    """
+    try:
+        res = (
+            _get()
+            .table("instruments")
+            .select("symbol, provider_symbol")
+            .eq("is_active", True)
+            .execute()
+        )
+        return {
+            r["symbol"]: r["provider_symbol"]
+            for r in (res.data or [])
+            if r.get("symbol") and r.get("provider_symbol")
+        }
+    except Exception as e:
+        log.warning("get_active_instruments failed: %s", e)
+        return {}
+
+
+# ------------------------------------------------------------
+# TIMEFRAMES (canonical registry)
+# ------------------------------------------------------------
+def get_timeframe_map() -> dict[str, dict]:
+    """
+    Return {code: {'provider_interval': str, 'duration_minutes': int}}
+    for every active timeframe.
+    Example: {'M1': {'provider_interval': '1min', 'duration_minutes': 1}, ...}
+    """
+    try:
+        res = (
+            _get()
+            .table("timeframes")
+            .select("code, provider_interval, duration_minutes")
+            .eq("is_active", True)
+            .execute()
+        )
+        return {
+            r["code"]: {
+                "provider_interval": r["provider_interval"],
+                "duration_minutes": int(r["duration_minutes"]),
+            }
+            for r in (res.data or [])
+            if r.get("code")
+        }
+    except Exception as e:
+        log.warning("get_timeframe_map failed: %s", e)
+        return {}
+
+
+# ------------------------------------------------------------
 # SETTINGS (per-user key/value)
 # ------------------------------------------------------------
 def get_setting(user_id: str, key: str) -> Any | None:
@@ -97,7 +168,8 @@ def get_setting(user_id: str, key: str) -> Any | None:
             .maybe_single()
             .execute()
         )
-        return res.data.get("value") if res.data else None
+        row = _maybe_row(res)
+        return row.get("value") if row else None
     except Exception as e:
         log.warning("get_setting(%s, %s) failed: %s", user_id, key, e)
         return None
@@ -146,9 +218,10 @@ def increment_api_usage(provider: str, by: int = 1, limit_value: int = 0) -> Non
             .maybe_single()
             .execute()
         )
+        row = _maybe_row(res)
 
-        if res.data:
-            new_used = (res.data.get("used") or 0) + by
+        if row:
+            new_used = (row.get("used") or 0) + by
             (
                 _get()
                 .table("api_usage")
@@ -156,7 +229,7 @@ def increment_api_usage(provider: str, by: int = 1, limit_value: int = 0) -> Non
                     "used": new_used,
                     "updated_at": datetime.now(timezone.utc).isoformat(),
                 })
-                .eq("id", res.data["id"])
+                .eq("id", row["id"])
                 .execute()
             )
         else:
@@ -212,7 +285,7 @@ def find_class(symbol: str, timeframe: str, class_code: str, version: int = 1) -
             .maybe_single()
             .execute()
         )
-        return res.data if res else None
+        return _maybe_row(res)
     except Exception as e:
         log.warning("find_class failed: %s", e)
         return None
@@ -228,7 +301,7 @@ def create_class(payload: dict) -> dict | None:
             .single()
             .execute()
         )
-        return res.data
+        return _maybe_row(res)
     except Exception as e:
         log.error("create_class failed: %s", e)
         return None
@@ -245,8 +318,9 @@ def touch_class(class_id: str) -> None:
             .maybe_single()
             .execute()
         )
-        if existing.data:
-            new_count = (existing.data.get("occurrences") or 0) + 1
+        row = _maybe_row(existing)
+        if row:
+            new_count = (row.get("occurrences") or 0) + 1
             (
                 _get()
                 .table("classes")
@@ -271,7 +345,7 @@ def upsert_signal(payload: dict) -> dict | None:
             .single()
             .execute()
         )
-        return res.data
+        return _maybe_row(res)
     except Exception as e:
         log.error("upsert_signal failed: %s", e)
         return None
@@ -287,7 +361,7 @@ def insert_observation(payload: dict) -> dict | None:
             .single()
             .execute()
         )
-        return res.data
+        return _maybe_row(res)
     except Exception as e:
         log.error("insert_observation failed: %s", e)
         return None
@@ -330,7 +404,7 @@ def insert_open_experiment(payload: dict) -> dict | None:
             .single()
             .execute()
         )
-        return res.data
+        return _maybe_row(res)
     except Exception as e:
         log.error("insert_open_experiment failed: %s", e)
         return None
