@@ -18,6 +18,9 @@
 #
 # Signal codes follow the pattern Cl-{Class}-Si-{NN}, where NN
 # is a per-class counter.
+#
+# Timeframe duration comes from the timeframes registry — no
+# hardcoded lookup.
 
 import logging
 import sys
@@ -40,27 +43,7 @@ log = logging.getLogger("signal_engine")
 
 
 # ------------------------------------------------------------
-# Timeframe → minutes
-# ------------------------------------------------------------
-TIMEFRAME_MINUTES = {
-    "M1":  1,
-    "M5":  5,
-    "M15": 15,
-    "M30": 30,
-    "H1":  60,
-    "H2":  120,
-    "H4":  240,
-    "H6":  360,
-    "H8":  480,
-    "H12": 720,
-    "D1":  1440,
-    "W1":  10080,
-}
-
-
-# ------------------------------------------------------------
-# Per-bar processing guard (prevents duplicate signals on the
-# same bar when the pipeline runs more than once per interval)
+# Per-bar processing guard
 # ------------------------------------------------------------
 def _processed_bar_key(symbol: str, timeframe: str) -> str:
     return f"run:{symbol}:{timeframe}:last_processed_bar"
@@ -95,7 +78,6 @@ def fetch_signals_for_class(class_id: str) -> list[dict]:
 
 
 def normalise_variations(v: dict | None) -> dict:
-    """Return only the True variation keys, sorted for comparison."""
     if not v:
         return {}
     return {k: True for k, val in sorted(v.items()) if val is True}
@@ -116,7 +98,6 @@ def find_matching_signal(
 
 
 def next_signal_number(class_code: str, existing_signals: list[dict]) -> int:
-    """Return the next NN for this class."""
     prefix = f"Cl-{class_code}-Si-"
     max_nn = 0
     for s in existing_signals:
@@ -161,7 +142,6 @@ def create_signal(
 
 
 def touch_signal(signal: dict) -> None:
-    """Increment recurrences and refresh last_fired."""
     try:
         new_count = (signal.get("recurrences") or 0) + 1
         (
@@ -188,6 +168,7 @@ def open_experiment(
     conditions: dict,
     direction: str,
     forward_window: int,
+    duration_minutes: int,
 ) -> dict | None:
     ctx = conditions.get("_context") or {}
     entry_price = ctx.get("close")
@@ -198,8 +179,11 @@ def open_experiment(
         log.warning("Cannot open experiment — missing context")
         return None
 
-    tf_minutes = TIMEFRAME_MINUTES.get(timeframe, 60)
-    duration = timedelta(minutes=tf_minutes * forward_window)
+    if duration_minutes <= 0:
+        log.warning("Cannot open experiment — invalid duration for %s", timeframe)
+        return None
+
+    duration = timedelta(minutes=duration_minutes * forward_window)
     now = datetime.now(timezone.utc)
 
     payload = {
@@ -225,14 +209,16 @@ def open_experiment(
 # ============================================================
 
 def run() -> int:
-    """
-    Execute one signal-generation cycle. Returns the number of
-    (symbol, timeframe) pairs that produced signals.
-    """
     log.info("=== signal_engine starting ===")
 
     if not sb.is_pipeline_running():
         log.info("Pipeline is stopped. Exiting.")
+        return 0
+
+    # Load timeframe registry once at startup
+    timeframes = sb.get_timeframe_map()
+    if not timeframes:
+        log.warning("No timeframes registry available. Exiting.")
         return 0
 
     sessions = sb.get_active_sessions()
@@ -244,11 +230,17 @@ def run() -> int:
 
     for s in sessions:
         symbol = s.get("symbol")
-        timeframes = s.get("timeframes") or []
-        if not symbol or not timeframes:
+        tf_codes = s.get("timeframes") or []
+        if not symbol or not tf_codes:
             continue
 
-        for tf in timeframes:
+        for tf in tf_codes:
+            tf_meta = timeframes.get(tf)
+            if not tf_meta:
+                log.debug("Unknown timeframe '%s' — skipping", tf)
+                continue
+            duration_minutes = tf_meta["duration_minutes"]
+
             # 1. Load conditions
             conditions = rds.load_conditions(symbol, tf)
             if not conditions or not conditions.get("_context"):
@@ -307,10 +299,12 @@ def run() -> int:
                         continue
 
                 exp = open_experiment(
-                    signal, class_row, conditions, direction, forward_window,
+                    signal, class_row, conditions, direction,
+                    forward_window, duration_minutes,
                 )
                 if exp:
-                    log.info("      opened experiment %s", exp["id"])
+                    log.info("      opened experiment %s (expires in %d bars of %s)",
+                             exp["id"], forward_window, tf)
                 else:
                     log.warning("      could not open experiment for %s",
                                 signal["signal_code"])
