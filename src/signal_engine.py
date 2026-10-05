@@ -7,11 +7,13 @@
 # Entry point: python -m src.signal_engine
 #
 # Signal codes are globally unique across the whole table:
-#   Cl-{SYMBOL}-{CLASS}-Si-{NN}
-# e.g. Cl-EURUSD-A-Si-01, Cl-USDCAD-C-Si-17
+#   Cl-{SYMBOL}-{CLASS}-Si-{NN}-{L|S}
+# e.g. Cl-EURUSD-B-Si-01-L  (first long signal for EUR/USD Class B)
+#      Cl-EURUSD-B-Si-01-S  (its short counterpart)
+#      Cl-USDCAD-C-Si-17-L  (seventeenth long signal for USD/CAD Class C)
 #
-# The symbol prefix prevents collisions when two different
-# instruments happen to fire the same class letter.
+# NN counts per (symbol, class, direction). Long and short each
+# have their own sequence.
 #
 # Flow, per (symbol, timeframe):
 #   1. Skip if the last bar was already processed
@@ -22,8 +24,6 @@
 #         - find or create a signal
 #         - open an experiment
 #   6. Mark the bar processed
-#
-# Timeframe duration comes from the timeframes registry.
 
 import logging
 import sys
@@ -46,14 +46,16 @@ log = logging.getLogger("signal_engine")
 
 
 # ------------------------------------------------------------
-# Symbol sanitisation
+# Helpers
 # ------------------------------------------------------------
 def sanitise_symbol(symbol: str) -> str:
-    """
-    Turn 'EUR/USD' into 'EURUSD'. Strips anything that isn't
-    a letter or digit so it's safe inside the signal code.
-    """
+    """EUR/USD → EURUSD"""
     return "".join(c for c in (symbol or "") if c.isalnum()).upper()
+
+
+def direction_suffix(direction: str) -> str:
+    """long → L, short → S"""
+    return "L" if direction == "long" else "S"
 
 
 # ------------------------------------------------------------
@@ -111,22 +113,33 @@ def find_matching_signal(
     return None
 
 
-def next_signal_number(symbol: str, class_code: str, existing_signals: list[dict]) -> int:
+def next_signal_number(
+    symbol: str,
+    class_code: str,
+    direction: str,
+    existing_signals: list[dict],
+) -> int:
     """
-    Return the next NN for this (symbol, class) combination.
-    Looks for signals with the code prefix Cl-{SYMBOL}-{CLASS}-Si-.
+    Return the next NN for this (symbol, class, direction).
+    Looks for signals with the prefix
+    Cl-{SYMBOL}-{CLASS}-Si- and the matching direction suffix.
     """
     prefix = f"Cl-{sanitise_symbol(symbol)}-{class_code}-Si-"
+    suffix = f"-{direction_suffix(direction)}"
     max_nn = 0
     for s in existing_signals:
         code = s.get("signal_code", "")
-        if code.startswith(prefix):
-            try:
-                n = int(code[len(prefix):])
-                if n > max_nn:
-                    max_nn = n
-            except ValueError:
-                continue
+        if s.get("direction") != direction:
+            continue
+        if not code.startswith(prefix) or not code.endswith(suffix):
+            continue
+        middle = code[len(prefix):-len(suffix)]
+        try:
+            n = int(middle)
+            if n > max_nn:
+                max_nn = n
+        except ValueError:
+            continue
     return max_nn + 1
 
 
@@ -142,8 +155,11 @@ def create_signal(
     existing_signals: list[dict],
 ) -> dict | None:
     class_code = class_row["class_code"]
-    nn = next_signal_number(symbol, class_code, existing_signals)
-    code = f"Cl-{sanitise_symbol(symbol)}-{class_code}-Si-{nn:02d}"
+    nn = next_signal_number(symbol, class_code, direction, existing_signals)
+    code = (
+        f"Cl-{sanitise_symbol(symbol)}-{class_code}-"
+        f"Si-{nn:02d}-{direction_suffix(direction)}"
+    )
 
     payload = {
         "signal_code": code,
@@ -154,8 +170,7 @@ def create_signal(
         "status":      "watching",
     }
 
-    log.info("Creating signal %s (%s) for Class %s",
-             code, direction, class_code)
+    log.info("Creating signal %s for Class %s", code, class_code)
 
     return sb.upsert_signal(payload)
 
