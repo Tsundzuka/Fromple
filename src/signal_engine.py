@@ -6,6 +6,13 @@
 #
 # Entry point: python -m src.signal_engine
 #
+# Signal codes are globally unique across the whole table:
+#   Cl-{SYMBOL}-{CLASS}-Si-{NN}
+# e.g. Cl-EURUSD-A-Si-01, Cl-USDCAD-C-Si-17
+#
+# The symbol prefix prevents collisions when two different
+# instruments happen to fire the same class letter.
+#
 # Flow, per (symbol, timeframe):
 #   1. Skip if the last bar was already processed
 #   2. Load conditions + fingerprint from Redis
@@ -16,11 +23,7 @@
 #         - open an experiment
 #   6. Mark the bar processed
 #
-# Signal codes follow the pattern Cl-{Class}-Si-{NN}, where NN
-# is a per-class counter.
-#
-# Timeframe duration comes from the timeframes registry — no
-# hardcoded lookup.
+# Timeframe duration comes from the timeframes registry.
 
 import logging
 import sys
@@ -40,6 +43,17 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 log = logging.getLogger("signal_engine")
+
+
+# ------------------------------------------------------------
+# Symbol sanitisation
+# ------------------------------------------------------------
+def sanitise_symbol(symbol: str) -> str:
+    """
+    Turn 'EUR/USD' into 'EURUSD'. Strips anything that isn't
+    a letter or digit so it's safe inside the signal code.
+    """
+    return "".join(c for c in (symbol or "") if c.isalnum()).upper()
 
 
 # ------------------------------------------------------------
@@ -97,8 +111,12 @@ def find_matching_signal(
     return None
 
 
-def next_signal_number(class_code: str, existing_signals: list[dict]) -> int:
-    prefix = f"Cl-{class_code}-Si-"
+def next_signal_number(symbol: str, class_code: str, existing_signals: list[dict]) -> int:
+    """
+    Return the next NN for this (symbol, class) combination.
+    Looks for signals with the code prefix Cl-{SYMBOL}-{CLASS}-Si-.
+    """
+    prefix = f"Cl-{sanitise_symbol(symbol)}-{class_code}-Si-"
     max_nn = 0
     for s in existing_signals:
         code = s.get("signal_code", "")
@@ -118,13 +136,14 @@ def next_signal_number(class_code: str, existing_signals: list[dict]) -> int:
 
 def create_signal(
     class_row: dict,
+    symbol: str,
     direction: str,
     variations: dict,
     existing_signals: list[dict],
 ) -> dict | None:
     class_code = class_row["class_code"]
-    nn = next_signal_number(class_code, existing_signals)
-    code = f"Cl-{class_code}-Si-{nn:02d}"
+    nn = next_signal_number(symbol, class_code, existing_signals)
+    code = f"Cl-{sanitise_symbol(symbol)}-{class_code}-Si-{nn:02d}"
 
     payload = {
         "signal_code": code,
@@ -215,7 +234,6 @@ def run() -> int:
         log.info("Pipeline is stopped. Exiting.")
         return 0
 
-    # Load timeframe registry once at startup
     timeframes = sb.get_timeframe_map()
     if not timeframes:
         log.warning("No timeframes registry available. Exiting.")
@@ -241,12 +259,10 @@ def run() -> int:
                 continue
             duration_minutes = tf_meta["duration_minutes"]
 
-            # 1. Load conditions
             conditions = rds.load_conditions(symbol, tf)
             if not conditions or not conditions.get("_context"):
                 continue
 
-            # 2. Load bars for the last bar datetime
             bars = rds.load_bars(symbol, tf)
             if not bars:
                 continue
@@ -254,28 +270,23 @@ def run() -> int:
             if not last_bar_dt:
                 continue
 
-            # 3. Skip if this bar was already processed
             if already_processed(symbol, tf, last_bar_dt):
                 log.debug("Bar already processed for %s %s — skipping", symbol, tf)
                 continue
 
-            # 4. Load fingerprint
             fp = rds.get_json(f"run:{symbol}:{tf}:fingerprint")
             fingerprint = (fp or {}).get("fingerprint")
             if not fingerprint:
                 log.debug("No fingerprint for %s %s — skipping", symbol, tf)
                 continue
 
-            # 5. Find the matched class
             class_row = find_matching_class(symbol, tf, fingerprint)
             if not class_row:
                 log.warning("No class matched for %s %s — skipping", symbol, tf)
                 continue
 
-            # 6. Snapshot variations
             variations = build_variation_snapshot(conditions)
 
-            # 7. Both directions
             existing_signals = fetch_signals_for_class(class_row["id"])
             forward_window = config.FORWARD_WINDOW
 
@@ -288,7 +299,7 @@ def run() -> int:
                              symbol, tf, signal["signal_code"], direction)
                 else:
                     signal = create_signal(
-                        class_row, direction, variations, existing_signals,
+                        class_row, symbol, direction, variations, existing_signals,
                     )
                     if signal:
                         log.info("  ✔ %s %s → new signal %s (%s)",
@@ -309,7 +320,6 @@ def run() -> int:
                     log.warning("      could not open experiment for %s",
                                 signal["signal_code"])
 
-            # 8. Mark this bar done
             mark_processed(symbol, tf, last_bar_dt)
             processed += 1
 
