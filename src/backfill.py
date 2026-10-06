@@ -3,14 +3,14 @@
 # ============================================================
 # Sequential historical backfill for M5 bars.
 #
-# Design (v2 — flat-storage):
-#   Each run fetches ONE window (5,000 bars) per symbol from
-#   the symbol's current cursor. The window REPLACES the M5
-#   list in Redis — it does not append. Storage stays flat at
-#   ~5,000 bars per symbol for the entire backfill.
+# Design (v3 — flat storage, batched pipeline):
+#   Each run fetches ONE window (up to 18 days) per symbol from
+#   the symbol's current cursor. The window REPLACES the M5 list
+#   in Redis — it does not append. Storage stays flat at ~5,000
+#   bars per symbol for the entire backfill.
 #
-#   After fetching, the pipeline stages run inline on the
-#   current window:
+#   After fetching, the pipeline stages run inline on the current
+#   window:
 #     1. cleanup    — clears stale derived bars
 #     2. aggregate  — derives M15–H8 from the new M5 window
 #     3. indicators — computes snapshots for every bar
@@ -19,11 +19,12 @@
 #     6. signal_engine  — opens experiments with entry_at = bar dt
 #     7. paper_trade    — closes them (they've long expired)
 #
-#   The class/signal guards are cleared before each window so
-#   every bar in the fresh window gets processed.
+#   The class/signal guards are cleared before each window so every
+#   bar in the fresh window gets processed.
 #
-#   Cursors advance after each run. When a cursor reaches
-#   "now", the symbol is marked done and skipped thereafter.
+#   Cursors advance after each run. When a cursor's newest bar is
+#   within DONE_WINDOW_HOURS of now, the symbol is marked done and
+#   skipped thereafter.
 #
 # Entry point: python -m src.backfill
 
@@ -46,6 +47,9 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
+for _noisy in ("httpx", "httpcore"):
+    logging.getLogger(_noisy).setLevel(logging.WARNING)
+
 log = logging.getLogger("backfill")
 
 
@@ -55,11 +59,11 @@ log = logging.getLogger("backfill")
 BACKFILL_TIMEFRAME = "M5"
 BACKFILL_INTERVAL  = "5min"
 
-# Bars per request. 5,000 is Twelve Data's hard max.
+# Twelve Data returns at most 5,000 bars per request.
 WINDOW_SIZE = 5000
 
-# Window size in calendar days. ~18 days covers 5,000 M5 bars
-# with a small buffer, so one request fills one window.
+# Window size in calendar days. ~18 days yields ~3,500-5,000 M5 bars
+# depending on weekend coverage and market holidays.
 WINDOW_DAYS = 18
 
 # Respect the free tier's 8 requests/minute limit.
@@ -344,9 +348,7 @@ def run() -> int:
             sb.increment_api_usage(provider="twelvedata", by=1, limit_value=800)
 
             if not bars:
-                log.warning("  %s: empty window — marking done", symbol)
-                rds.set_json(_done_key(symbol), True,
-                             ttl_seconds=BACKFILL_KEY_TTL_SECONDS)
+                log.warning("  %s: empty window — skipping (not marking done)", symbol)
                 time.sleep(SECONDS_BETWEEN_CALLS)
                 continue
 
@@ -372,10 +374,12 @@ def run() -> int:
             # Clear guards so the pipeline reprocesses this window
             clear_guards(symbol, symbol_tfs.get(symbol, []))
 
-            # Done detection
+            # Done detection: only "reached present" when the newest
+            # bar is close to now. The window is always smaller than
+            # WINDOW_SIZE (because we pass both start_date and end_date),
+            # so size cannot be used as a completion signal.
             reached_present = (
-                len(bars) < WINDOW_SIZE
-                or (newest_dt is not None and newest_dt >= done_cutoff)
+                newest_dt is not None and newest_dt >= done_cutoff
             )
             if reached_present:
                 log.info("  %s: reached present — marking done", symbol)
@@ -400,6 +404,8 @@ def run() -> int:
         return total_written
 
     finally:
+        # Restore the original function (defensive — process is
+        # about to exit anyway)
         sb.is_pipeline_running = _original_running
 
 
