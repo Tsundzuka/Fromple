@@ -2,25 +2,24 @@
 # src/cleanup.py
 # ============================================================
 # Deletes regeneratable Redis scratch keys after each pipeline cycle,
-# and trims M5 bars to a fixed count per symbol.
+# and trims each base timeframe's bars to its capped count.
 #
 # Redis is a scratchpad, not storage. The registry lives in Supabase.
 #
 # PRESERVED across cycles (must survive):
-#   run:{symbol}:M5:bars                 — source of truth for aggregation
-#                                          (trimmed to last M5_MAX_BARS)
-#   run:{symbol}:W1:*                    — weekly, updates rarely
-#   run:{symbol}:D1:*                    — daily, updates once per day
-#   run:{symbol}:MN1:*                   — monthly, updates rarely
+#   BASE timeframes — bars, indicators, conditions, fingerprint
+#     M5   — source of truth for aggregation into M15–H8
+#     H12  — fetched directly; updates twice a day
+#     D1   — fetched directly; updates once a day
+#     W1   — fetched directly; updates once a week
+#     MN1  — fetched directly; updates once a month
 #   run:{symbol}:{tf}:last_bar_dt        — fetch guard
 #   run:{symbol}:{tf}:last_class_bar     — class engine guard
 #   run:{symbol}:{tf}:last_processed_bar — signal engine guard
 #
 # DELETED every cycle (regeneratable):
-#   run:{symbol}:{tf}:bars               — for tf not in PRESERVED
-#   run:{symbol}:{tf}:indicators         — for tf not in PRESERVED
-#   run:{symbol}:{tf}:conditions         — for tf not in PRESERVED
-#   run:{symbol}:{tf}:fingerprint        — for tf not in PRESERVED
+#   DERIVED timeframes — bars, indicators, conditions, fingerprint
+#     M15, M30, H1, H2, H4, H6, H8
 #
 # Entry point: python -m src.cleanup
 
@@ -44,18 +43,26 @@ log = logging.getLogger("cleanup")
 # ------------------------------------------------------------
 # Constants
 # ------------------------------------------------------------
-BASE_TIMEFRAME = "M5"
+# Base timeframes: fetched by fetch_ohlcv.py, persist across cycles.
+# The value is the maximum number of bars to keep per symbol.
+# These caps must match fetch_ohlcv.py's MAX_BARS dict.
+BASE_MAX_BARS = {
+    "M5":  5_000,
+    "H12": 1_000,
+    "D1":  1_000,
+    "W1":    500,
+    "MN1":   200,
+}
 
-# Number of M5 bars to retain per symbol. Matches Twelve Data's
-# per-request maximum, so a single refetch could reseed this window.
-# 5,000 M5 bars ≈ 17 calendar days of 24h forex trading.
-M5_MAX_BARS = 5000
+# Timeframes whose full state is preserved. Bars are trimmed, but
+# the keys themselves never get deleted.
+PRESERVED_TIMEFRAMES = set(BASE_MAX_BARS.keys())
 
-# Timeframes whose full computed state is preserved across cycles.
-# Their bars, indicators, conditions, and fingerprints are not deleted.
-PRESERVED_TIMEFRAMES = {"M5", "W1", "D1", "MN1"}
+# Derived timeframes: produced by aggregate.py, deleted each cycle.
+# Listed explicitly so the intent is visible even if the set overlaps.
+DERIVED_TIMEFRAMES = {"M15", "M30", "H1", "H2", "H4", "H6", "H8"}
 
-# Suffixes deleted each cycle, for timeframes NOT in PRESERVED_TIMEFRAMES.
+# Suffixes deleted each cycle for derived timeframes.
 REGENERATABLE_SUFFIXES = (
     "bars",
     "indicators",
@@ -67,17 +74,17 @@ REGENERATABLE_SUFFIXES = (
 # ============================================================
 # HELPERS
 # ============================================================
-def trim_m5(symbol: str) -> int:
+def trim_bars(symbol: str, timeframe: str, cap: int) -> int:
     """
-    Trim the M5 bars list for one symbol to the newest M5_MAX_BARS
-    entries. Returns the number of bars removed.
+    Trim the bars list for one (symbol, timeframe) to the newest
+    `cap` entries. Returns the number of bars removed.
     """
-    key = rds.bars_key(symbol, BASE_TIMEFRAME)
+    key = rds.bars_key(symbol, timeframe)
     bars = rds.get_json(key)
-    if not isinstance(bars, list) or len(bars) <= M5_MAX_BARS:
+    if not isinstance(bars, list) or len(bars) <= cap:
         return 0
 
-    trimmed = bars[-M5_MAX_BARS:]
+    trimmed = bars[-cap:]
     removed = len(bars) - len(trimmed)
     rds.set_json(key, trimmed)
     return removed
@@ -108,8 +115,8 @@ def cleanup_combo(symbol: str, timeframe: str) -> int:
     """
     Delete the regeneratable keys for one (symbol, timeframe) pair.
 
-    If the timeframe is in PRESERVED_TIMEFRAMES, nothing is deleted.
-    Otherwise, bars + indicators + conditions + fingerprint are removed.
+    Base timeframes are preserved. Derived timeframes have bars,
+    indicators, conditions, and fingerprint removed.
     """
     if timeframe in PRESERVED_TIMEFRAMES:
         return 0
@@ -131,8 +138,8 @@ def cleanup_combo(symbol: str, timeframe: str) -> int:
 # ============================================================
 def run() -> int:
     log.info("=== cleanup starting ===")
-    log.info("M5 retention: %d bars per symbol", M5_MAX_BARS)
     log.info("Preserved timeframes: %s", ", ".join(sorted(PRESERVED_TIMEFRAMES)))
+    log.info("Derived (cleaned): %s", ", ".join(sorted(DERIVED_TIMEFRAMES)))
 
     combos = active_combos()
     if not combos:
@@ -141,16 +148,17 @@ def run() -> int:
 
     symbols = sorted({sym for sym, _ in combos})
 
-    # 1. Trim M5 to the fixed bar count
+    # 1. Trim base timeframe bars to their per-timeframe caps
     total_trimmed = 0
     for symbol in symbols:
-        removed = trim_m5(symbol)
-        total_trimmed += removed
-        if removed > 0:
-            log.info("  %s M5: trimmed %d bars (kept %d)",
-                     symbol, removed, M5_MAX_BARS)
+        for tf, cap in BASE_MAX_BARS.items():
+            removed = trim_bars(symbol, tf, cap)
+            total_trimmed += removed
+            if removed > 0:
+                log.info("  %s %s: trimmed %d bars (kept %d)",
+                         symbol, tf, removed, cap)
 
-    # 2. Delete scratch keys for non-preserved timeframes
+    # 2. Delete scratch keys for derived timeframes
     total_deleted = 0
     cleaned_tfs: set[str] = set()
     preserved_tfs: set[str] = set()
@@ -164,7 +172,7 @@ def run() -> int:
             preserved_tfs.add(tf)
 
     log.info("=== cleanup finished ===")
-    log.info("M5 bars trimmed: %d", total_trimmed)
+    log.info("Bars trimmed: %d", total_trimmed)
     log.info("Keys deleted: %d across %d combos", total_deleted, len(combos))
     log.info("Cleaned timeframes: %s", ", ".join(sorted(cleaned_tfs)) or "(none)")
     log.info("Preserved timeframes: %s", ", ".join(sorted(preserved_tfs)) or "(none)")
