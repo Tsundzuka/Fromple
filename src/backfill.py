@@ -3,19 +3,27 @@
 # ============================================================
 # Sequential historical backfill for M5 bars.
 #
-# Runs hourly. Each run:
-#   1. Reads the backfill cursor for each symbol from Redis
-#      (on first run, calls /earliest_timestamp to seed it)
-#   2. Fetches one window of up to 5,000 bars starting from the cursor
-#   3. Merges those bars into the M5 list for the symbol
-#   4. Advances the cursor to the newest bar received
-#   5. If the window returned fewer bars than requested, or the newest
-#      bar is within DONE_WINDOW_HOURS of now, marks the symbol as done
+# Design (v2 — flat-storage):
+#   Each run fetches ONE window (5,000 bars) per symbol from
+#   the symbol's current cursor. The window REPLACES the M5
+#   list in Redis — it does not append. Storage stays flat at
+#   ~5,000 bars per symbol for the entire backfill.
 #
-# Once a symbol is marked done, subsequent runs skip it entirely.
+#   After fetching, the pipeline stages run inline on the
+#   current window:
+#     1. cleanup    — clears stale derived bars
+#     2. aggregate  — derives M15–H8 from the new M5 window
+#     3. indicators — computes snapshots for every bar
+#     4. conditions — evaluates per-bar conditions
+#     5. class_engine
+#     6. signal_engine  — opens experiments with entry_at = bar dt
+#     7. paper_trade    — closes them (they've long expired)
 #
-# Idempotent: merging is dedupe-by-datetime, so re-runs on the same
-# window are safe.
+#   The class/signal guards are cleared before each window so
+#   every bar in the fresh window gets processed.
+#
+#   Cursors advance after each run. When a cursor reaches
+#   "now", the symbol is marked done and skipped thereafter.
 #
 # Entry point: python -m src.backfill
 
@@ -53,13 +61,17 @@ WINDOW_SIZE = 5000
 # Respect the free tier's 8 requests/minute limit.
 SECONDS_BETWEEN_CALLS = 8
 
-# If the newest bar returned is within this window of "now",
+# If a window's newest bar is within this many hours of "now",
 # consider the symbol fully backfilled.
 DONE_WINDOW_HOURS = 2
 
-# How long the cursor and done-flag keys survive in Redis.
-# Long enough to outlive any reasonable backfill effort.
+# Long TTL for cursor and done keys — must outlive the whole
+# backfill campaign (weeks).
 BACKFILL_KEY_TTL_SECONDS = 400 * 24 * 60 * 60  # 400 days
+
+# Guards to clear before each window so the pipeline reprocesses
+# every bar in the fresh window.
+GUARD_SUFFIXES = ("last_class_bar", "last_processed_bar")
 
 
 # ------------------------------------------------------------
@@ -73,15 +85,20 @@ def _done_key(symbol: str) -> str:
     return f"run:{symbol}:{BACKFILL_TIMEFRAME}:backfill_done"
 
 
+def _guard_key(symbol: str, tf: str, suffix: str) -> str:
+    return f"run:{symbol}:{tf}:{suffix}"
+
+
 # ------------------------------------------------------------
 # Datetime parsing
 # ------------------------------------------------------------
-def _parse_dt(value: str) -> datetime | None:
+def _parse_dt(value) -> datetime | None:
     if not value:
         return None
+    s = str(value).strip()
     for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%d"):
         try:
-            return datetime.strptime(str(value).strip(), fmt).replace(tzinfo=timezone.utc)
+            return datetime.strptime(s, fmt).replace(tzinfo=timezone.utc)
         except ValueError:
             continue
     return None
@@ -91,10 +108,7 @@ def _parse_dt(value: str) -> datetime | None:
 # Twelve Data calls
 # ------------------------------------------------------------
 def fetch_earliest_timestamp(provider_symbol: str) -> datetime | None:
-    """
-    Ask Twelve Data for the earliest available M5 bar for a symbol.
-    Returns a UTC datetime, or None on failure.
-    """
+    """Ask Twelve Data for the earliest available M5 bar."""
     url = f"{config.TWELVEDATA_BASE_URL}/earliest_timestamp"
     params = {
         "symbol":   provider_symbol,
@@ -106,7 +120,8 @@ def fetch_earliest_timestamp(provider_symbol: str) -> datetime | None:
         resp.raise_for_status()
         payload = resp.json()
     except requests.RequestException as e:
-        log.warning("earliest_timestamp request failed for %s: %s", provider_symbol, e)
+        log.warning("earliest_timestamp request failed for %s: %s",
+                    provider_symbol, e)
         return None
 
     if isinstance(payload, dict) and payload.get("status") == "error":
@@ -119,10 +134,7 @@ def fetch_earliest_timestamp(provider_symbol: str) -> datetime | None:
 
 
 def fetch_window(provider_symbol: str, start_dt: datetime) -> list[dict]:
-    """
-    Fetch up to WINDOW_SIZE M5 bars starting from start_dt.
-    Returns a list of bars (oldest → newest), or [] on failure.
-    """
+    """Fetch up to WINDOW_SIZE M5 bars starting from start_dt."""
     url = f"{config.TWELVEDATA_BASE_URL}/time_series"
     params = {
         "symbol":     provider_symbol,
@@ -180,33 +192,71 @@ def fetch_window(provider_symbol: str, start_dt: datetime) -> list[dict]:
 
 
 # ------------------------------------------------------------
-# Merge into M5 list
+# Redis helpers
 # ------------------------------------------------------------
-def merge_into_m5(symbol: str, new_bars: list[dict]) -> int:
+def replace_m5(symbol: str, bars: list[dict]) -> int:
     """
-    Merge new bars into the symbol's M5 list in Redis. Returns the
-    total number of M5 bars after the merge.
+    REPLACE the M5 bars key for this symbol with `bars`.
+    Does not merge — the previous window is discarded.
     """
     key = rds.bars_key(symbol, BACKFILL_TIMEFRAME)
-    existing = rds.get_json(key)
-    if not isinstance(existing, list):
-        existing = []
+    rds.set_json(key, bars)
+    return len(bars)
 
-    by_dt: dict[str, dict] = {b["datetime"]: b for b in existing if "datetime" in b}
-    for b in new_bars:
-        if "datetime" in b:
-            by_dt[b["datetime"]] = b
 
-    merged = sorted(by_dt.values(), key=lambda b: b["datetime"])
-    rds.set_json(key, merged)
-    return len(merged)
+def clear_guards(symbol: str, timeframes: list[str]) -> None:
+    """
+    Clear the class and signal guards for every timeframe we're
+    about to process, so the pipeline treats the fresh window
+    as unprocessed.
+    """
+    for tf in timeframes:
+        for suffix in GUARD_SUFFIXES:
+            try:
+                rds.delete(_guard_key(symbol, tf, suffix))
+            except Exception as e:
+                log.warning("Failed to clear %s: %s", suffix, e)
+
+
+# ------------------------------------------------------------
+# Pipeline orchestration (inline)
+# ------------------------------------------------------------
+def run_pipeline() -> None:
+    """
+    Run the pipeline stages in order against the current Redis
+    state (which is the fresh backfill window). Stages are
+    imported lazily to avoid circular imports.
+    """
+    from . import aggregate, indicators, conditions, \
+                  class_engine, signal_engine, paper_trade, cleanup
+
+    log.info("    pipeline: cleanup")
+    cleanup.run()
+
+    log.info("    pipeline: aggregate")
+    aggregate.run()
+
+    log.info("    pipeline: indicators")
+    indicators.run()
+
+    log.info("    pipeline: conditions")
+    conditions.run()
+
+    log.info("    pipeline: class_engine")
+    class_engine.run()
+
+    log.info("    pipeline: signal_engine")
+    signal_engine.run()
+
+    log.info("    pipeline: paper_trade")
+    paper_trade.run()
 
 
 # ------------------------------------------------------------
 # Main
 # ------------------------------------------------------------
 def run() -> int:
-    log.info("=== backfill starting ===")
+    log.info("=== backfill starting (flat-storage mode) ===")
 
     config.require(
         "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY",
@@ -214,105 +264,132 @@ def run() -> int:
         "TWELVEDATA_API_KEY",
     )
 
-    instruments = sb.get_active_instruments()
-    sessions = sb.get_active_sessions()
+    # --- Monkeypatch: treat the pipeline as running so the
+    #     stages execute even if the system_state toggle is off.
+    #     This override only applies to this process.
+    _original_running = sb.is_pipeline_running
+    sb.is_pipeline_running = lambda: True
 
-    if not instruments:
-        log.warning("No active instruments — exiting.")
-        return 0
-    if not sessions:
-        log.info("No active sessions — exiting.")
-        return 0
+    try:
+        instruments = sb.get_active_instruments()
+        sessions = sb.get_active_sessions()
 
-    # Unique symbols we're configured to track
-    symbols = sorted({s["symbol"] for s in sessions if s.get("symbol")})
-    if not symbols:
-        log.info("No symbols in sessions — exiting.")
-        return 0
+        if not instruments or not sessions:
+            log.warning("No instruments or sessions — exiting.")
+            return 0
 
-    now_utc = datetime.now(timezone.utc)
-    done_cutoff = now_utc - timedelta(hours=DONE_WINDOW_HOURS)
+        # Unique symbols, and their timeframes for guard clearing.
+        symbol_tfs: dict[str, list[str]] = {}
+        for s in sessions:
+            sym = s.get("symbol")
+            tfs = s.get("timeframes") or []
+            if sym:
+                symbol_tfs.setdefault(sym, [])
+                symbol_tfs[sym].extend(tfs)
 
-    total_added = 0
-    progressed = 0
-    all_done = True
+        symbols = sorted(symbol_tfs.keys())
+        now_utc = datetime.now(timezone.utc)
+        done_cutoff = now_utc - timedelta(hours=DONE_WINDOW_HOURS)
 
-    for symbol in symbols:
-        # Check done flag
-        if rds.get_json(_done_key(symbol)):
-            log.debug("  %s: already done — skipping", symbol)
-            continue
+        total_written = 0
+        progressed = 0
+        all_done = True
+        any_window_written = False
 
-        all_done = False
-
-        provider_symbol = instruments.get(symbol)
-        if not provider_symbol:
-            log.warning("  %s: no provider_symbol — skipping", symbol)
-            continue
-
-        # 1. Determine start point
-        cursor_raw = rds.get_json(_cursor_key(symbol))
-        start_dt = _parse_dt(cursor_raw) if cursor_raw else None
-
-        if start_dt is None:
-            log.info("  %s: no cursor — querying earliest_timestamp", symbol)
-            start_dt = fetch_earliest_timestamp(provider_symbol)
-            sb.increment_api_usage(provider="twelvedata", by=1, limit_value=800)
-            time.sleep(SECONDS_BETWEEN_CALLS)
-
-            if start_dt is None:
-                log.warning("  %s: could not determine earliest timestamp — skipping", symbol)
+        for symbol in symbols:
+            if rds.get_json(_done_key(symbol)):
+                log.debug("  %s: already done — skipping", symbol)
                 continue
 
-            log.info("  %s: earliest M5 bar is %s", symbol, start_dt.date())
+            all_done = False
 
-        # 2. Fetch one window
-        log.info("  %s: fetching window from %s", symbol, start_dt)
-        bars = fetch_window(provider_symbol, start_dt)
-        sb.increment_api_usage(provider="twelvedata", by=1, limit_value=800)
+            provider_symbol = instruments.get(symbol)
+            if not provider_symbol:
+                log.warning("  %s: no provider_symbol — skipping", symbol)
+                continue
 
-        if not bars:
-            log.warning("  %s: empty window — marking done", symbol)
-            rds.set_json(_done_key(symbol), True, ttl_seconds=BACKFILL_KEY_TTL_SECONDS)
-            time.sleep(SECONDS_BETWEEN_CALLS)
-            continue
+            # Determine start point
+            cursor_raw = rds.get_json(_cursor_key(symbol))
+            start_dt = _parse_dt(cursor_raw) if cursor_raw else None
 
-        # 3. Merge into M5
-        total = merge_into_m5(symbol, bars)
-        total_added += len(bars)
-        progressed += 1
+            if start_dt is None:
+                log.info("  %s: no cursor — querying earliest_timestamp", symbol)
+                start_dt = fetch_earliest_timestamp(provider_symbol)
+                sb.increment_api_usage(provider="twelvedata", by=1, limit_value=800)
+                time.sleep(SECONDS_BETWEEN_CALLS)
 
-        newest_dt = _parse_dt(bars[-1].get("datetime"))
+                if start_dt is None:
+                    log.warning("  %s: could not determine earliest "
+                                "timestamp — skipping", symbol)
+                    continue
 
-        # 4. Advance cursor
-        if newest_dt:
-            rds.set_json(
-                _cursor_key(symbol),
-                newest_dt.strftime("%Y-%m-%d %H:%M:%S"),
-                ttl_seconds=BACKFILL_KEY_TTL_SECONDS,
+                log.info("  %s: earliest M5 bar is %s", symbol, start_dt.date())
+
+            # Fetch one window
+            log.info("  %s: fetching window from %s", symbol, start_dt)
+            bars = fetch_window(provider_symbol, start_dt)
+            sb.increment_api_usage(provider="twelvedata", by=1, limit_value=800)
+
+            if not bars:
+                log.warning("  %s: empty window — marking done", symbol)
+                rds.set_json(_done_key(symbol), True,
+                             ttl_seconds=BACKFILL_KEY_TTL_SECONDS)
+                time.sleep(SECONDS_BETWEEN_CALLS)
+                continue
+
+            # Replace M5 (do not merge — flat storage)
+            total = replace_m5(symbol, bars)
+            total_written += len(bars)
+            progressed += 1
+            any_window_written = True
+
+            newest_dt = _parse_dt(bars[-1].get("datetime"))
+
+            # Advance cursor
+            if newest_dt:
+                rds.set_json(
+                    _cursor_key(symbol),
+                    newest_dt.strftime("%Y-%m-%d %H:%M:%S"),
+                    ttl_seconds=BACKFILL_KEY_TTL_SECONDS,
+                )
+
+            log.info("  %s: %d bars (cursor → %s)",
+                     symbol, len(bars), newest_dt)
+
+            # Clear guards so the pipeline reprocesses this window
+            clear_guards(symbol, symbol_tfs.get(symbol, []))
+
+            # Done detection
+            reached_present = (
+                len(bars) < WINDOW_SIZE
+                or (newest_dt is not None and newest_dt >= done_cutoff)
             )
+            if reached_present:
+                log.info("  %s: reached present — marking done", symbol)
+                rds.set_json(_done_key(symbol), True,
+                             ttl_seconds=BACKFILL_KEY_TTL_SECONDS)
 
-        log.info("  %s: +%d bars (total %d), cursor → %s",
-                 symbol, len(bars), total, newest_dt)
+            time.sleep(SECONDS_BETWEEN_CALLS)
 
-        # 5. Done detection
-        reached_present = (
-            len(bars) < WINDOW_SIZE
-            or (newest_dt is not None and newest_dt >= done_cutoff)
-        )
-        if reached_present:
-            log.info("  %s: reached present — marking done", symbol)
-            rds.set_json(_done_key(symbol), True, ttl_seconds=BACKFILL_KEY_TTL_SECONDS)
+        # Run the pipeline on the window we just fetched
+        if any_window_written:
+            log.info("=== running pipeline on fresh backfill window ===")
+            run_pipeline()
+            log.info("=== pipeline done ===")
+        else:
+            log.info("No new windows fetched — skipping pipeline run")
 
-        time.sleep(SECONDS_BETWEEN_CALLS)
+        if all_done:
+            log.info("All symbols backfilled — nothing to do.")
 
-    if all_done:
-        log.info("All symbols backfilled — nothing to do.")
-    else:
-        log.info("=== backfill finished: %d symbols progressed, %d bars added ===",
-                 progressed, total_added)
+        log.info("=== backfill finished: %d symbols, %d bars written ===",
+                 progressed, total_written)
+        return total_written
 
-    return total_added
+    finally:
+        # Restore the original function (defensive — process is
+        # about to exit anyway)
+        sb.is_pipeline_running = _original_running
 
 
 # ------------------------------------------------------------
