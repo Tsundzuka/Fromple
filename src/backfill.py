@@ -58,6 +58,10 @@ BACKFILL_INTERVAL  = "5min"
 # Bars per request. 5,000 is Twelve Data's hard max.
 WINDOW_SIZE = 5000
 
+# Window size in calendar days. ~18 days covers 5,000 M5 bars
+# with a small buffer, so one request fills one window.
+WINDOW_DAYS = 18
+
 # Respect the free tier's 8 requests/minute limit.
 SECONDS_BETWEEN_CALLS = 8
 
@@ -134,12 +138,21 @@ def fetch_earliest_timestamp(provider_symbol: str) -> datetime | None:
 
 
 def fetch_window(provider_symbol: str, start_dt: datetime) -> list[dict]:
-    """Fetch up to WINDOW_SIZE M5 bars starting from start_dt."""
+    """
+    Fetch up to WINDOW_SIZE M5 bars starting from start_dt.
+
+    Both start_date and end_date are passed so Twelve Data returns
+    a specific historical window. Passing only start_date causes
+    the API to return the most recent bars instead.
+    """
+    end_dt = start_dt + timedelta(days=WINDOW_DAYS)
+
     url = f"{config.TWELVEDATA_BASE_URL}/time_series"
     params = {
         "symbol":     provider_symbol,
         "interval":   BACKFILL_INTERVAL,
         "start_date": start_dt.strftime("%Y-%m-%d %H:%M:%S"),
+        "end_date":   end_dt.strftime("%Y-%m-%d %H:%M:%S"),
         "outputsize": WINDOW_SIZE,
         "order":      "ASC",
         "apikey":     config.TWELVEDATA_API_KEY,
@@ -264,9 +277,9 @@ def run() -> int:
         "TWELVEDATA_API_KEY",
     )
 
-    # --- Monkeypatch: treat the pipeline as running so the
-    #     stages execute even if the system_state toggle is off.
-    #     This override only applies to this process.
+    # Monkeypatch: treat the pipeline as running so the stages
+    # execute even if the system_state toggle is off. This
+    # override only applies to this process.
     _original_running = sb.is_pipeline_running
     sb.is_pipeline_running = lambda: True
 
@@ -387,8 +400,6 @@ def run() -> int:
         return total_written
 
     finally:
-        # Restore the original function (defensive — process is
-        # about to exit anyway)
         sb.is_pipeline_running = _original_running
 
 
