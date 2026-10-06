@@ -2,19 +2,24 @@
 # src/conditions.py
 # ============================================================
 # Evaluates market conditions from bars + indicators stored in
-# Redis, and writes a condition dictionary back to Redis.
+# Redis, and writes a conditions HISTORY (list) back to Redis.
+#
+# BATCH MODE: if indicators.py produced a per-bar indicator list
+# (one dict per bar), this file evaluates conditions for every
+# bar and writes a list of conditions dicts.
+#
+# LEGACY MODE: if indicators.py produced a single dict (latest
+# bar only), this file evaluates that one bar and writes a
+# single-entry list. No regression.
+#
+# Every entry in the output list carries:
+#   _bar_dt      — the bar's datetime (aligned with bars[i])
+#   _context     — symbol, timeframe, regime, close, etc.
 #
 # Entry point: python -m src.conditions
-#
-# Produces two things per (symbol, timeframe):
-#   1. Regime:        "uptrend" | "downtrend" | "consolidating"
-#   2. Conditions:    dict of {"regime.uptrend": True, ...}
-#
-# Everything here is deterministic and pure. No external calls.
 
 import logging
 import sys
-from typing import Sequence
 
 from . import supabase_client as sb
 from . import redis_client as rds
@@ -33,7 +38,6 @@ log = logging.getLogger("conditions")
 # ============================================================
 # REGIME
 # ============================================================
-
 def classify_regime(bars: list[dict], indicators: dict) -> str:
     """
     Uptrend / Downtrend / Consolidating.
@@ -56,20 +60,17 @@ def classify_regime(bars: list[dict], indicators: dict) -> str:
     up_votes = 0
     down_votes = 0
 
-    # SMA20 vs SMA50
     if v20 is not None and v50 is not None:
         if v20 > v50:
             up_votes += 1
         elif v20 < v50:
             down_votes += 1
 
-    # SMA20 slope
     if r20:
         up_votes += 1
     if f20:
         down_votes += 1
 
-    # MACD histogram
     if macd_hist is not None:
         if macd_hist > 0:
             up_votes += 1
@@ -86,13 +87,8 @@ def classify_regime(bars: list[dict], indicators: dict) -> str:
 # ============================================================
 # MARKET STATE
 # ============================================================
-
 def find_swing_levels(bars: list[dict], lookback: int = 50) -> dict:
-    """
-    Identify recent swing highs and lows over the last `lookback`
-    bars. Returns the highest high, lowest low, and their bar
-    indices relative to the slice.
-    """
+    """Identify recent swing highs and lows over the last `lookback` bars."""
     window = bars[-lookback:] if len(bars) >= lookback else bars
     if not window:
         return {"high": None, "low": None, "high_idx": None, "low_idx": None}
@@ -119,11 +115,7 @@ def evaluate_market_state(
     lookback: int = 50,
     proximity_pct: float = 0.0015,
 ) -> dict:
-    """
-    Evaluate market state as a dict of flags. `proximity_pct` is
-    how close price must be to a level to count as "at" it
-    (0.15% by default, reasonable for FX).
-    """
+    """Evaluate market state as a dict of flags."""
     if len(bars) < 20:
         return {}
 
@@ -150,7 +142,6 @@ def evaluate_market_state(
         if dist <= proximity_pct:
             at_resistance = True
 
-    # Range position: where is close within the swing range?
     range_position = None
     if swing_high is not None and swing_low is not None and swing_high > swing_low:
         pct = (close - swing_low) / (swing_high - swing_low)
@@ -161,7 +152,6 @@ def evaluate_market_state(
         else:
             range_position = "mid"
 
-    # Wick behaviour: long wick rejection on the last bar
     body = abs(close - open_)
     total_range = high - low
     wick_rejection = False
@@ -191,7 +181,6 @@ def evaluate_market_state(
 # ============================================================
 # INDICATOR CONDITIONS
 # ============================================================
-
 def evaluate_indicator_conditions(indicators: dict) -> dict:
     """Turn indicator snapshots into boolean condition flags."""
     out: dict = {}
@@ -225,9 +214,8 @@ def evaluate_indicator_conditions(indicators: dict) -> dict:
 
 
 # ============================================================
-# BUILD THE FULL CONDITION DICTIONARY
+# BUILD ONE BAR'S CONDITIONS
 # ============================================================
-
 def build_conditions(
     symbol: str,
     timeframe: str,
@@ -236,8 +224,7 @@ def build_conditions(
 ) -> dict:
     """
     Combine regime + market state + indicator flags into a flat
-    condition dictionary. Every key is a stable string; every
-    value is a bool.
+    condition dictionary for the LATEST bar in `bars`.
     """
     if not bars or not indicators:
         return {}
@@ -264,14 +251,13 @@ def build_conditions(
 
     conditions.update(inds)
 
-    # Attach non-boolean context so downstream stages can read it
     conditions["_context"] = {
-        "symbol":        symbol,
-        "timeframe":     timeframe,
-        "regime":        regime,
-        "close":         state.get("close"),
-        "swing_high":    state.get("swing_high"),
-        "swing_low":     state.get("swing_low"),
+        "symbol":         symbol,
+        "timeframe":      timeframe,
+        "regime":         regime,
+        "close":          state.get("close"),
+        "swing_high":     state.get("swing_high"),
+        "swing_low":      state.get("swing_low"),
         "range_position": state.get("range_position"),
     }
 
@@ -287,15 +273,83 @@ def active_conditions(conditions: dict) -> list[str]:
 
 
 # ============================================================
+# INDICATORS HISTORY LOADER
+# ============================================================
+def load_indicators_history(symbol: str, timeframe: str) -> list[dict]:
+    """
+    Load indicators from Redis. Accepts:
+      - list of dicts   (batch mode — preferred)
+      - single dict     (legacy mode — treated as latest bar)
+    Returns a list, or [] if nothing usable.
+    """
+    key = f"run:{symbol}:{timeframe}:indicators"
+    raw = rds.get_json(key)
+
+    if raw is None:
+        return []
+
+    if isinstance(raw, list):
+        return [i for i in raw if isinstance(i, dict)]
+
+    if isinstance(raw, dict):
+        return [raw]
+
+    return []
+
+
+# ============================================================
+# BUILD CONDITIONS HISTORY
+# ============================================================
+def build_conditions_history(
+    symbol: str,
+    timeframe: str,
+    bars: list[dict],
+    ind_history: list[dict],
+) -> list[dict]:
+    """
+    Build a per-bar conditions history.
+
+    - If len(ind_history) == len(bars): batch mode, evaluate each
+      bar against its aligned indicators, using bars[:i+1] as the
+      lookback window.
+    - If len(ind_history) == 1: legacy mode, evaluate only the
+      latest bar.
+    - Otherwise: length mismatch, return [].
+    """
+    if not bars or not ind_history:
+        return []
+
+    history: list[dict] = []
+
+    if len(ind_history) == len(bars):
+        for i, (bar, ind) in enumerate(zip(bars, ind_history)):
+            window = bars[: i + 1]
+            conds = build_conditions(symbol, timeframe, window, ind)
+            if not conds:
+                continue
+            conds["_bar_dt"] = bar.get("datetime")
+            history.append(conds)
+        return history
+
+    if len(ind_history) == 1:
+        conds = build_conditions(symbol, timeframe, bars, ind_history[0])
+        if conds:
+            conds["_bar_dt"] = bars[-1].get("datetime")
+            history.append(conds)
+        return history
+
+    log.warning(
+        "Indicator/bar length mismatch for %s %s: %d indicators vs %d bars",
+        symbol, timeframe, len(ind_history), len(bars),
+    )
+    return []
+
+
+# ============================================================
 # MAIN PIPELINE
 # ============================================================
-
 def run() -> int:
-    """
-    Execute one condition-evaluation cycle across every
-    (symbol, timeframe) that has indicators in Redis.
-    """
-    log.info("=== conditions starting ===")
+    log.info("=== conditions starting (batch-aware) ===")
 
     if not sb.is_pipeline_running():
         log.info("Pipeline is stopped (system_state.is_running = false). Exiting.")
@@ -316,23 +370,27 @@ def run() -> int:
 
         for tf in timeframes:
             bars       = rds.load_bars(symbol, tf)
-            indicators = rds.load_indicators(symbol, tf)
+            ind_history = load_indicators_history(symbol, tf)
 
-            if not bars or not indicators:
-                log.debug("Missing bars or indicators for %s %s — skipping", symbol, tf)
+            if not bars or not ind_history:
+                log.debug("Missing bars or indicators for %s %s — skipping",
+                          symbol, tf)
                 continue
 
-            conds = build_conditions(symbol, tf, bars, indicators)
-            if not conds:
-                log.warning("Could not build conditions for %s %s", symbol, tf)
+            history = build_conditions_history(symbol, tf, bars, ind_history)
+            if not history:
+                log.warning("Empty conditions history for %s %s", symbol, tf)
                 continue
 
-            rds.save_conditions(symbol, tf, conds)
+            rds.save_conditions(symbol, tf, history)
 
-            active = active_conditions(conds)
+            latest = history[-1]
+            regime = latest.get("_context", {}).get("regime", "?")
+            active = active_conditions(latest)
+
             log.info(
-                "  ✔ %s %s → regime=%s, %d active conditions",
-                symbol, tf, conds["_context"]["regime"], len(active),
+                "  ✔ %s %s → %d bars evaluated, latest regime=%s, %d active conditions",
+                symbol, tf, len(history), regime, len(active),
             )
             processed += 1
 
