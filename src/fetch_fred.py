@@ -1,14 +1,19 @@
 """
 fetch_fred.py — Fetch macro economic series from FRED.
-No external dependencies beyond requests.
+
+FRED is the Federal Reserve Economic Data API. Series IDs are stable
+identifiers (e.g. DFF, DGS10). The API returns observations as strings,
+using "." for missing values. A single daily run is sufficient — FRED
+series do not change intraday.
 """
 
 import os
 import requests
-from datetime import datetime, timezone
 
+from src import config
 from src.config import FRED_SERIES, FRED_BASE_URL
 from src.supabase_client import SupabaseClient
+
 
 def fetch_series(series_id: str, api_key: str) -> dict | None:
     """Fetch the latest observation for a FRED series."""
@@ -40,12 +45,13 @@ def fetch_series(series_id: str, api_key: str) -> dict | None:
         "observation_date": obs["date"],
     }
 
-def main():
-    api_key = os.environ.get("FRED_API_KEY")
-    if not api_key:
-        print("FRED_API_KEY not set — exiting")
-        return
 
+def main() -> None:
+    config.require(
+        "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "FRED_API_KEY",
+    )
+
+    api_key = os.environ["FRED_API_KEY"]
     sb = SupabaseClient()
     rows = []
 
@@ -64,6 +70,7 @@ def main():
         sb.upsert_macro_rates(rows)
         sb.increment_api_usage("fred", len(rows))
         print(f"Upserted {len(rows)} FRED rows")
+
 
 if __name__ == "__main__":
     main()
