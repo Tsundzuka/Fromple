@@ -1,79 +1,95 @@
+"""
+fetch_calendar.py — Fetch economic calendar events from Finnhub.
+
+Filters to the 8 major FX currencies and stores events in the
+`calendar_events` table. Uses the `calendar_fetched_within` guard so
+the workflow can run every 3 hours while only hitting Finnhub every 6.
+
+Note: Finnhub returns `time` as "YYYY-MM-DD HH:MM:SS" with no timezone
+suffix. Postgres interprets this as UTC, which matches Finnhub's
+publishing convention.
+"""
+
 import os
 import requests
-from datetime import datetime, timedelta
-from supabase import create_client
+from datetime import datetime, timedelta, timezone
 
-# --- Configuration ---
-FINNHUB_API_KEY = os.environ["FINNHUB_API_KEY"]
-SUPABASE_URL = os.environ["SUPABASE_URL"]
-SUPABASE_SERVICE_KEY = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+from src import config
+from src import supabase_client as sb
+from src.config import (
+    FINNHUB_BASE_URL,
+    FINNHUB_HIGH_IMPACT_CURRENCIES,
+    FINNHUB_CALENDAR_LOOKAHEAD_DAYS,
+    FINNHUB_CALENDAR_FETCH_INTERVAL_HOURS,
+)
 
-# How many days ahead to fetch (max 90 on free tier)
-DAYS_AHEAD = 14
 
-# --- Main function ---
-def fetch_and_store_calendar():
-    supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
-
-    # Check the control flag before doing anything
-    state = supabase.table("system_state").select("is_running").eq("id", 1).single().execute()
-    if not state.data or not state.data["is_running"]:
-        print("System is stopped. Exiting.")
-        return
-
-    # Build the date range
-    from_date = datetime.utcnow().strftime("%Y-%m-%d")
-    to_date = (datetime.utcnow() + timedelta(days=DAYS_AHEAD)).strftime("%Y-%m-%d")
-
-    # Fetch from Finnhub
-    url = "https://finnhub.io/api/v1/calendar/economic"
+def fetch_events(api_key: str, from_date: str, to_date: str) -> list:
+    """Fetch economic events between two dates."""
+    url = f"{FINNHUB_BASE_URL}/calendar/economic"
     params = {
         "from": from_date,
         "to": to_date,
-        "token": FINNHUB_API_KEY,
+        "token": api_key,
+    }
+    resp = requests.get(url, params=params, timeout=15)
+    resp.raise_for_status()
+    payload = resp.json()
+    return payload.get("economicCalendar", [])
+
+
+def normalise(event: dict) -> dict | None:
+    """Map Finnhub event fields to our schema."""
+    event_time = event.get("time")  # ISO 8601 string, no tz suffix
+    if not event_time:
+        return None
+
+    currency = (event.get("country") or "").upper()
+    if currency not in FINNHUB_HIGH_IMPACT_CURRENCIES:
+        return None
+
+    return {
+        "event_name": event.get("event", "unknown"),
+        "currency": currency,
+        "impact": (event.get("impact") or "").lower() or None,
+        "event_time": event_time,
+        "forecast": str(event["estimate"]) if event.get("estimate") is not None else None,
+        "previous": str(event["prev"])     if event.get("prev")     is not None else None,
+        "actual":   str(event["actual"])   if event.get("actual")   is not None else None,
     }
 
-    print(f"Fetching economic calendar from {from_date} to {to_date}...")
-    response = requests.get(url, params=params)
 
-    if response.status_code != 200:
-        print(f"Finnhub error: {response.status_code} — {response.text}")
-        return
-
-    data = response.json()
-    events = data.get("economicCalendar", [])
-    print(f"Received {len(events)} events from Finnhub.")
-
-    if not events:
-        print("No events returned. Nothing to store.")
-        return
-
-    # Build rows for Supabase
-    rows = []
-    for event in events:
-        rows.append({
-            "event_date": event.get("date"),
-            "country": event.get("country"),
-            "event_name": event.get("event"),
-            "impact": event.get("impact"),          # low, medium, high
-            "actual": event.get("actual"),
-            "estimate": event.get("estimate"),
-            "previous": event.get("previous"),
-            "unit": event.get("unit"),
-            "currency": event.get("currency"),
-            "source": "finnhub",
-            "fetched_at": datetime.utcnow().isoformat(),
-        })
-
-    # Batch upsert (unique on event_date + country + event_name)
-    result = (
-        supabase.table("calendar_events")
-        .upsert(rows, on_conflict="event_date,country,event_name")
-        .execute()
+def main() -> None:
+    config.require(
+        "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "FINNHUB_API_KEY",
     )
 
-    print(f"Upserted {len(result.data)} calendar events.")
+    # Self-guard: skip if the calendar was fetched recently.
+    if sb.calendar_fetched_within(FINNHUB_CALENDAR_FETCH_INTERVAL_HOURS):
+        print(
+            f"Calendar fetched within last "
+            f"{FINNHUB_CALENDAR_FETCH_INTERVAL_HOURS}h — skipping"
+        )
+        return
 
-# --- Entry point ---
+    api_key = os.environ["FINNHUB_API_KEY"]
+    today = datetime.now(timezone.utc).date()
+    to_date = today + timedelta(days=FINNHUB_CALENDAR_LOOKAHEAD_DAYS)
+
+    raw = fetch_events(api_key, today.isoformat(), to_date.isoformat())
+    rows = []
+    for event in raw:
+        row = normalise(event)
+        if row:
+            rows.append(row)
+
+    if rows:
+        sb.upsert_calendar_events(rows)
+        sb.increment_api_usage("finnhub", 1)
+        print(f"Upserted {len(rows)} calendar events")
+    else:
+        print("No qualifying events found")
+
+
 if __name__ == "__main__":
-    fetch_and_store_calendar()
+    main()
