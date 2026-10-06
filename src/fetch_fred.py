@@ -11,8 +11,8 @@ import os
 import requests
 
 from src import config
+from src import supabase_client as sb
 from src.config import FRED_SERIES, FRED_BASE_URL
-from src.supabase_client import SupabaseClient
 
 
 def fetch_series(series_id: str, api_key: str) -> dict | None:
@@ -52,7 +52,6 @@ def main() -> None:
     )
 
     api_key = os.environ["FRED_API_KEY"]
-    sb = SupabaseClient()
     rows = []
 
     for series_id in FRED_SERIES:
