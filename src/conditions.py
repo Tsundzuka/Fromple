@@ -4,17 +4,10 @@
 # Evaluates market conditions from bars + indicators stored in
 # Redis, and writes a conditions HISTORY (list) back to Redis.
 #
-# BATCH MODE: if indicators.py produced a per-bar indicator list
-# (one dict per bar), this file evaluates conditions for every
-# bar and writes a list of conditions dicts.
-#
-# LEGACY MODE: if indicators.py produced a single dict (latest
-# bar only), this file evaluates that one bar and writes a
-# single-entry list. No regression.
-#
-# Every entry in the output list carries:
-#   _bar_dt      — the bar's datetime (aligned with bars[i])
-#   _context     — symbol, timeframe, regime, close, etc.
+# BATCH MODE: matches each indicator snapshot to its bar via
+# the `_bar_dt` field, so the snapshot offset introduced by
+# indicators.py (which skips the first 49 bars) is handled
+# correctly.
 #
 # Entry point: python -m src.conditions
 
@@ -307,42 +300,48 @@ def build_conditions_history(
     ind_history: list[dict],
 ) -> list[dict]:
     """
-    Build a per-bar conditions history.
-
-    - If len(ind_history) == len(bars): batch mode, evaluate each
-      bar against its aligned indicators, using bars[:i+1] as the
-      lookback window.
-    - If len(ind_history) == 1: legacy mode, evaluate only the
-      latest bar.
-    - Otherwise: length mismatch, return [].
+    Build a per-bar conditions history by matching each indicator
+    snapshot to its bar via `_bar_dt`. This is robust to the
+    offset introduced by indicators.py skipping the first
+    MIN_BARS_FOR_SNAPSHOT bars.
     """
     if not bars or not ind_history:
         return []
 
-    history: list[dict] = []
-
-    if len(ind_history) == len(bars):
-        for i, (bar, ind) in enumerate(zip(bars, ind_history)):
-            window = bars[: i + 1]
-            conds = build_conditions(symbol, timeframe, window, ind)
-            if not conds:
-                continue
-            conds["_bar_dt"] = bar.get("datetime")
-            history.append(conds)
-        return history
-
-    if len(ind_history) == 1:
+    # Legacy single-dict shape: process only the latest bar
+    if len(ind_history) == 1 and "_bar_dt" not in ind_history[0]:
         conds = build_conditions(symbol, timeframe, bars, ind_history[0])
         if conds:
             conds["_bar_dt"] = bars[-1].get("datetime")
-            history.append(conds)
-        return history
+            return [conds]
+        return []
 
-    log.warning(
-        "Indicator/bar length mismatch for %s %s: %d indicators vs %d bars",
-        symbol, timeframe, len(ind_history), len(bars),
-    )
-    return []
+    # Build index of bar position by datetime
+    bar_idx_by_dt = {
+        b.get("datetime"): i
+        for i, b in enumerate(bars)
+        if b.get("datetime")
+    }
+
+    history: list[dict] = []
+    for ind in ind_history:
+        if not isinstance(ind, dict):
+            continue
+        bar_dt = ind.get("_bar_dt")
+        if not bar_dt:
+            continue
+        i = bar_idx_by_dt.get(bar_dt)
+        if i is None:
+            continue
+
+        window = bars[: i + 1]
+        conds = build_conditions(symbol, timeframe, window, ind)
+        if not conds:
+            continue
+        conds["_bar_dt"] = bar_dt
+        history.append(conds)
+
+    return history
 
 
 # ============================================================
@@ -369,7 +368,7 @@ def run() -> int:
             continue
 
         for tf in timeframes:
-            bars       = rds.load_bars(symbol, tf)
+            bars        = rds.load_bars(symbol, tf)
             ind_history = load_indicators_history(symbol, tf)
 
             if not bars or not ind_history:
