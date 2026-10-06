@@ -1,8 +1,8 @@
 name: backfill
 
 on:
-  schedule:
-    - cron: '3 * * * *'      # hourly at minute 3
+ # schedule:
+ #   - cron: '3 * * * *'      # hourly at minute 3
   workflow_dispatch:
 
 concurrency:
