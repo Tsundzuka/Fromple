@@ -10,8 +10,8 @@ import os
 import requests
 
 from src import config
+from src import supabase_client as sb
 from src.config import FXNEWSBIAS_BASE_URL, FXNEWSBIAS_SENTIMENT_PATH
-from src.supabase_client import SupabaseClient
 
 
 def fetch_sentiment(api_key: str) -> dict | None:
@@ -29,7 +29,6 @@ def main() -> None:
     )
 
     api_key = os.environ["FXNEWSBIAS_API_KEY"]
-    sb = SupabaseClient()
 
     payload = fetch_sentiment(api_key)
     if not payload:
