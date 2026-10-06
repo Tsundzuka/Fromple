@@ -2,9 +2,7 @@ name: backfill
 
 on:
   schedule:
-    # Runs hourly at minute 3. The fetch_ohlcv workflow runs at
-    # minutes 0, 5, 10, ... so minute 3 avoids every collision.
-    - cron: '3 * * * *'
+    - cron: '3 * * * *'      # hourly at minute 3
   workflow_dispatch:
 
 concurrency:
