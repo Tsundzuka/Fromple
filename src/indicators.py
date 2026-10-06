@@ -2,17 +2,13 @@
 # src/indicators.py
 # ============================================================
 # Computes technical indicators from OHLCV bars stored in Redis
-# and writes the results back to Redis.
+# and writes a per-bar snapshot history back to Redis.
+#
+# BATCH MODE: produces one indicator snapshot per bar, aligned
+# with the bars array. Downstream stages (conditions, class
+# engine, signal engine) can then iterate bar-by-bar.
 #
 # Entry point: python -m src.indicators
-#
-# Flow:
-#   1. Exit if system_state.is_running = false
-#   2. Load active sessions
-#   3. For each (symbol, timeframe):
-#         load bars from Redis
-#         compute indicators
-#         save indicators to Redis
 #
 # No pandas, no numpy. Pure Python lists and dicts.
 
@@ -34,15 +30,16 @@ logging.basicConfig(
 log = logging.getLogger("indicators")
 
 
+# Minimum bars required to produce a snapshot. Must be at least
+# the longest-period indicator + its lookback (SMA50 = 50).
+MIN_BARS_FOR_SNAPSHOT = 50
+
+
 # ============================================================
 # PRIMITIVES
 # ============================================================
-
 def sma(values: Sequence[float], period: int) -> list[float | None]:
-    """
-    Simple moving average. Returns a list the same length as
-    `values`, with None where the window is not yet full.
-    """
+    """Simple moving average. Returns list the same length as values."""
     out: list[float | None] = [None] * len(values)
     if period <= 0 or len(values) < period:
         return out
@@ -58,16 +55,12 @@ def sma(values: Sequence[float], period: int) -> list[float | None]:
 
 
 def ema(values: Sequence[float], period: int) -> list[float | None]:
-    """
-    Exponential moving average. Seeded with the SMA of the first
-    `period` values, then smoothed.
-    """
+    """Exponential moving average, seeded with SMA."""
     out: list[float | None] = [None] * len(values)
     if period <= 0 or len(values) < period:
         return out
 
     multiplier = 2.0 / (period + 1)
-
     seed = sum(values[:period]) / period
     out[period - 1] = seed
 
@@ -80,10 +73,7 @@ def ema(values: Sequence[float], period: int) -> list[float | None]:
 
 
 def stddev(values: Sequence[float], period: int) -> list[float | None]:
-    """
-    Rolling population standard deviation. None where window
-    is not yet full.
-    """
+    """Rolling population standard deviation."""
     out: list[float | None] = [None] * len(values)
     if period <= 0 or len(values) < period:
         return out
@@ -98,301 +88,322 @@ def stddev(values: Sequence[float], period: int) -> list[float | None]:
 
 
 # ============================================================
-# INDICATORS
+# SERIES COMPUTATIONS
 # ============================================================
+def rsi_series(closes: Sequence[float], period: int = 14) -> list[float | None]:
+    """Wilder's RSI as a full series."""
+    n = len(closes)
+    out: list[float | None] = [None] * n
+    if n < period + 1:
+        return out
 
-def compute_sma(values: Sequence[float], period: int) -> dict:
-    """Return the last SMA value plus a rising/falling flag."""
-    series = sma(values, period)
-    last = series[-1] if series else None
-    prev = series[-2] if len(series) >= 2 else None
-
-    rising = falling = False
-    if last is not None and prev is not None:
-        rising = last > prev
-        falling = last < prev
-
-    return {
-        "value":   last,
-        "prev":    prev,
-        "rising":  rising,
-        "falling": falling,
-    }
-
-
-def compute_ema(values: Sequence[float], period: int) -> dict:
-    """Return the last EMA value plus a rising/falling flag."""
-    series = ema(values, period)
-    last = series[-1] if series else None
-    prev = series[-2] if len(series) >= 2 else None
-
-    rising = falling = False
-    if last is not None and prev is not None:
-        rising = last > prev
-        falling = last < prev
-
-    return {
-        "value":   last,
-        "prev":    prev,
-        "rising":  rising,
-        "falling": falling,
-    }
-
-
-def compute_rsi(closes: Sequence[float], period: int = 14) -> dict:
-    """
-    Wilder's RSI. Returns the latest value plus overbought and
-    oversold flags.
-    """
-    if len(closes) < period + 1:
-        return {"value": None, "overbought": False, "oversold": False}
-
-    gains: list[float] = []
-    losses: list[float] = []
-
-    for i in range(1, len(closes)):
+    gains = [0.0] * n
+    losses = [0.0] * n
+    for i in range(1, n):
         delta = closes[i] - closes[i - 1]
         if delta >= 0:
-            gains.append(delta)
-            losses.append(0.0)
+            gains[i] = delta
         else:
-            gains.append(0.0)
-            losses.append(-delta)
+            losses[i] = -delta
 
-    # First average: simple mean of first `period` gains/losses
-    avg_gain = sum(gains[:period]) / period
-    avg_loss = sum(losses[:period]) / period
-
-    # Wilder's smoothing for the rest
-    for i in range(period, len(gains)):
-        avg_gain = (avg_gain * (period - 1) + gains[i]) / period
-        avg_loss = (avg_loss * (period - 1) + losses[i]) / period
+    avg_gain = sum(gains[1 : period + 1]) / period
+    avg_loss = sum(losses[1 : period + 1]) / period
 
     if avg_loss == 0:
-        rsi = 100.0
+        out[period] = 100.0
     else:
         rs = avg_gain / avg_loss
-        rsi = 100.0 - (100.0 / (1.0 + rs))
+        out[period] = 100.0 - (100.0 / (1.0 + rs))
 
-    return {
-        "value":      rsi,
-        "overbought": rsi >= 70,
-        "oversold":   rsi <= 30,
-    }
+    for i in range(period + 1, n):
+        avg_gain = (avg_gain * (period - 1) + gains[i]) / period
+        avg_loss = (avg_loss * (period - 1) + losses[i]) / period
+        if avg_loss == 0:
+            out[i] = 100.0
+        else:
+            rs = avg_gain / avg_loss
+            out[i] = 100.0 - (100.0 / (1.0 + rs))
+
+    return out
 
 
-def compute_macd(
+def macd_series(
     closes: Sequence[float],
     fast: int = 12,
     slow: int = 26,
     signal: int = 9,
 ) -> dict:
-    """
-    MACD line, signal line, histogram, and cross detection.
-    `cross` is True when MACD crosses signal on the last bar.
-    """
-    if len(closes) < slow + signal:
+    """MACD line, signal, histogram, cross flags — all aligned to closes."""
+    n = len(closes)
+    macd_line: list[float | None] = [None] * n
+    signal_line: list[float | None] = [None] * n
+    histogram: list[float | None] = [None] * n
+    cross_up: list[bool] = [False] * n
+    cross_down: list[bool] = [False] * n
+
+    if n < slow + signal:
         return {
-            "macd": None,
-            "signal": None,
-            "histogram": None,
-            "cross_up": False,
-            "cross_down": False,
+            "macd": macd_line,
+            "signal": signal_line,
+            "histogram": histogram,
+            "cross_up": cross_up,
+            "cross_down": cross_down,
         }
 
     ema_fast = ema(closes, fast)
     ema_slow = ema(closes, slow)
 
-    macd_series: list[float | None] = []
-    for f, s in zip(ema_fast, ema_slow):
-        if f is None or s is None:
-            macd_series.append(None)
-        else:
-            macd_series.append(f - s)
+    for i in range(n):
+        if ema_fast[i] is not None and ema_slow[i] is not None:
+            macd_line[i] = ema_fast[i] - ema_slow[i]
 
-    # EMA of the non-None portion of the MACD series
-    valid = [x for x in macd_series if x is not None]
-    signal_series = ema(valid, signal)
+    # Compact valid MACD values, compute EMA on that, remap back
+    macd_start = slow - 1
+    macd_valid = macd_line[macd_start:]
+    sig_valid = ema(macd_valid, signal)
 
-    signal_tail = signal_series[-1] if signal_series else None
-    signal_prev = signal_series[-2] if len(signal_series) >= 2 else None
+    for i, sv in enumerate(sig_valid):
+        if sv is not None:
+            signal_line[macd_start + i] = sv
 
-    macd_tail = macd_series[-1]
-    macd_prev = macd_series[-2] if len(macd_series) >= 2 else None
+    for i in range(n):
+        if macd_line[i] is not None and signal_line[i] is not None:
+            histogram[i] = macd_line[i] - signal_line[i]
 
-    histogram = None
-    if macd_tail is not None and signal_tail is not None:
-        histogram = macd_tail - signal_tail
-
-    cross_up = cross_down = False
-    if None not in (macd_tail, signal_tail, macd_prev, signal_prev):
-        prev_diff = macd_prev - signal_prev
-        curr_diff = macd_tail - signal_tail
-        cross_up = prev_diff <= 0 < curr_diff
-        cross_down = prev_diff >= 0 > curr_diff
+    for i in range(1, n):
+        if None not in (
+            macd_line[i], signal_line[i],
+            macd_line[i - 1], signal_line[i - 1],
+        ):
+            prev_diff = macd_line[i - 1] - signal_line[i - 1]
+            curr_diff = macd_line[i] - signal_line[i]
+            cross_up[i] = prev_diff <= 0 < curr_diff
+            cross_down[i] = prev_diff >= 0 > curr_diff
 
     return {
-        "macd":       macd_tail,
-        "signal":     signal_tail,
-        "histogram":  histogram,
-        "cross_up":   cross_up,
+        "macd": macd_line,
+        "signal": signal_line,
+        "histogram": histogram,
+        "cross_up": cross_up,
         "cross_down": cross_down,
     }
 
 
-def compute_bollinger(
+def bollinger_series(
     closes: Sequence[float],
     period: int = 20,
     mult: float = 2.0,
 ) -> dict:
-    """Bollinger Bands: middle, upper, lower, width, and squeeze flag."""
-    if len(closes) < period:
-        return {
-            "middle": None,
-            "upper": None,
-            "lower": None,
-            "width": None,
-            "squeeze": False,
-        }
+    """Bollinger bands + width + per-bar squeeze flag."""
+    n = len(closes)
+    mid = sma(closes, period)
+    sd = stddev(closes, period)
 
-    mid_series = sma(closes, period)
-    sd_series  = stddev(closes, period)
+    upper: list[float | None] = [None] * n
+    lower: list[float | None] = [None] * n
+    width: list[float | None] = [None] * n
+    squeeze: list[bool] = [False] * n
 
-    mid = mid_series[-1]
-    sd  = sd_series[-1]
+    for i in range(n):
+        if mid[i] is not None and sd[i] is not None and mid[i] != 0:
+            upper[i] = mid[i] + mult * sd[i]
+            lower[i] = mid[i] - mult * sd[i]
+            width[i] = (upper[i] - lower[i]) / mid[i]
 
-    if mid is None or sd is None:
-        return {
-            "middle": None,
-            "upper": None,
-            "lower": None,
-            "width": None,
-            "squeeze": False,
-        }
-
-    upper = mid + mult * sd
-    lower = mid - mult * sd
-    width = (upper - lower) / mid if mid != 0 else None
-
-    # Squeeze: width is in the bottom 25% of the last `period` widths
-    recent_widths: list[float] = []
-    for i in range(period - 1, len(closes)):
-        m = mid_series[i]
-        s = sd_series[i]
-        if m and s is not None and m != 0:
-            recent_widths.append(((m + mult * s) - (m - mult * s)) / m)
-
-    squeeze = False
-    if len(recent_widths) >= 4 and width is not None:
-        recent_widths.sort()
-        cutoff = recent_widths[max(0, len(recent_widths) // 4 - 1)]
-        squeeze = width <= cutoff
+    # Squeeze: current width in bottom 25% of the last `period` valid widths
+    for i in range(n):
+        if width[i] is None:
+            continue
+        recent = [w for w in width[max(0, i - period + 1) : i + 1] if w is not None]
+        if len(recent) >= 4:
+            sorted_recent = sorted(recent)
+            cutoff = sorted_recent[max(0, len(sorted_recent) // 4 - 1)]
+            squeeze[i] = width[i] <= cutoff
 
     return {
-        "middle":  mid,
-        "upper":   upper,
-        "lower":   lower,
-        "width":   width,
+        "middle": mid,
+        "upper": upper,
+        "lower": lower,
+        "width": width,
         "squeeze": squeeze,
     }
 
 
-def compute_atr(bars: Sequence[dict], period: int = 14) -> dict:
-    """Average True Range using Wilder's smoothing."""
-    if len(bars) < period + 1:
-        return {"value": None, "percent": None, "expanding": False}
+def atr_series(
+    bars: Sequence[dict],
+    period: int = 14,
+) -> dict:
+    """ATR (Wilder's smoothing) + percent + expanding flag."""
+    n = len(bars)
+    atr: list[float | None] = [None] * n
+    percent: list[float | None] = [None] * n
+    expanding: list[bool] = [False] * n
 
-    trs: list[float] = []
-    for i in range(1, len(bars)):
+    if n < period + 1:
+        return {"value": atr, "percent": percent, "expanding": expanding}
+
+    trs = [0.0] * n
+    for i in range(1, n):
         h = bars[i]["high"]
         l = bars[i]["low"]
         prev_c = bars[i - 1]["close"]
-        tr = max(h - l, abs(h - prev_c), abs(l - prev_c))
-        trs.append(tr)
+        trs[i] = max(h - l, abs(h - prev_c), abs(l - prev_c))
 
-    # Wilder's smoothing
-    atr_val = sum(trs[:period]) / period
-    for i in range(period, len(trs)):
-        atr_val = (atr_val * (period - 1) + trs[i]) / period
+    # Seed at index period
+    atr[period] = sum(trs[1 : period + 1]) / period
 
-    last_close = bars[-1]["close"]
-    percent = (atr_val / last_close * 100.0) if last_close else None
+    for i in range(period + 1, n):
+        atr[i] = (atr[i - 1] * (period - 1) + trs[i]) / period
 
-    expanding = False
-    if len(trs) >= period * 2:
-        older_atr = sum(trs[:period]) / period
-        if older_atr > 0:
-            expanding = atr_val > older_atr * 1.2
+    for i in range(n):
+        if atr[i] is not None and bars[i]["close"]:
+            percent[i] = atr[i] / bars[i]["close"] * 100.0
 
-    return {
-        "value":     atr_val,
-        "percent":   percent,
-        "expanding": expanding,
-    }
+    for i in range(period * 2, n):
+        if atr[i] is not None and atr[i - period] is not None and atr[i - period] > 0:
+            expanding[i] = atr[i] > atr[i - period] * 1.2
+
+    return {"value": atr, "percent": percent, "expanding": expanding}
 
 
-def compute_volume(bars: Sequence[dict], period: int = 20) -> dict:
-    """Current volume vs rolling average, plus high/low flags."""
-    if len(bars) < period + 1:
-        return {"current": None, "average": None, "high": False, "low": False}
-
+def volume_series(bars: Sequence[dict], period: int = 20) -> dict:
+    """Volume vs rolling average + high/low flags."""
+    n = len(bars)
     vols = [b["volume"] for b in bars]
-    avg_series = sma(vols, period)
-    avg = avg_series[-1]
-    current = vols[-1]
+    avg = sma(vols, period)
 
-    if avg is None or avg == 0:
-        return {"current": current, "average": avg, "high": False, "low": False}
+    current: list[float | None] = list(vols)
+    high: list[bool] = [False] * n
+    low: list[bool] = [False] * n
+    ratio: list[float | None] = [None] * n
 
-    ratio = current / avg
+    for i in range(n):
+        if avg[i] is not None and avg[i] > 0:
+            r = current[i] / avg[i]
+            ratio[i] = r
+            high[i] = r >= 1.5
+            low[i] = r <= 0.6
 
     return {
         "current": current,
         "average": avg,
-        "high":    ratio >= 1.5,
-        "low":     ratio <= 0.6,
-        "ratio":   ratio,
+        "high": high,
+        "low": low,
+        "ratio": ratio,
     }
 
 
 # ============================================================
-# TOP-LEVEL: compute all indicators for one (symbol, timeframe)
+# SNAPSHOT BUILDER
 # ============================================================
+def _safe(v):
+    """Coerce NaN/Inf to None so JSON serialisation never fails."""
+    if isinstance(v, float):
+        if v != v or v in (float("inf"), float("-inf")):
+            return None
+    return v
 
-def compute_all(bars: list[dict]) -> dict:
+
+def build_snapshots(bars: list[dict]) -> list[dict]:
     """
-    Given a list of bars (oldest → newest), return a dict of
-    indicator snapshots keyed by indicator name.
+    Given bars oldest → newest, return one indicator snapshot per
+    bar. Bars before MIN_BARS_FOR_SNAPSHOT are skipped (indicators
+    aren't meaningful yet).
+
+    Each snapshot matches the shape conditions.py expects:
+      sma20, sma50, ema9, ema21, rsi14, macd, bollinger, atr14, volume
     """
-    if not bars or len(bars) < 30:
-        return {}
+    n = len(bars)
+    if n < MIN_BARS_FOR_SNAPSHOT:
+        return []
 
     closes = [b["close"] for b in bars]
 
-    return {
-        "sma20":       compute_sma(closes, 20),
-        "sma50":       compute_sma(closes, 50),
-        "ema9":        compute_ema(closes, 9),
-        "ema21":       compute_ema(closes, 21),
-        "rsi14":       compute_rsi(closes, 14),
-        "macd":        compute_macd(closes),
-        "bollinger":   compute_bollinger(closes, 20, 2.0),
-        "atr14":       compute_atr(bars, 14),
-        "volume":      compute_volume(bars, 20),
-    }
+    sma20_s   = sma(closes, 20)
+    sma50_s   = sma(closes, 50)
+    ema9_s    = ema(closes, 9)
+    ema21_s   = ema(closes, 21)
+    rsi_s     = rsi_series(closes, 14)
+    macd_s    = macd_series(closes)
+    bb_s      = bollinger_series(closes, 20, 2.0)
+    atr_s     = atr_series(bars, 14)
+    vol_s     = volume_series(bars, 20)
+
+    snapshots: list[dict] = []
+
+    for i in range(MIN_BARS_FOR_SNAPSHOT - 1, n):
+        s20, s20p = sma20_s[i], sma20_s[i - 1] if i >= 1 else None
+        s50, s50p = sma50_s[i], sma50_s[i - 1] if i >= 1 else None
+        e9, e9p   = ema9_s[i],  ema9_s[i - 1] if i >= 1 else None
+        e21, e21p = ema21_s[i], ema21_s[i - 1] if i >= 1 else None
+
+        snap = {
+            "sma20": {
+                "value":   _safe(s20),
+                "prev":    _safe(s20p),
+                "rising":  s20 is not None and s20p is not None and s20 > s20p,
+                "falling": s20 is not None and s20p is not None and s20 < s20p,
+            },
+            "sma50": {
+                "value":   _safe(s50),
+                "prev":    _safe(s50p),
+                "rising":  s50 is not None and s50p is not None and s50 > s50p,
+                "falling": s50 is not None and s50p is not None and s50 < s50p,
+            },
+            "ema9": {
+                "value":   _safe(e9),
+                "prev":    _safe(e9p),
+                "rising":  e9 is not None and e9p is not None and e9 > e9p,
+                "falling": e9 is not None and e9p is not None and e9 < e9p,
+            },
+            "ema21": {
+                "value":   _safe(e21),
+                "prev":    _safe(e21p),
+                "rising":  e21 is not None and e21p is not None and e21 > e21p,
+                "falling": e21 is not None and e21p is not None and e21 < e21p,
+            },
+            "rsi14": {
+                "value":      _safe(rsi_s[i]),
+                "overbought": rsi_s[i] is not None and rsi_s[i] >= 70,
+                "oversold":   rsi_s[i] is not None and rsi_s[i] <= 30,
+            },
+            "macd": {
+                "macd":       _safe(macd_s["macd"][i]),
+                "signal":     _safe(macd_s["signal"][i]),
+                "histogram":  _safe(macd_s["histogram"][i]),
+                "cross_up":   bool(macd_s["cross_up"][i]),
+                "cross_down": bool(macd_s["cross_down"][i]),
+            },
+            "bollinger": {
+                "middle":  _safe(bb_s["middle"][i]),
+                "upper":   _safe(bb_s["upper"][i]),
+                "lower":   _safe(bb_s["lower"][i]),
+                "width":   _safe(bb_s["width"][i]),
+                "squeeze": bool(bb_s["squeeze"][i]),
+            },
+            "atr14": {
+                "value":     _safe(atr_s["value"][i]),
+                "percent":   _safe(atr_s["percent"][i]),
+                "expanding": bool(atr_s["expanding"][i]),
+            },
+            "volume": {
+                "current": _safe(vol_s["current"][i]),
+                "average": _safe(vol_s["average"][i]),
+                "high":    bool(vol_s["high"][i]),
+                "low":     bool(vol_s["low"][i]),
+                "ratio":   _safe(vol_s["ratio"][i]),
+            },
+        }
+        snapshots.append(snap)
+
+    return snapshots
 
 
 # ============================================================
 # MAIN PIPELINE
 # ============================================================
-
 def run() -> int:
-    """
-    Execute one indicator computation cycle across every
-    (symbol, timeframe) that has bars in Redis.
-    Returns the number of (symbol, timeframe) pairs processed.
-    """
-    log.info("=== indicators starting ===")
+    log.info("=== indicators starting (batch mode) ===")
 
     if not sb.is_pipeline_running():
         log.info("Pipeline is stopped (system_state.is_running = false). Exiting.")
@@ -417,13 +428,15 @@ def run() -> int:
                 log.debug("No bars in Redis for %s %s — skipping", symbol, tf)
                 continue
 
-            indicators = compute_all(bars)
-            if not indicators:
-                log.warning("Insufficient bars for %s %s (%d bars)", symbol, tf, len(bars))
+            snapshots = build_snapshots(bars)
+            if not snapshots:
+                log.warning("Insufficient bars for %s %s (%d bars)",
+                            symbol, tf, len(bars))
                 continue
 
-            rds.save_indicators(symbol, tf, indicators)
-            log.info("  ✔ %s %s → %d indicators", symbol, tf, len(indicators))
+            rds.save_indicators(symbol, tf, snapshots)
+            log.info("  ✔ %s %s → %d snapshots from %d bars",
+                     symbol, tf, len(snapshots), len(bars))
             processed += 1
 
     log.info("=== indicators finished: %d pairs processed ===", processed)
