@@ -14,12 +14,12 @@ import requests
 from datetime import datetime, timezone
 
 from src import config
+from src import supabase_client as sb
 from src.config import (
     FINNHUB_BASE_URL,
     FINNHUB_NEWS_CATEGORY,
     FINNHUB_NEWS_FETCH_INTERVAL_HOURS,
 )
-from src.supabase_client import SupabaseClient
 
 
 def fetch_news(api_key: str) -> list:
@@ -63,8 +63,6 @@ def main() -> None:
     config.require(
         "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "FINNHUB_API_KEY",
     )
-
-    sb = SupabaseClient()
 
     # Self-guard: skip if news was fetched recently.
     if sb.news_fetched_within(FINNHUB_NEWS_FETCH_INTERVAL_HOURS):
