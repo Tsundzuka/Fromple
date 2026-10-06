@@ -1,75 +1,79 @@
-"""
-fetch_fred.py — Fetch macro economic series from FRED.
-
-FRED is the Federal Reserve Economic Data API. Series IDs are stable
-identifiers (e.g. DFF, DGS10). The API returns observations as strings,
-using "." for missing values. A single daily run is sufficient — FRED
-series do not change intraday.
-"""
-
 import os
 import requests
+from datetime import datetime, timedelta
+from supabase import create_client
 
-from src import config
-from src import supabase_client as sb
-from src.config import FRED_SERIES, FRED_BASE_URL
+# --- Configuration ---
+FINNHUB_API_KEY = os.environ["FINNHUB_API_KEY"]
+SUPABASE_URL = os.environ["SUPABASE_URL"]
+SUPABASE_SERVICE_KEY = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
 
+# How many days ahead to fetch (max 90 on free tier)
+DAYS_AHEAD = 14
 
-def fetch_series(series_id: str, api_key: str) -> dict | None:
-    """Fetch the latest observation for a FRED series."""
-    url = f"{FRED_BASE_URL}/series/observations"
+# --- Main function ---
+def fetch_and_store_calendar():
+    supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+
+    # Check the control flag before doing anything
+    state = supabase.table("system_state").select("is_running").eq("id", 1).single().execute()
+    if not state.data or not state.data["is_running"]:
+        print("System is stopped. Exiting.")
+        return
+
+    # Build the date range
+    from_date = datetime.utcnow().strftime("%Y-%m-%d")
+    to_date = (datetime.utcnow() + timedelta(days=DAYS_AHEAD)).strftime("%Y-%m-%d")
+
+    # Fetch from Finnhub
+    url = "https://finnhub.io/api/v1/calendar/economic"
     params = {
-        "series_id": series_id,
-        "api_key": api_key,
-        "file_type": "json",
-        "sort_order": "desc",
-        "limit": 1,
-    }
-    resp = requests.get(url, params=params, timeout=15)
-    resp.raise_for_status()
-    payload = resp.json()
-
-    observations = payload.get("observations", [])
-    if not observations:
-        return None
-
-    obs = observations[0]
-    value = obs.get("value", ".")
-    if value == ".":
-        return None  # FRED uses '.' for missing data
-
-    return {
-        "series_id": series_id,
-        "description": FRED_SERIES.get(series_id, series_id),
-        "value": float(value),
-        "observation_date": obs["date"],
+        "from": from_date,
+        "to": to_date,
+        "token": FINNHUB_API_KEY,
     }
 
+    print(f"Fetching economic calendar from {from_date} to {to_date}...")
+    response = requests.get(url, params=params)
 
-def main() -> None:
-    config.require(
-        "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "FRED_API_KEY",
+    if response.status_code != 200:
+        print(f"Finnhub error: {response.status_code} — {response.text}")
+        return
+
+    data = response.json()
+    events = data.get("economicCalendar", [])
+    print(f"Received {len(events)} events from Finnhub.")
+
+    if not events:
+        print("No events returned. Nothing to store.")
+        return
+
+    # Build rows for Supabase
+    rows = []
+    for event in events:
+        rows.append({
+            "event_date": event.get("date"),
+            "country": event.get("country"),
+            "event_name": event.get("event"),
+            "impact": event.get("impact"),          # low, medium, high
+            "actual": event.get("actual"),
+            "estimate": event.get("estimate"),
+            "previous": event.get("previous"),
+            "unit": event.get("unit"),
+            "currency": event.get("currency"),
+            "source": "finnhub",
+            "fetched_at": datetime.utcnow().isoformat(),
+        })
+
+    # Batch upsert (unique on event_date + country + event_name)
+    result = (
+        supabase.table("calendar_events")
+        .upsert(rows, on_conflict="event_date,country,event_name")
+        .execute()
     )
 
-    api_key = os.environ["FRED_API_KEY"]
-    rows = []
+    print(f"Upserted {len(result.data)} calendar events.")
 
-    for series_id in FRED_SERIES:
-        try:
-            row = fetch_series(series_id, api_key)
-            if row:
-                rows.append(row)
-                print(f"  {series_id}: {row['value']} ({row['observation_date']})")
-            else:
-                print(f"  {series_id}: no value")
-        except Exception as e:
-            print(f"  {series_id}: error — {e}")
-
-    if rows:
-        sb.upsert_macro_rates(rows)
-        sb.increment_api_usage("fred", len(rows))
-        print(f"Upserted {len(rows)} FRED rows")
-
-
+# --- Entry point ---
 if __name__ == "__main__":
-    main()
+    fetch_and_store_calendar()
