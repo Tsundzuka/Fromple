@@ -8,6 +8,7 @@ requests==2.32.3
 python-dotenv==1.0.1
 supabase==2.9.1
 upstash-redis==1.1.0
+biquote==0.3.0
 
 # NOTE: the `twelvedata` Python SDK is intentionally NOT included
 # because it depends on pandas. The pipeline calls the Twelve Data
