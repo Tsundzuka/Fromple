@@ -3,19 +3,25 @@
 # ============================================================
 # Derives higher timeframe OHLCV bars from M5 bars in Redis.
 #
-# Runs immediately after fetch_ohlcv.py, before indicators.py.
+# Only the DERIVED timeframes are produced here. The base
+# timeframes (M5, H12, D1, W1, MN1) are fetched directly by
+# fetch_ohlcv.py and are skipped.
+#
+# Derived:
+#   M15, M30, H1, H2, H4, H6, H8
+#
+# Fetched elsewhere (skipped here):
+#   M5, H12, D1, W1, MN1
 #
 # For each session symbol:
 #   1. Read M5 bars from Redis (run:{symbol}:M5:bars)
-#   2. For each timeframe listed on the session (except M5):
+#   2. For each derived timeframe listed on the session:
 #        - Aggregate M5 into buckets of the target duration
 #        - Only write if at least MIN_BARS_REQUIRED bars produced
-#        - Save to run:{symbol}:{tf}:bars with 365-day TTL
+#        - Save to run:{symbol}:{tf}:bars with a TTL
 #
 # Bucket boundaries:
-#   - Intraday (M15..H12): epoch-aligned (00:00 UTC start)
-#   - D1: 00:00 UTC
-#   - W1: Monday 00:00 UTC
+#   - Intraday (M15..H8): epoch-aligned (00:00 UTC start)
 #
 # Entry point: python -m src.aggregate
 
@@ -41,6 +47,10 @@ log = logging.getLogger("aggregate")
 # Constants
 # ------------------------------------------------------------
 BASE_TIMEFRAME = "M5"
+
+# Timeframes that are derived from M5. Everything else is either
+# fetched directly (fetch_ohlcv.py) or not enabled at all.
+DERIVED_TIMEFRAMES = {"M15", "M30", "H1", "H2", "H4", "H6", "H8"}
 
 # Minimum bars required in the target timeframe before writing.
 # 50 covers SMA50. Bump if you add longer-period indicators.
@@ -68,17 +78,9 @@ def _parse_bar_dt(value: str) -> datetime | None:
 def _bucket_start(dt: datetime, minutes: int) -> datetime:
     """
     Floor a UTC datetime to the start of its aggregation bucket.
-
-    - Intraday and D1 use Unix-epoch alignment (minute 0 = 00:00 UTC,
-      which is exactly what we want).
-    - W1 uses Monday-based weeks, since epoch-aligned weeks would
-      start on Thursdays.
+    All derived timeframes here are intraday, so epoch alignment
+    gives the correct 00:00 UTC start.
     """
-    if minutes >= 10080:  # 1 week or longer
-        # Monday-based week
-        monday = dt - timedelta(days=dt.weekday())
-        return monday.replace(hour=0, minute=0, second=0, microsecond=0)
-
     epoch_seconds = int(dt.timestamp())
     bucket_seconds = (epoch_seconds // (minutes * 60)) * (minutes * 60)
     return datetime.fromtimestamp(bucket_seconds, tz=timezone.utc)
@@ -136,6 +138,7 @@ def aggregate_bars(m5_bars: list[dict], target_minutes: int) -> list[dict]:
 # ============================================================
 def run() -> int:
     log.info("=== aggregate starting ===")
+    log.info("Derived timeframes: %s", ", ".join(sorted(DERIVED_TIMEFRAMES)))
 
     if not sb.is_pipeline_running():
         log.info("Pipeline is stopped — exiting.")
@@ -177,14 +180,15 @@ def run() -> int:
 
         log.info("  %s: %d M5 bars available", symbol, len(m5_bars))
 
-        # Determine which derived timeframes to produce.
+        # Only derive timeframes that are (a) enabled on the session,
+        # (b) present in the registry, and (c) in our derived set.
         derived = sorted(
             tf for tf in tf_set
-            if tf != BASE_TIMEFRAME and tf in timeframes
+            if tf in DERIVED_TIMEFRAMES and tf in timeframes
         )
 
         if not derived:
-            log.info("  %s: no derived timeframes configured", symbol)
+            log.info("  %s: no derivable timeframes configured", symbol)
             continue
 
         for tf in derived:
