@@ -5,16 +5,12 @@
 # in both directions (long + short) simultaneously.
 #
 # BATCH MODE: iterates through the per-bar conditions history
-# produced by conditions.py. For each unprocessed bar:
-#   1. Compute the bar's fingerprint
-#   2. Look up the matching class
-#   3. Snapshot variations
-#   4. For each direction (long, short):
-#        - find or create signal
-#        - open experiment with entry_at = the bar's datetime
-#
-# Signal codes are globally unique across the whole table:
-#   Cl-{SYMBOL}-{CLASS}-Si-{NN}-{L|S}
+# produced by conditions.py. All signal lookups, code allocation,
+# touch counting, and experiment discovery happen in memory. Supabase
+# is hit only at the end of each (symbol, timeframe):
+#   - 1 bulk insert for all new signals
+#   - 1 upsert for all existing signals whose recurrences changed
+#   - 1 bulk insert for all new experiments
 #
 # Entry point: python -m src.signal_engine
 
@@ -35,6 +31,9 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
+for _noisy in ("httpx", "httpcore"):
+    logging.getLogger(_noisy).setLevel(logging.WARNING)
+
 log = logging.getLogger("signal_engine")
 
 
@@ -48,12 +47,10 @@ VARIATION_PREFIXES = ("ind.", "cal.", "news.")
 # Helpers
 # ------------------------------------------------------------
 def sanitise_symbol(symbol: str) -> str:
-    """EUR/USD → EURUSD"""
     return "".join(c for c in (symbol or "") if c.isalnum()).upper()
 
 
 def direction_suffix(direction: str) -> str:
-    """long → L, short → S"""
     return "L" if direction == "long" else "S"
 
 
@@ -74,7 +71,6 @@ def _parse_bar_dt(value: str) -> datetime | None:
 # VARIATION SNAPSHOT
 # ============================================================
 def build_variation_snapshot(conditions: dict) -> dict:
-    """Snapshot which variation elements fired on this bar."""
     return {
         k: True
         for k, v in conditions.items()
@@ -89,7 +85,6 @@ def normalise_variations(v: dict | None) -> dict:
 
 
 def variations_key(variations: dict) -> str:
-    """Stable signature for cache lookups."""
     return "|".join(sorted(k for k, v in variations.items() if v))
 
 
@@ -112,11 +107,16 @@ def mark_processed(symbol: str, timeframe: str, bar_dt: str) -> None:
 # SIGNAL LOOKUP
 # ============================================================
 def fetch_signals_for_class(class_id: str) -> list[dict]:
+    """
+    Load every signal for a class. Returns full rows so the caller
+    can safely upsert updates back with the same shape.
+    """
     try:
         res = (
             sb._get()
             .table("signals")
-            .select("id, signal_code, direction, variations, recurrences")
+            .select("id, signal_code, class_id, direction, variations, "
+                    "recurrences, status, first_fired, last_fired")
             .eq("class_id", class_id)
             .execute()
         )
@@ -140,19 +140,23 @@ def find_matching_signal(
     return None
 
 
-def next_signal_number(
+def max_signal_number(
     symbol: str,
     class_code: str,
     direction: str,
     existing_signals: list[dict],
 ) -> int:
+    """
+    Highest NN found for this (symbol, class, direction). We keep
+    counting locally when generating new codes.
+    """
     prefix = f"Cl-{sanitise_symbol(symbol)}-{class_code}-Si-"
     suffix = f"-{direction_suffix(direction)}"
     max_nn = 0
     for s in existing_signals:
-        code = s.get("signal_code", "")
         if s.get("direction") != direction:
             continue
+        code = s.get("signal_code", "")
         if not code.startswith(prefix) or not code.endswith(suffix):
             continue
         middle = code[len(prefix):-len(suffix)]
@@ -162,109 +166,244 @@ def next_signal_number(
                 max_nn = n
         except ValueError:
             continue
-    return max_nn + 1
+    return max_nn
 
 
 # ============================================================
-# SIGNAL CREATE / TOUCH
+# BATCH PROCESSING PER TIMEFRAME
 # ============================================================
-def create_signal(
-    class_row: dict,
-    symbol: str,
-    direction: str,
-    variations: dict,
-    existing_signals: list[dict],
-) -> dict | None:
-    class_code = class_row["class_code"]
-    nn = next_signal_number(symbol, class_code, direction, existing_signals)
-    code = (
-        f"Cl-{sanitise_symbol(symbol)}-{class_code}-"
-        f"Si-{nn:02d}-{direction_suffix(direction)}"
+def process_timeframe(symbol: str, timeframe: str, duration_minutes: int) -> dict:
+    """
+    Processes every unprocessed bar in the conditions history for
+    one (symbol, timeframe).
+    """
+    key = f"run:{symbol}:{timeframe}:conditions"
+    raw = rds.get_json(key)
+    if not raw:
+        return {"processed": 0, "signals_new": 0, "signals_touched": 0, "experiments": 0}
+
+    history = raw if isinstance(raw, list) else [raw]
+
+    class_index = build_class_index(symbol, timeframe, version=1)
+    if not class_index["by_fp"]:
+        return {"processed": 0, "signals_new": 0, "signals_touched": 0, "experiments": 0}
+
+    last_processed = get_last_processed(symbol, timeframe)
+    forward_window = config.FORWARD_WINDOW
+
+    # Caches and buffers
+    signals_by_class: dict[str, list[dict]] = {}
+    next_nn_by_class_dir: dict[tuple[str, str], int] = {}
+
+    new_signals: dict[str, dict] = {}         # signal_code -> row payload
+    existing_touch_counts: dict[str, int] = {}  # signal_id -> delta
+    pending_experiments: list[dict] = []      # unresolved (signal_code or signal_id)
+
+    bars_processed = 0
+    max_bar_dt = last_processed
+
+    for entry in history:
+        bar_dt_str = entry.get("_bar_dt")
+        if not bar_dt_str:
+            continue
+        if last_processed and bar_dt_str <= last_processed:
+            continue
+
+        fp = build_fingerprint(entry)
+        if not fp:
+            max_bar_dt = bar_dt_str
+            continue
+
+        class_row = class_index["by_fp"].get(fp)
+        if not class_row:
+            max_bar_dt = bar_dt_str
+            continue
+
+        class_id = class_row["id"]
+        if class_id not in signals_by_class:
+            signals_by_class[class_id] = fetch_signals_for_class(class_id)
+
+        variations = build_variation_snapshot(entry)
+        var_key = variations_key(variations)
+
+        entry_dt = _parse_bar_dt(bar_dt_str)
+        if entry_dt is None:
+            continue
+
+        for direction in ("long", "short"):
+            signal = find_matching_signal(
+                signals_by_class[class_id], direction, variations,
+            )
+
+            if signal:
+                # Existing signal — record a touch
+                sid = signal["id"]
+                existing_touch_counts[sid] = existing_touch_counts.get(sid, 0) + 1
+                signal_code = signal["signal_code"]
+            else:
+                # Allocate a new signal code in memory
+                class_code = class_row["class_code"]
+                nk = (class_code, direction)
+                if nk not in next_nn_by_class_dir:
+                    next_nn_by_class_dir[nk] = max_signal_number(
+                        symbol, class_code, direction, signals_by_class[class_id],
+                    )
+                next_nn_by_class_dir[nk] += 1
+                nn = next_nn_by_class_dir[nk]
+                signal_code = (
+                    f"Cl-{sanitise_symbol(symbol)}-{class_code}-"
+                    f"Si-{nn:02d}-{direction_suffix(direction)}"
+                )
+
+                # Add to the in-memory cache so later bars match it
+                signal = {
+                    "id": None,
+                    "signal_code": signal_code,
+                    "class_id": class_id,
+                    "direction": direction,
+                    "variations": normalise_variations(variations),
+                    "recurrences": 0,
+                    "status": "watching",
+                    "first_fired": entry_dt.isoformat(),
+                    "last_fired": entry_dt.isoformat(),
+                }
+                signals_by_class[class_id].append(signal)
+                new_signals[signal_code] = signal
+
+            pending_experiments.append({
+                "signal_code": signal_code,
+                "class_id":    class_id,
+                "direction":   direction,
+                "entry_dt":    entry_dt,
+                "conditions":  entry,
+            })
+
+        bars_processed += 1
+        max_bar_dt = bar_dt_str
+
+    # --- Flush: bulk insert new signals ---
+    code_to_id: dict[str, str] = {}
+    if new_signals:
+        rows = [
+            {
+                "signal_code": sig["signal_code"],
+                "class_id":    sig["class_id"],
+                "direction":   sig["direction"],
+                "variations":  sig["variations"],
+                "recurrences": 1,   # will be overwritten by updates below
+                "status":      "watching",
+            }
+            for sig in new_signals.values()
+        ]
+        try:
+            res = sb._get().table("signals").insert(rows).execute()
+            for r in (res.data or []):
+                if r.get("signal_code"):
+                    code_to_id[r["signal_code"]] = r["id"]
+        except Exception as e:
+            log.error("bulk insert signals failed: %s", e)
+
+    # --- Flush: bulk insert experiments ---
+    experiments: list[dict] = []
+    for p in pending_experiments:
+        sid = code_to_id.get(p["signal_code"])
+        if not sid:
+            # New signal failed to insert; skip its experiments
+            continue
+
+        ctx = p["conditions"].get("_context") or {}
+        entry_price = ctx.get("close")
+        if entry_price is None:
+            continue
+
+        duration = timedelta(minutes=duration_minutes * forward_window)
+
+        experiments.append({
+            "signal_id":      sid,
+            "class_id":       p["class_id"],
+            "symbol":         symbol,
+            "timeframe":      timeframe,
+            "direction":      p["direction"],
+            "entry_price":    float(entry_price),
+            "entry_at":       p["entry_dt"].isoformat(),
+            "forward_window": forward_window,
+            "expires_at":     (p["entry_dt"] + duration).isoformat(),
+            "favorable_pips": 0,
+            "adverse_pips":   0,
+            "status":         "open",
+        })
+
+    experiments_inserted = 0
+    if experiments:
+        try:
+            sb._get().table("open_experiments").insert(experiments).execute()
+            experiments_inserted = len(experiments)
+        except Exception as e:
+            log.error("bulk insert experiments failed: %s", e)
+
+    # --- Flush: update touched signals (bulk upsert) ---
+    # Each existing signal gets one upsert with its accumulated delta.
+    # We do it one-by-one only if there are few; for large batches we
+    # use a single upsert with all rows.
+    touched_count = 0
+    if existing_touch_counts:
+        now_iso = datetime.now(timezone.utc).isoformat()
+        upsert_rows: list[dict] = []
+        # Build a lookup from id to full signal row for the update
+        lookup: dict[str, dict] = {}
+        for sigs in signals_by_class.values():
+            for s in sigs:
+                if s.get("id"):
+                    lookup[s["id"]] = s
+
+        for sid, delta in existing_touch_counts.items():
+            s = lookup.get(sid)
+            if not s:
+                continue
+            upsert_rows.append({
+                "id":           sid,
+                "signal_code":  s["signal_code"],
+                "class_id":     s["class_id"],
+                "direction":    s["direction"],
+                "variations":   normalise_variations(s.get("variations") or {}),
+                "recurrences":  (s.get("recurrences") or 0) + delta,
+                "status":       s.get("status") or "watching",
+                "first_fired":  s.get("first_fired") or now_iso,
+                "last_fired":   now_iso,
+            })
+
+        if upsert_rows:
+            try:
+                sb._get().table("signals").upsert(
+                    upsert_rows, on_conflict="id"
+                ).execute()
+                touched_count = len(upsert_rows)
+            except Exception as e:
+                log.warning("bulk upsert of touched signals failed: %s", e)
+
+    # --- Advance per-bar guard ---
+    if max_bar_dt and max_bar_dt != last_processed:
+        mark_processed(symbol, timeframe, max_bar_dt)
+
+    log.info(
+        "  %s %s: %d bars, +%d signals, %d touched, %d experiments",
+        symbol, timeframe, bars_processed,
+        len(new_signals), touched_count, experiments_inserted,
     )
 
-    payload = {
-        "signal_code": code,
-        "class_id":    class_row["id"],
-        "direction":   direction,
-        "variations":  normalise_variations(variations),
-        "recurrences": 1,
-        "status":      "watching",
+    return {
+        "processed":         bars_processed,
+        "signals_new":       len(new_signals),
+        "signals_touched":   touched_count,
+        "experiments":       experiments_inserted,
     }
-
-    return sb.upsert_signal(payload)
-
-
-def touch_signal(signal: dict) -> None:
-    try:
-        new_count = (signal.get("recurrences") or 0) + 1
-        (
-            sb._get()
-            .table("signals")
-            .update({
-                "recurrences": new_count,
-                "last_fired":  datetime.now(timezone.utc).isoformat(),
-            })
-            .eq("id", signal["id"])
-            .execute()
-        )
-        signal["recurrences"] = new_count
-    except Exception as e:
-        log.warning("touch_signal failed: %s", e)
-
-
-# ============================================================
-# OPEN EXPERIMENT
-# ============================================================
-def open_experiment(
-    signal: dict,
-    class_row: dict,
-    conditions: dict,
-    direction: str,
-    forward_window: int,
-    duration_minutes: int,
-    entry_at: datetime,
-) -> dict | None:
-    """
-    Open a paper experiment with entry_at = the bar's datetime.
-    For live cycles this is "now"; for backfill it is the bar's
-    historical timestamp.
-    """
-    ctx = conditions.get("_context") or {}
-    entry_price = ctx.get("close")
-    symbol = ctx.get("symbol")
-    timeframe = ctx.get("timeframe")
-
-    if entry_price is None or not symbol or not timeframe:
-        return None
-
-    if duration_minutes <= 0:
-        return None
-
-    duration = timedelta(minutes=duration_minutes * forward_window)
-
-    payload = {
-        "signal_id":      signal["id"],
-        "class_id":       class_row["id"],
-        "symbol":         symbol,
-        "timeframe":      timeframe,
-        "direction":      direction,
-        "entry_price":    float(entry_price),
-        "entry_at":       entry_at.isoformat(),
-        "forward_window": forward_window,
-        "expires_at":     (entry_at + duration).isoformat(),
-        "favorable_pips": 0,
-        "adverse_pips":   0,
-        "status":         "open",
-    }
-
-    return sb.insert_open_experiment(payload)
 
 
 # ============================================================
 # MAIN PIPELINE
 # ============================================================
 def run() -> int:
-    log.info("=== signal_engine starting (batch mode) ===")
+    log.info("=== signal_engine starting (batched) ===")
 
     if not sb.is_pipeline_running():
         log.info("Pipeline is stopped. Exiting.")
@@ -280,127 +419,30 @@ def run() -> int:
         log.info("No active sessions. Exiting.")
         return 0
 
-    total_processed = 0
-    total_skipped = 0
-
+    # Unique (symbol, tf) pairs, with duration per tf
+    pairs: set[tuple[str, str]] = set()
     for s in sessions:
         symbol = s.get("symbol")
-        tf_codes = s.get("timeframes") or []
-        if not symbol or not tf_codes:
-            continue
+        for tf in (s.get("timeframes") or []):
+            if symbol and tf and tf in timeframes:
+                pairs.add((symbol, tf))
 
-        for tf in tf_codes:
-            tf_meta = timeframes.get(tf)
-            if not tf_meta:
-                continue
-            duration_minutes = tf_meta["duration_minutes"]
+    total_bars = 0
+    total_signals = 0
+    total_experiments = 0
 
-            history = rds.load_conditions(symbol, tf)
-            if not history:
-                continue
+    for symbol, tf in sorted(pairs):
+        duration = int(timeframes[tf]["duration_minutes"])
+        result = process_timeframe(symbol, tf, duration)
+        total_bars += result["processed"]
+        total_signals += result["signals_new"]
+        total_experiments += result["experiments"]
 
-            # Normalise into a list (backward compatible)
-            if isinstance(history, dict):
-                history = [history]
-            if not isinstance(history, list):
-                continue
-
-            # Build the class index once per (symbol, tf)
-            class_index = build_class_index(symbol, tf, version=1)
-            if not class_index["by_fp"]:
-                log.debug("No classes indexed for %s %s — skipping", symbol, tf)
-                continue
-
-            last_processed = get_last_processed(symbol, tf)
-            forward_window = config.FORWARD_WINDOW
-
-            # Signal cache: class_id → list of signals
-            signal_cache: dict[str, list[dict]] = {}
-
-            processed_this = 0
-            skipped_this = 0
-
-            for entry in history:
-                bar_dt_str = entry.get("_bar_dt")
-                if not bar_dt_str:
-                    skipped_this += 1
-                    continue
-
-                if last_processed and bar_dt_str <= last_processed:
-                    skipped_this += 1
-                    continue
-
-                entry_dt = _parse_bar_dt(bar_dt_str)
-                if entry_dt is None:
-                    skipped_this += 1
-                    continue
-
-                fingerprint = build_fingerprint(entry)
-                if not fingerprint:
-                    mark_processed(symbol, tf, bar_dt_str)
-                    skipped_this += 1
-                    continue
-
-                class_row = class_index["by_fp"].get(fingerprint)
-                if not class_row:
-                    log.debug("No class for %s %s @ %s", symbol, tf, bar_dt_str)
-                    mark_processed(symbol, tf, bar_dt_str)
-                    skipped_this += 1
-                    continue
-
-                class_id = class_row["id"]
-                if class_id not in signal_cache:
-                    signal_cache[class_id] = fetch_signals_for_class(class_id)
-
-                variations = build_variation_snapshot(entry)
-
-                for direction in ("long", "short"):
-                    signal = find_matching_signal(
-                        signal_cache[class_id], direction, variations,
-                    )
-
-                    if signal:
-                        touch_signal(signal)
-                    else:
-                        signal = create_signal(
-                            class_row, symbol, direction,
-                            variations, signal_cache[class_id],
-                        )
-                        if signal:
-                            signal_cache[class_id].append(signal)
-
-                    if not signal:
-                        log.warning(
-                            "  ✘ %s %s @ %s → could not create %s signal",
-                            symbol, tf, bar_dt_str, direction,
-                        )
-                        continue
-
-                    exp = open_experiment(
-                        signal, class_row, entry, direction,
-                        forward_window, duration_minutes, entry_dt,
-                    )
-                    if not exp:
-                        log.warning(
-                            "      could not open experiment for %s",
-                            signal.get("signal_code"),
-                        )
-
-                mark_processed(symbol, tf, bar_dt_str)
-                processed_this += 1
-
-            if processed_this or skipped_this:
-                log.info(
-                    "  %s %s: %d bars processed, %d skipped",
-                    symbol, tf, processed_this, skipped_this,
-                )
-
-            total_processed += processed_this
-            total_skipped += skipped_this
-
-    log.info("=== signal_engine finished: %d processed, %d skipped ===",
-             total_processed, total_skipped)
-    return total_processed
+    log.info(
+        "=== signal_engine finished: %d bars, %d new signals, %d experiments ===",
+        total_bars, total_signals, total_experiments,
+    )
+    return total_bars
 
 
 # ------------------------------------------------------------
