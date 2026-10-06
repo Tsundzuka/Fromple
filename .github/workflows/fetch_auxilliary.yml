@@ -1,42 +1,56 @@
 name: fetch_auxiliary
+
 on:
-  schedule:
-    - cron: '0 */3 * * *'
+  # Manual trigger only during testing. The cron line is added
+  # once all four scripts have been verified end-to-end.
   workflow_dispatch:
+
 concurrency:
   group: fetch_auxiliary
   cancel-in-progress: false
+
 jobs:
   fetch:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install -r requirements.txt
-      - name: FRED
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch FRED macro series
         env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python -m src.fetch_fred
-      - name: Finnhub calendar
+
+      - name: Fetch Finnhub economic calendar
         env:
-          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
         run: python -m src.fetch_calendar
-      - name: Finnhub news
+
+      - name: Fetch Finnhub news
         env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python -m src.fetch_news
-      - name: FXNewsBias sentiment
+
+      - name: Fetch FXNewsBias sentiment
         env:
-          FXNEWSBIAS_API_KEY: ${{ secrets.FXNEWSBIAS_API_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          FXNEWSBIAS_API_KEY: ${{ secrets.FXNEWSBIAS_API_KEY }}
         run: python -m src.fetch_sentiment
