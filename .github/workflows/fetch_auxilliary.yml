@@ -1,8 +1,8 @@
 name: fetch_auxiliary
 
 on:
-  # Manual trigger only during testing. The cron line is added
-  # once all four scripts have been verified end-to-end.
+  schedule:
+    - cron: '0 * * * *'        # every hour, on the hour
   workflow_dispatch:
 
 concurrency:
@@ -34,11 +34,10 @@ jobs:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python -m src.fetch_fred
 
-      - name: Fetch Finnhub economic calendar
+      - name: Fetch economic calendar (biquote)
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
         run: python -m src.fetch_calendar
 
       - name: Fetch Finnhub news
