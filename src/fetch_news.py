@@ -1,13 +1,26 @@
 """
 fetch_news.py — Fetch forex market news from Finnhub.
+
+Finnhub's /news endpoint returns items with a Unix epoch `datetime`
+field. Converted to timezone-aware ISO 8601 UTC. Upserts on `url`
+as the natural key, so repeated runs are idempotent.
+
+Self-guard skips runs where news was fetched within the configured
+interval (FINNHUB_NEWS_FETCH_INTERVAL_HOURS).
 """
 
 import os
 import requests
 from datetime import datetime, timezone
 
-from src.config import FINNHUB_BASE_URL, FINNHUB_NEWS_CATEGORY
+from src import config
+from src.config import (
+    FINNHUB_BASE_URL,
+    FINNHUB_NEWS_CATEGORY,
+    FINNHUB_NEWS_FETCH_INTERVAL_HOURS,
+)
 from src.supabase_client import SupabaseClient
+
 
 def fetch_news(api_key: str) -> list:
     """Fetch latest forex news items."""
@@ -20,6 +33,7 @@ def fetch_news(api_key: str) -> list:
     resp.raise_for_status()
     return resp.json()
 
+
 def normalise(item: dict) -> dict | None:
     """Map Finnhub news fields to our schema."""
     url = item.get("url")
@@ -29,7 +43,11 @@ def normalise(item: dict) -> dict | None:
 
     published_at = item.get("datetime")
     if published_at:
-        published_at = datetime.fromtimestamp(published_at, tz=timezone.utc).isoformat()
+        published_at = datetime.fromtimestamp(
+            published_at, tz=timezone.utc
+        ).isoformat()
+
+    related = item.get("related")
 
     return {
         "headline": headline,
@@ -37,16 +55,26 @@ def normalise(item: dict) -> dict | None:
         "url": url,
         "category": item.get("category"),
         "published_at": published_at,
-        "related_symbols": item.get("related", "").split(",") if item.get("related") else [],
+        "related_symbols": related.split(",") if related else [],
     }
 
-def main():
-    api_key = os.environ.get("FINNHUB_API_KEY")
-    if not api_key:
-        print("FINNHUB_API_KEY not set — exiting")
-        return
+
+def main() -> None:
+    config.require(
+        "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "FINNHUB_API_KEY",
+    )
 
     sb = SupabaseClient()
+
+    # Self-guard: skip if news was fetched recently.
+    if sb.news_fetched_within(FINNHUB_NEWS_FETCH_INTERVAL_HOURS):
+        print(
+            f"News fetched within last "
+            f"{FINNHUB_NEWS_FETCH_INTERVAL_HOURS}h — skipping"
+        )
+        return
+
+    api_key = os.environ["FINNHUB_API_KEY"]
     raw = fetch_news(api_key)
     rows = [normalise(item) for item in raw]
     rows = [r for r in rows if r]
@@ -57,6 +85,7 @@ def main():
         print(f"Upserted {len(rows)} news items")
     else:
         print("No news items found")
+
 
 if __name__ == "__main__":
     main()
