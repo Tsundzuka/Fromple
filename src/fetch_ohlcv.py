@@ -1,9 +1,19 @@
 # ============================================================
 # src/fetch_ohlcv.py
 # ============================================================
-# Fetches OHLCV bars from Twelve Data for every instrument
+# Fetches M5 OHLCV bars from Twelve Data for every instrument
 # whose session window currently contains the UTC time, and
 # writes them to Upstash Redis.
+#
+# Only M5 is fetched. All higher timeframes (M15, M30, H1, H2,
+# H4, H6, H8, H12, D1, W1) are derived from M5 by aggregate.py,
+# which runs as a separate step in the pipeline.
+#
+# M5 bars are persisted across cycles:
+#   - New bars are merged with existing bars in Redis
+#   - Duplicates are removed (by datetime)
+#   - The list is capped at MAX_M5_BARS (~1 year of M5)
+#   - A 365-day TTL is set on the key as a safety net
 #
 # Entry point: python -m src.fetch_ohlcv
 #
@@ -11,18 +21,6 @@
 #   - instruments table  → symbol → provider_symbol
 #   - timeframes table   → code → provider_interval + duration_minutes
 #   - sessions table     → user-controlled enabled instruments + timeframes
-#
-# Flow:
-#   1. Exit if system_state.is_running = false
-#   2. Load instruments + timeframes registries
-#   3. Load active sessions
-#   4. For each session in its UTC window:
-#         for each timeframe enabled on that session:
-#             check fetch guard (skip if not due)
-#             fetch bars from Twelve Data
-#             save to Redis
-#             stamp last-bar time
-#   5. Stamp system_state.last_successful_run
 
 import logging
 import sys
@@ -48,19 +46,27 @@ log = logging.getLogger("fetch_ohlcv")
 
 
 # ------------------------------------------------------------
-# Rate limiting
+# Constants
 # ------------------------------------------------------------
+# Twelve Data only needs to be hit for the base timeframe.
+FETCH_TIMEFRAME = "M5"
+
+# Twelve Data requests are spaced out to stay under 8/min on free tier.
 SECONDS_BETWEEN_CALLS = 8
 
+# Cap on how many M5 bars to keep per symbol in Redis.
+# 100,000 bars of M5 ≈ 347 days ≈ 1 year.
+# Storage estimate: ~25 MB per symbol, ~100 MB for 4 symbols.
+# Fits within Upstash free tier (256 MB).
+MAX_M5_BARS = 100_000
+
+# M5 key lifetime in Redis — 365 days.
+M5_TTL_SECONDS = 365 * 24 * 60 * 60
+
 
 # ============================================================
-# FETCH GUARD
+# FETCH GUARD (per timeframe — still M5 only)
 # ============================================================
-# We store the newest bar's `datetime` under
-#   run:{symbol}:{tf}:last_bar_dt
-# and only call the API when the current time has moved past
-# the next scheduled bar boundary.
-
 def _last_bar_key(symbol: str, timeframe: str) -> str:
     return f"run:{symbol}:{timeframe}:last_bar_dt"
 
@@ -203,10 +209,44 @@ def fetch_bars(
 
 
 # ============================================================
+# M5 PERSISTENCE — merge, dedupe, trim, save
+# ============================================================
+def merge_bars(existing: list[dict], new: list[dict]) -> list[dict]:
+    """
+    Merge two bar lists, dedupe by `datetime`, sort ascending,
+    and trim to the last MAX_M5_BARS entries.
+    """
+    by_dt: dict[str, dict] = {b["datetime"]: b for b in existing if "datetime" in b}
+    for b in new:
+        if "datetime" in b:
+            by_dt[b["datetime"]] = b  # newer wins on collision
+
+    merged = sorted(by_dt.values(), key=lambda b: b["datetime"])
+    if len(merged) > MAX_M5_BARS:
+        merged = merged[-MAX_M5_BARS:]
+    return merged
+
+
+def persist_m5(symbol: str, new_bars: list[dict]) -> int:
+    """
+    Read existing M5 bars from Redis, merge with new bars, and
+    write back. Returns the total number of bars after merge.
+    """
+    key = rds.bars_key(symbol, FETCH_TIMEFRAME)
+    existing = rds.get_json(key) or []
+    if not isinstance(existing, list):
+        existing = []
+
+    merged = merge_bars(existing, new_bars)
+    rds.set_json(key, merged, ttl_seconds=M5_TTL_SECONDS)
+    return len(merged)
+
+
+# ============================================================
 # MAIN PIPELINE
 # ============================================================
 def run() -> int:
-    log.info("=== fetch_ohlcv starting ===")
+    log.info("=== fetch_ohlcv starting (M5 only) ===")
 
     if not sb.is_pipeline_running():
         log.info("Pipeline is stopped (system_state.is_running = false). Exiting.")
@@ -221,6 +261,11 @@ def run() -> int:
         return 0
     if not timeframes:
         log.warning("No active timeframes found. Exiting.")
+        return 0
+
+    m5_meta = timeframes.get(FETCH_TIMEFRAME)
+    if not m5_meta:
+        log.error("Timeframe '%s' missing from registry. Exiting.", FETCH_TIMEFRAME)
         return 0
 
     log.info("Registries: %d instruments, %d timeframes",
@@ -258,8 +303,7 @@ def run() -> int:
 
     for s in due_sessions:
         symbol = s.get("symbol")
-        tf_codes = s.get("timeframes") or []
-        if not symbol or not tf_codes:
+        if not symbol:
             continue
 
         provider_symbol = instruments.get(symbol)
@@ -267,36 +311,33 @@ def run() -> int:
             log.warning("No provider_symbol registered for %s — skipping", symbol)
             continue
 
-        for tf in tf_codes:
-            tf_meta = timeframes.get(tf)
-            if not tf_meta:
-                log.warning("Unknown timeframe '%s' for %s — skipping", tf, symbol)
-                continue
+        # Fetch guard for M5
+        if not is_fetch_due(symbol, FETCH_TIMEFRAME, m5_meta["duration_minutes"], now_utc):
+            log.debug("Not due yet: %s %s — skipping", symbol, FETCH_TIMEFRAME)
+            skipped += 1
+            continue
 
-            provider_interval = tf_meta["provider_interval"]
-            duration_minutes  = tf_meta["duration_minutes"]
+        log.info("Fetching %s (%s) %s (%s, %d bars)…",
+                 symbol, provider_symbol, FETCH_TIMEFRAME,
+                 m5_meta["provider_interval"], config.BARS_PER_FETCH)
 
-            # Fetch guard
-            if not is_fetch_due(symbol, tf, duration_minutes, now_utc):
-                log.debug("Not due yet: %s %s — skipping", symbol, tf)
-                skipped += 1
-                continue
+        bars = fetch_bars(
+            provider_symbol,
+            m5_meta["provider_interval"],
+            config.BARS_PER_FETCH,
+        )
 
-            log.info("Fetching %s (%s) %s (%s, %d bars)…",
-                     symbol, provider_symbol, tf, provider_interval, config.BARS_PER_FETCH)
+        if bars:
+            total = persist_m5(symbol, bars)
+            stamp_last_bar(symbol, FETCH_TIMEFRAME, bars)
+            log.info("  ✔ Merged %d new → %d total M5 bars for %s",
+                     len(bars), total, symbol)
+            fetched += 1
+        else:
+            log.warning("  ✘ No bars written for %s %s", symbol, FETCH_TIMEFRAME)
 
-            bars = fetch_bars(provider_symbol, provider_interval, config.BARS_PER_FETCH)
-
-            if bars:
-                rds.save_bars(symbol, tf, bars)
-                stamp_last_bar(symbol, tf, bars)
-                log.info("  ✔ Saved %d bars: %s", len(bars), rds.bars_key(symbol, tf))
-                fetched += 1
-            else:
-                log.warning("  ✘ No bars written for %s %s", symbol, tf)
-
-            sb.increment_api_usage(provider="twelvedata", by=1, limit_value=800)
-            time.sleep(SECONDS_BETWEEN_CALLS)
+        sb.increment_api_usage(provider="twelvedata", by=1, limit_value=800)
+        time.sleep(SECONDS_BETWEEN_CALLS)
 
     sb.mark_successful_run()
     log.info("=== fetch_ohlcv finished: %d fetched, %d skipped (not due) ===",
