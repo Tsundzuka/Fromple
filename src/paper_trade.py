@@ -2,23 +2,16 @@
 # src/paper_trade.py
 # ============================================================
 # Closes expired open experiments: measures the favourable and
-# adverse pip movement since entry, writes a permanent
-# observation, and updates the parent signal's aggregate stats.
+# adverse pip movement WITHIN the forward window, writes a
+# permanent observation, and updates the parent signal's
+# aggregate stats.
+#
+# BATCH MODE: handles any number of expired experiments in one
+# cycle. Backfill can produce thousands at once; this file
+# processes them all, computing MFE/MAE strictly between
+# entry_at and expires_at.
 #
 # Entry point: python -m src.paper_trade
-#
-# Flow:
-#   1. Exit if system_state.is_running = false
-#   2. Load every open_experiments row whose expires_at <= now
-#   3. For each:
-#         load bars, compute MFE / MAE in pips
-#         insert an observation
-#         close the experiment
-#   4. Recompute per-signal aggregates (wins, losses,
-#      avg_favorable, avg_adverse, status)
-#
-# Pip values are per-symbol. FX pairs use 0.0001; the USD Index
-# uses 0.01 (index points). No JPY pairs are enabled.
 
 import logging
 import sys
@@ -41,35 +34,42 @@ log = logging.getLogger("paper_trade")
 
 
 # ------------------------------------------------------------
-# Pip values per symbol
+# Datetime normalisation
 # ------------------------------------------------------------
-PIP_VALUE = {
-    "EUR/USD": 0.0001,
-    "AUD/USD": 0.0001,
-    "USD/CHF": 0.0001,
-    "USD/CAD": 0.0001,
-    "DXY":     0.01,
-}
-
-
-def get_pip_value(symbol: str) -> float:
-    return PIP_VALUE.get(symbol, 0.0001)
-
-
-# ------------------------------------------------------------
-# Bar filtering
-# ------------------------------------------------------------
-def bars_since(bars: list[dict], since_iso: str) -> list[dict]:
+def _norm_dt(value) -> str:
     """
-    Return bars whose `datetime` is at or after `since_iso`.
-    Bar datetimes from Twelve Data look like "2025-01-15 13:00:00"
-    or "2025-01-15". We normalise for a lexicographic compare.
+    Normalise any datetime (string or object) to a sortable
+    'YYYY-MM-DD HH:MM:SS' string. Strips timezone info — all
+    datetimes in this system are UTC.
     """
-    def norm(s: str) -> str:
-        return s.replace("T", " ").replace("Z", "")
+    if value is None:
+        return ""
+    s = str(value).replace("T", " ").replace("Z", "")
+    if "+" in s:
+        s = s.split("+")[0]
+    s = s.strip()
+    if len(s) == 16:
+        s += ":00"
+    return s
 
-    target = norm(since_iso)
-    return [b for b in bars if norm(str(b.get("datetime", ""))) >= target]
+
+def bars_in_window(
+    bars: list[dict],
+    entry_at,
+    expires_at,
+) -> list[dict]:
+    """
+    Return bars whose `datetime` falls within [entry_at, expires_at].
+    This defines the forward window for MFE/MAE computation.
+    """
+    start = _norm_dt(entry_at)
+    end   = _norm_dt(expires_at)
+    if not start or not end:
+        return []
+    return [
+        b for b in bars
+        if start <= _norm_dt(b.get("datetime", "")) <= end
+    ]
 
 
 # ------------------------------------------------------------
@@ -100,7 +100,7 @@ def compute_movement(
     if direction == "long":
         favorable = (max_high - entry_price) / pip_value
         adverse   = (entry_price - min_low)  / pip_value
-    else:  # short
+    else:
         favorable = (entry_price - min_low)  / pip_value
         adverse   = (max_high - entry_price) / pip_value
 
@@ -171,8 +171,7 @@ def refresh_signal_stats(signal_id: str) -> None:
 
     ratio = (avg_fav / avg_adv) if avg_adv > 0 else None
 
-    # Status thresholds come from config; per-user overrides come later
-    if n < 20:
+    if n < config.MIN_OBSERVATIONS:
         status = "watching"
     elif ratio is None or ratio >= config.RATIO_FLOOR:
         status = "active"
@@ -201,13 +200,8 @@ def refresh_signal_stats(signal_id: str) -> None:
 # ============================================================
 # MAIN PIPELINE
 # ============================================================
-
 def run() -> int:
-    """
-    Close every expired open experiment. Returns the number of
-    experiments closed.
-    """
-    log.info("=== paper_trade starting ===")
+    log.info("=== paper_trade starting (batch mode) ===")
 
     if not sb.is_pipeline_running():
         log.info("Pipeline is stopped. Exiting.")
@@ -219,34 +213,48 @@ def run() -> int:
         return 0
 
     log.info("Closing %d expired experiments", len(expired))
+
     closed = 0
+    skipped = 0
     touched_signals: set[str] = set()
 
-    for exp in expired:
-        symbol = exp["symbol"]
-        timeframe = exp["timeframe"]
-        direction = exp["direction"]
-        entry_price = float(exp["entry_price"])
-        entry_at = exp["entry_at"]
+    # Cache bars and pip values per (symbol, timeframe) to avoid
+    # re-reading Redis thousands of times during a big backfill.
+    bars_cache: dict[tuple[str, str], list[dict]] = {}
+    pip_cache:  dict[str, float] = {}
 
-        bars = rds.load_bars(symbol, timeframe)
+    for i, exp in enumerate(expired, start=1):
+        symbol       = exp["symbol"]
+        timeframe    = exp["timeframe"]
+        direction    = exp["direction"]
+        entry_price  = float(exp["entry_price"])
+        entry_at     = exp["entry_at"]
+        expires_at   = exp["expires_at"]
+
+        key = (symbol, timeframe)
+        if key not in bars_cache:
+            bars_cache[key] = rds.load_bars(symbol, timeframe) or []
+        bars = bars_cache[key]
+
         if not bars:
-            log.debug("No bars in Redis for %s %s — skipping experiment %s",
-                      symbol, timeframe, exp["id"])
+            skipped += 1
             continue
 
-        window_bars = bars_since(bars, entry_at)
+        window_bars = bars_in_window(bars, entry_at, expires_at)
         if not window_bars:
-            log.debug("No bars after entry for %s %s — skipping",
-                      symbol, timeframe)
+            skipped += 1
             continue
 
-        pip_value = get_pip_value(symbol)
+        if symbol not in pip_cache:
+            pip_cache[symbol] = sb.get_instrument_pip_value(symbol)
+        pip_value = pip_cache[symbol]
+
         fav, adv = compute_movement(entry_price, direction, window_bars, pip_value)
 
         obs = write_observation(exp, fav, adv)
         if not obs:
             log.warning("Failed to write observation for experiment %s", exp["id"])
+            skipped += 1
             continue
 
         sb.close_open_experiment(
@@ -257,17 +265,20 @@ def run() -> int:
         )
 
         touched_signals.add(exp["signal_id"])
-        log.info(
-            "  ✔ closed %s %s → fav=%.1f adv=%.1f",
-            exp["signal_id"], direction, fav, adv,
-        )
         closed += 1
 
+        if closed % 100 == 0:
+            log.info("  progress: %d/%d closed", closed, len(expired))
+
     # Refresh aggregates once per signal
+    log.info("Refreshing aggregate stats for %d signals", len(touched_signals))
     for sid in touched_signals:
         refresh_signal_stats(sid)
 
-    log.info("=== paper_trade finished: %d experiments closed ===", closed)
+    log.info(
+        "=== paper_trade finished: %d closed, %d skipped ===",
+        closed, skipped,
+    )
     return closed
 
 
