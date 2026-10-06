@@ -6,10 +6,16 @@
 #
 # Redis is a scratchpad, not storage. The registry lives in Supabase.
 #
-# BACKFILL GUARD: while backfill is still running for a symbol,
-# its M5 list is left untouched. Backfill writes M5 history across
-# many cycles; trimming it mid-backfill would delete bars that
-# later cycles intend to use for aggregation.
+# Runs in two contexts:
+#   1. As the last step of the live pipeline (pipeline.yml)
+#   2. As the first step of the backfill pipeline (backfill.py)
+#
+# In both cases, the semantics are identical: clear derived keys,
+# trim base timeframes to their caps, preserve guards.
+#
+# Backfill no longer accumulates M5 across cycles — it REPLACES
+# the M5 list each window. So trimming is always safe; there is
+# no window where M5 is mid-growth.
 #
 # PRESERVED across cycles (must survive):
 #   BASE timeframes — bars, indicators, conditions, fingerprint
@@ -48,8 +54,8 @@ log = logging.getLogger("cleanup")
 # ------------------------------------------------------------
 # Constants
 # ------------------------------------------------------------
-# Base timeframes: fetched by fetch_ohlcv.py, persist across cycles.
-# The value is the maximum number of bars to keep per symbol.
+# Base timeframes: persist across cycles. The value is the max
+# number of bars to keep per symbol.
 # These caps must match fetch_ohlcv.py's MAX_BARS dict.
 BASE_MAX_BARS = {
     "M5":  5_000,
@@ -59,8 +65,7 @@ BASE_MAX_BARS = {
     "MN1":   200,
 }
 
-# Timeframes whose full state is preserved. Bars are trimmed, but
-# the keys themselves never get deleted.
+# Timeframes whose full state is preserved.
 PRESERVED_TIMEFRAMES = set(BASE_MAX_BARS.keys())
 
 # Derived timeframes: produced by aggregate.py, deleted each cycle.
@@ -78,26 +83,11 @@ REGENERATABLE_SUFFIXES = (
 # ============================================================
 # HELPERS
 # ============================================================
-def _backfill_done(symbol: str) -> bool:
-    """
-    True if backfill has finished for this symbol. The flag is set
-    by backfill.py when its cursor reaches the present.
-    """
-    return bool(rds.get_json(f"run:{symbol}:M5:backfill_done"))
-
-
 def trim_bars(symbol: str, timeframe: str, cap: int) -> int:
     """
     Trim the bars list for one (symbol, timeframe) to the newest
     `cap` entries. Returns the number of bars removed.
-
-    Skips trimming M5 while backfill is still active for that
-    symbol, so backfill and cleanup don't fight over the same list.
     """
-    # Don't trim M5 while backfill is running for this symbol
-    if timeframe == "M5" and not _backfill_done(symbol):
-        return 0
-
     key = rds.bars_key(symbol, timeframe)
     bars = rds.get_json(key)
     if not isinstance(bars, list) or len(bars) <= cap:
@@ -167,14 +157,10 @@ def run() -> int:
 
     symbols = sorted({sym for sym, _ in combos})
 
-    # 1. Trim base timeframe bars to their per-timeframe caps.
-    #    M5 is skipped for any symbol whose backfill hasn't completed.
+    # 1. Trim base timeframe bars to their per-timeframe caps
     total_trimmed = 0
     for symbol in symbols:
         for tf, cap in BASE_MAX_BARS.items():
-            if tf == "M5" and not _backfill_done(symbol):
-                log.debug("  %s M5: backfill active — skipping trim", symbol)
-                continue
             removed = trim_bars(symbol, tf, cap)
             total_trimmed += removed
             if removed > 0:
