@@ -49,9 +49,16 @@ def control_key(name: str) -> str:
 # ------------------------------------------------------------
 # Generic set/get with JSON serialisation
 # ------------------------------------------------------------
-def set_json(key: str, value: Any, ttl: int = config.REDIS_TTL_LONG) -> None:
+def set_json(key: str, value: Any, ttl_seconds: int = config.REDIS_TTL_LONG) -> None:
+    """
+    Store a JSON-serialisable value.
+
+    `ttl_seconds` — key lifetime in seconds. Defaults to
+    config.REDIS_TTL_LONG. Pass a different value for shorter
+    or longer retention (see fetch_ohlcv.py per-timeframe TTLs).
+    """
     try:
-        _get().set(key, json.dumps(value), ex=ttl)
+        _get().set(key, json.dumps(value), ex=ttl_seconds)
     except Exception as e:
         log.warning("redis set_json(%s) failed: %s", key, e)
 
@@ -87,24 +94,40 @@ def load_bars(symbol: str, timeframe: str) -> list[dict]:
     return get_json(bars_key(symbol, timeframe)) or []
 
 
-def save_indicators(symbol: str, timeframe: str, indicators: dict) -> None:
+def save_indicators(symbol: str, timeframe: str, indicators: Any) -> None:
+    """
+    Store indicators. Accepts a single dict (legacy) or a list
+    of dicts (batch mode — one per bar).
+    """
     set_json(indicators_key(symbol, timeframe), indicators)
 
 
-def load_indicators(symbol: str, timeframe: str) -> dict:
-    return get_json(indicators_key(symbol, timeframe)) or {}
+def load_indicators(symbol: str, timeframe: str) -> Any:
+    """
+    Return whatever was stored — a dict (legacy) or a list (batch).
+    Callers decide how to interpret the shape.
+    """
+    return get_json(indicators_key(symbol, timeframe))
 
 
-def save_conditions(symbol: str, timeframe: str, conditions: dict) -> None:
+def save_conditions(symbol: str, timeframe: str, conditions: Any) -> None:
+    """
+    Store conditions. Accepts a single dict (legacy) or a list
+    of dicts (batch mode — one per bar).
+    """
     set_json(conditions_key(symbol, timeframe), conditions)
 
 
-def load_conditions(symbol: str, timeframe: str) -> dict:
-    return get_json(conditions_key(symbol, timeframe)) or {}
+def load_conditions(symbol: str, timeframe: str) -> Any:
+    """
+    Return whatever was stored — a dict (legacy) or a list (batch).
+    Callers decide how to interpret the shape.
+    """
+    return get_json(conditions_key(symbol, timeframe))
 
 
 def set_control(name: str, value: Any) -> None:
-    set_json(control_key(name), value, ttl=config.REDIS_TTL_SHORT)
+    set_json(control_key(name), value, ttl_seconds=config.REDIS_TTL_SHORT)
 
 
 def get_control(name: str) -> Any | None:
