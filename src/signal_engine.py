@@ -6,11 +6,14 @@
 #
 # BATCH MODE: iterates through the per-bar conditions history
 # produced by conditions.py. All signal lookups, code allocation,
-# touch counting, and experiment discovery happen in memory. Supabase
-# is hit only at the end of each (symbol, timeframe):
+# touch counting, and experiment discovery happen in memory.
+# Supabase is hit only at the end of each (symbol, timeframe):
 #   - 1 bulk insert for all new signals
-#   - 1 upsert for all existing signals whose recurrences changed
+#   - 1 bulk upsert for all existing signals whose recurrences changed
 #   - 1 bulk insert for all new experiments
+#
+# Signal code format: Cl-{SYMBOL}-{TIMEFRAME}-{CLASS}-Si-{NN}-{L|S}
+# e.g. Cl-AUDUSD-H1-A-Si-01-L
 #
 # Entry point: python -m src.signal_engine
 
@@ -47,10 +50,12 @@ VARIATION_PREFIXES = ("ind.", "cal.", "news.")
 # Helpers
 # ------------------------------------------------------------
 def sanitise_symbol(symbol: str) -> str:
+    """EUR/USD → EURUSD"""
     return "".join(c for c in (symbol or "") if c.isalnum()).upper()
 
 
 def direction_suffix(direction: str) -> str:
+    """long → L, short → S"""
     return "L" if direction == "long" else "S"
 
 
@@ -142,15 +147,15 @@ def find_matching_signal(
 
 def max_signal_number(
     symbol: str,
+    timeframe: str,
     class_code: str,
     direction: str,
     existing_signals: list[dict],
 ) -> int:
     """
-    Highest NN found for this (symbol, class, direction). We keep
-    counting locally when generating new codes.
+    Highest NN found for this (symbol, timeframe, class, direction).
     """
-    prefix = f"Cl-{sanitise_symbol(symbol)}-{class_code}-Si-"
+    prefix = f"Cl-{sanitise_symbol(symbol)}-{timeframe}-{class_code}-Si-"
     suffix = f"-{direction_suffix(direction)}"
     max_nn = 0
     for s in existing_signals:
@@ -195,9 +200,9 @@ def process_timeframe(symbol: str, timeframe: str, duration_minutes: int) -> dic
     signals_by_class: dict[str, list[dict]] = {}
     next_nn_by_class_dir: dict[tuple[str, str], int] = {}
 
-    new_signals: dict[str, dict] = {}         # signal_code -> row payload
+    new_signals: dict[str, dict] = {}           # signal_code -> row payload
     existing_touch_counts: dict[str, int] = {}  # signal_id -> delta
-    pending_experiments: list[dict] = []      # unresolved (signal_code or signal_id)
+    pending_experiments: list[dict] = []        # unresolved (signal_code, ...)
 
     bars_processed = 0
     max_bar_dt = last_processed
@@ -224,7 +229,6 @@ def process_timeframe(symbol: str, timeframe: str, duration_minutes: int) -> dic
             signals_by_class[class_id] = fetch_signals_for_class(class_id)
 
         variations = build_variation_snapshot(entry)
-        var_key = variations_key(variations)
 
         entry_dt = _parse_bar_dt(bar_dt_str)
         if entry_dt is None:
@@ -236,9 +240,14 @@ def process_timeframe(symbol: str, timeframe: str, duration_minutes: int) -> dic
             )
 
             if signal:
-                # Existing signal — record a touch
-                sid = signal["id"]
-                existing_touch_counts[sid] = existing_touch_counts.get(sid, 0) + 1
+                # Existing signal (loaded from DB, or created earlier
+                # in this same run).
+                sid = signal.get("id")
+                if sid:
+                    existing_touch_counts[sid] = existing_touch_counts.get(sid, 0) + 1
+                else:
+                    # Newly created in this run — bump the in-memory count
+                    signal["recurrences"] = (signal.get("recurrences") or 0) + 1
                 signal_code = signal["signal_code"]
             else:
                 # Allocate a new signal code in memory
@@ -246,12 +255,13 @@ def process_timeframe(symbol: str, timeframe: str, duration_minutes: int) -> dic
                 nk = (class_code, direction)
                 if nk not in next_nn_by_class_dir:
                     next_nn_by_class_dir[nk] = max_signal_number(
-                        symbol, class_code, direction, signals_by_class[class_id],
+                        symbol, timeframe, class_code, direction,
+                        signals_by_class[class_id],
                     )
                 next_nn_by_class_dir[nk] += 1
                 nn = next_nn_by_class_dir[nk]
                 signal_code = (
-                    f"Cl-{sanitise_symbol(symbol)}-{class_code}-"
+                    f"Cl-{sanitise_symbol(symbol)}-{timeframe}-{class_code}-"
                     f"Si-{nn:02d}-{direction_suffix(direction)}"
                 )
 
@@ -262,7 +272,7 @@ def process_timeframe(symbol: str, timeframe: str, duration_minutes: int) -> dic
                     "class_id": class_id,
                     "direction": direction,
                     "variations": normalise_variations(variations),
-                    "recurrences": 0,
+                    "recurrences": 1,
                     "status": "watching",
                     "first_fired": entry_dt.isoformat(),
                     "last_fired": entry_dt.isoformat(),
@@ -290,7 +300,7 @@ def process_timeframe(symbol: str, timeframe: str, duration_minutes: int) -> dic
                 "class_id":    sig["class_id"],
                 "direction":   sig["direction"],
                 "variations":  sig["variations"],
-                "recurrences": 1,   # will be overwritten by updates below
+                "recurrences": sig.get("recurrences") or 1,
                 "status":      "watching",
             }
             for sig in new_signals.values()
@@ -308,8 +318,17 @@ def process_timeframe(symbol: str, timeframe: str, duration_minutes: int) -> dic
     for p in pending_experiments:
         sid = code_to_id.get(p["signal_code"])
         if not sid:
-            # New signal failed to insert; skip its experiments
-            continue
+            # Signal was not created in this run — must look it up
+            # in the class cache instead.
+            for sigs in signals_by_class.values():
+                for s in sigs:
+                    if s.get("signal_code") == p["signal_code"] and s.get("id"):
+                        sid = s["id"]
+                        break
+                if sid:
+                    break
+            if not sid:
+                continue
 
         ctx = p["conditions"].get("_context") or {}
         entry_price = ctx.get("close")
@@ -335,21 +354,22 @@ def process_timeframe(symbol: str, timeframe: str, duration_minutes: int) -> dic
 
     experiments_inserted = 0
     if experiments:
-        try:
-            sb._get().table("open_experiments").insert(experiments).execute()
-            experiments_inserted = len(experiments)
-        except Exception as e:
-            log.error("bulk insert experiments failed: %s", e)
+        CHUNK = 500
+        for i in range(0, len(experiments), CHUNK):
+            chunk = experiments[i : i + CHUNK]
+            try:
+                sb._get().table("open_experiments").insert(chunk).execute()
+                experiments_inserted += len(chunk)
+            except Exception as e:
+                log.error("bulk insert experiments failed: %s", e)
 
-    # --- Flush: update touched signals (bulk upsert) ---
-    # Each existing signal gets one upsert with its accumulated delta.
-    # We do it one-by-one only if there are few; for large batches we
-    # use a single upsert with all rows.
+    # --- Flush: upsert touched signals ---
     touched_count = 0
     if existing_touch_counts:
         now_iso = datetime.now(timezone.utc).isoformat()
         upsert_rows: list[dict] = []
-        # Build a lookup from id to full signal row for the update
+
+        # Build id → full row lookup from cache
         lookup: dict[str, dict] = {}
         for sigs in signals_by_class.values():
             for s in sigs:
@@ -373,13 +393,16 @@ def process_timeframe(symbol: str, timeframe: str, duration_minutes: int) -> dic
             })
 
         if upsert_rows:
-            try:
-                sb._get().table("signals").upsert(
-                    upsert_rows, on_conflict="id"
-                ).execute()
-                touched_count = len(upsert_rows)
-            except Exception as e:
-                log.warning("bulk upsert of touched signals failed: %s", e)
+            CHUNK = 500
+            for i in range(0, len(upsert_rows), CHUNK):
+                chunk = upsert_rows[i : i + CHUNK]
+                try:
+                    sb._get().table("signals").upsert(
+                        chunk, on_conflict="id"
+                    ).execute()
+                    touched_count += len(chunk)
+                except Exception as e:
+                    log.warning("bulk upsert of touched signals failed: %s", e)
 
     # --- Advance per-bar guard ---
     if max_bar_dt and max_bar_dt != last_processed:
@@ -419,7 +442,7 @@ def run() -> int:
         log.info("No active sessions. Exiting.")
         return 0
 
-    # Unique (symbol, tf) pairs, with duration per tf
+    # Unique (symbol, tf) pairs
     pairs: set[tuple[str, str]] = set()
     for s in sessions:
         symbol = s.get("symbol")
