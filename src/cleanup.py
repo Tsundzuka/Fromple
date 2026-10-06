@@ -6,6 +6,11 @@
 #
 # Redis is a scratchpad, not storage. The registry lives in Supabase.
 #
+# BACKFILL GUARD: while backfill is still running for a symbol,
+# its M5 list is left untouched. Backfill writes M5 history across
+# many cycles; trimming it mid-backfill would delete bars that
+# later cycles intend to use for aggregation.
+#
 # PRESERVED across cycles (must survive):
 #   BASE timeframes — bars, indicators, conditions, fingerprint
 #     M5   — source of truth for aggregation into M15–H8
@@ -59,7 +64,6 @@ BASE_MAX_BARS = {
 PRESERVED_TIMEFRAMES = set(BASE_MAX_BARS.keys())
 
 # Derived timeframes: produced by aggregate.py, deleted each cycle.
-# Listed explicitly so the intent is visible even if the set overlaps.
 DERIVED_TIMEFRAMES = {"M15", "M30", "H1", "H2", "H4", "H6", "H8"}
 
 # Suffixes deleted each cycle for derived timeframes.
@@ -74,11 +78,26 @@ REGENERATABLE_SUFFIXES = (
 # ============================================================
 # HELPERS
 # ============================================================
+def _backfill_done(symbol: str) -> bool:
+    """
+    True if backfill has finished for this symbol. The flag is set
+    by backfill.py when its cursor reaches the present.
+    """
+    return bool(rds.get_json(f"run:{symbol}:M5:backfill_done"))
+
+
 def trim_bars(symbol: str, timeframe: str, cap: int) -> int:
     """
     Trim the bars list for one (symbol, timeframe) to the newest
     `cap` entries. Returns the number of bars removed.
+
+    Skips trimming M5 while backfill is still active for that
+    symbol, so backfill and cleanup don't fight over the same list.
     """
+    # Don't trim M5 while backfill is running for this symbol
+    if timeframe == "M5" and not _backfill_done(symbol):
+        return 0
+
     key = rds.bars_key(symbol, timeframe)
     bars = rds.get_json(key)
     if not isinstance(bars, list) or len(bars) <= cap:
@@ -148,10 +167,14 @@ def run() -> int:
 
     symbols = sorted({sym for sym, _ in combos})
 
-    # 1. Trim base timeframe bars to their per-timeframe caps
+    # 1. Trim base timeframe bars to their per-timeframe caps.
+    #    M5 is skipped for any symbol whose backfill hasn't completed.
     total_trimmed = 0
     for symbol in symbols:
         for tf, cap in BASE_MAX_BARS.items():
+            if tf == "M5" and not _backfill_done(symbol):
+                log.debug("  %s M5: backfill active — skipping trim", symbol)
+                continue
             removed = trim_bars(symbol, tf, cap)
             total_trimmed += removed
             if removed > 0:
