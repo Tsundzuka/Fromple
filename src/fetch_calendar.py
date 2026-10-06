@@ -6,6 +6,11 @@ No API key required. Covers 54 countries; we filter to the 8 FX majors.
 
 Self-guard uses `calendar_fetched_within` so the workflow can run every
 3 hours while only hitting biquote every 6.
+
+biquote response fields (per event):
+    id, eventId, time, period, countryCode, currency, name, importance,
+    type, sector, unit, multiplier, digits, actual, forecast, previous,
+    revisedPrevious, revision, timeMode, sourceUrl, source
 """
 
 import os
@@ -25,8 +30,8 @@ def fetch_events() -> list:
     """Fetch high-impact macro events for the 8 FX major currencies."""
     bq = Biquote()
 
-    # biquote uses country codes, not currency codes. Map the 8 FX
-    # currencies to their biquote country identifiers.
+    # biquote's `countries` parameter uses ISO 3166-1 alpha-2 codes,
+    # not currency codes. Map the 8 FX currencies to their country codes.
     country_map = {
         "USD": "US",
         "EUR": "EU",
@@ -48,27 +53,19 @@ def fetch_events() -> list:
 
 def normalise(event: dict) -> dict | None:
     """Map biquote event fields to our schema."""
-    # biquote returns events with a `time` field (ISO 8601 or epoch).
-    # Adjust these field names if the actual response format differs.
-    event_time = event.get("time") or event.get("datetime")
+    event_time = event.get("time")
     if not event_time:
         return None
 
-    # biquote returns country codes; map back to currency codes.
-    country = (event.get("country") or "").upper()
-    currency_map = {
-        "US": "USD", "EU": "EUR", "GB": "GBP", "JP": "JPY",
-        "AU": "AUD", "CH": "CHF", "CA": "CAD", "NZ": "NZD",
-    }
-    currency = currency_map.get(country, country)
-
+    # biquote returns `currency` directly (ISO 4217 code).
+    currency = (event.get("currency") or "").upper()
     if currency not in FINNHUB_HIGH_IMPACT_CURRENCIES:
         return None
 
     return {
-        "event_name": event.get("event") or event.get("name", "unknown"),
+        "event_name": event.get("name", "unknown"),
         "currency": currency,
-        "impact": (event.get("importance") or "high").lower(),
+        "impact": (event.get("importance") or "").lower() or None,
         "event_time": event_time,
         "forecast": str(event["forecast"]) if event.get("forecast") is not None else None,
         "previous": str(event["previous"]) if event.get("previous") is not None else None,
