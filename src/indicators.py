@@ -5,8 +5,7 @@
 # and writes a per-bar snapshot history back to Redis.
 #
 # BATCH MODE: produces one indicator snapshot per bar, aligned
-# with the bars array. Downstream stages (conditions, class
-# engine, signal engine) can then iterate bar-by-bar.
+# with the bars array via the `_bar_dt` field.
 #
 # Entry point: python -m src.indicators
 #
@@ -133,7 +132,7 @@ def macd_series(
     slow: int = 26,
     signal: int = 9,
 ) -> dict:
-    """MACD line, signal, histogram, cross flags — all aligned to closes."""
+    """MACD line, signal, histogram, cross flags — aligned to closes."""
     n = len(closes)
     macd_line: list[float | None] = [None] * n
     signal_line: list[float | None] = [None] * n
@@ -157,7 +156,6 @@ def macd_series(
         if ema_fast[i] is not None and ema_slow[i] is not None:
             macd_line[i] = ema_fast[i] - ema_slow[i]
 
-    # Compact valid MACD values, compute EMA on that, remap back
     macd_start = slow - 1
     macd_valid = macd_line[macd_start:]
     sig_valid = ema(macd_valid, signal)
@@ -210,7 +208,6 @@ def bollinger_series(
             lower[i] = mid[i] - mult * sd[i]
             width[i] = (upper[i] - lower[i]) / mid[i]
 
-    # Squeeze: current width in bottom 25% of the last `period` valid widths
     for i in range(n):
         if width[i] is None:
             continue
@@ -249,7 +246,6 @@ def atr_series(
         prev_c = bars[i - 1]["close"]
         trs[i] = max(h - l, abs(h - prev_c), abs(l - prev_c))
 
-    # Seed at index period
     atr[period] = sum(trs[1 : period + 1]) / period
 
     for i in range(period + 1, n):
@@ -310,8 +306,8 @@ def build_snapshots(bars: list[dict]) -> list[dict]:
     bar. Bars before MIN_BARS_FOR_SNAPSHOT are skipped (indicators
     aren't meaningful yet).
 
-    Each snapshot matches the shape conditions.py expects:
-      sma20, sma50, ema9, ema21, rsi14, macd, bollinger, atr14, volume
+    Each snapshot carries `_bar_dt` (the bar's datetime) so
+    downstream stages can match snapshots to bars directly.
     """
     n = len(bars)
     if n < MIN_BARS_FOR_SNAPSHOT:
@@ -338,6 +334,7 @@ def build_snapshots(bars: list[dict]) -> list[dict]:
         e21, e21p = ema21_s[i], ema21_s[i - 1] if i >= 1 else None
 
         snap = {
+            "_bar_dt": bars[i].get("datetime"),
             "sma20": {
                 "value":   _safe(s20),
                 "prev":    _safe(s20p),
