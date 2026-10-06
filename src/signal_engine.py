@@ -4,26 +4,19 @@
 # Turns a class firing into signals, and opens paper experiments
 # in both directions (long + short) simultaneously.
 #
-# Entry point: python -m src.signal_engine
+# BATCH MODE: iterates through the per-bar conditions history
+# produced by conditions.py. For each unprocessed bar:
+#   1. Compute the bar's fingerprint
+#   2. Look up the matching class
+#   3. Snapshot variations
+#   4. For each direction (long, short):
+#        - find or create signal
+#        - open experiment with entry_at = the bar's datetime
 #
 # Signal codes are globally unique across the whole table:
 #   Cl-{SYMBOL}-{CLASS}-Si-{NN}-{L|S}
-# e.g. Cl-EURUSD-B-Si-01-L  (first long signal for EUR/USD Class B)
-#      Cl-EURUSD-B-Si-01-S  (its short counterpart)
-#      Cl-USDCAD-C-Si-17-L  (seventeenth long signal for USD/CAD Class C)
 #
-# NN counts per (symbol, class, direction). Long and short each
-# have their own sequence.
-#
-# Flow, per (symbol, timeframe):
-#   1. Skip if the last bar was already processed
-#   2. Load conditions + fingerprint from Redis
-#   3. Find the class the class_engine matched
-#   4. Snapshot the variations (indicators + calendar)
-#   5. For each direction (long, short):
-#         - find or create a signal
-#         - open an experiment
-#   6. Mark the bar processed
+# Entry point: python -m src.signal_engine
 
 import logging
 import sys
@@ -32,7 +25,7 @@ from datetime import datetime, timezone, timedelta
 from . import config
 from . import supabase_client as sb
 from . import redis_client as rds
-from .class_engine import find_matching_class, build_variation_snapshot
+from .class_engine import build_fingerprint, build_class_index
 
 # ------------------------------------------------------------
 # Logging
@@ -43,6 +36,12 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 log = logging.getLogger("signal_engine")
+
+
+# ------------------------------------------------------------
+# Constants
+# ------------------------------------------------------------
+VARIATION_PREFIXES = ("ind.", "cal.", "news.")
 
 
 # ------------------------------------------------------------
@@ -58,16 +57,51 @@ def direction_suffix(direction: str) -> str:
     return "L" if direction == "long" else "S"
 
 
-# ------------------------------------------------------------
-# Per-bar processing guard
-# ------------------------------------------------------------
+def _parse_bar_dt(value: str) -> datetime | None:
+    if not value:
+        return None
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(str(value).strip(), fmt).replace(
+                tzinfo=timezone.utc
+            )
+        except ValueError:
+            continue
+    return None
+
+
+# ============================================================
+# VARIATION SNAPSHOT
+# ============================================================
+def build_variation_snapshot(conditions: dict) -> dict:
+    """Snapshot which variation elements fired on this bar."""
+    return {
+        k: True
+        for k, v in conditions.items()
+        if v is True and not k.startswith("_") and k.startswith(VARIATION_PREFIXES)
+    }
+
+
+def normalise_variations(v: dict | None) -> dict:
+    if not v:
+        return {}
+    return {k: True for k, val in sorted(v.items()) if val is True}
+
+
+def variations_key(variations: dict) -> str:
+    """Stable signature for cache lookups."""
+    return "|".join(sorted(k for k, v in variations.items() if v))
+
+
+# ============================================================
+# PER-BAR PROCESSING GUARD
+# ============================================================
 def _processed_bar_key(symbol: str, timeframe: str) -> str:
     return f"run:{symbol}:{timeframe}:last_processed_bar"
 
 
-def already_processed(symbol: str, timeframe: str, bar_dt: str) -> bool:
-    last = rds.get_json(_processed_bar_key(symbol, timeframe))
-    return last == bar_dt
+def get_last_processed(symbol: str, timeframe: str) -> str | None:
+    return rds.get_json(_processed_bar_key(symbol, timeframe))
 
 
 def mark_processed(symbol: str, timeframe: str, bar_dt: str) -> None:
@@ -77,7 +111,6 @@ def mark_processed(symbol: str, timeframe: str, bar_dt: str) -> None:
 # ============================================================
 # SIGNAL LOOKUP
 # ============================================================
-
 def fetch_signals_for_class(class_id: str) -> list[dict]:
     try:
         res = (
@@ -93,22 +126,16 @@ def fetch_signals_for_class(class_id: str) -> list[dict]:
         return []
 
 
-def normalise_variations(v: dict | None) -> dict:
-    if not v:
-        return {}
-    return {k: True for k, val in sorted(v.items()) if val is True}
-
-
 def find_matching_signal(
     existing_signals: list[dict],
     direction: str,
     variations: dict,
 ) -> dict | None:
-    target = normalise_variations(variations)
+    target = variations_key(variations)
     for s in existing_signals:
         if s.get("direction") != direction:
             continue
-        if normalise_variations(s.get("variations") or {}) == target:
+        if variations_key(normalise_variations(s.get("variations") or {})) == target:
             return s
     return None
 
@@ -119,11 +146,6 @@ def next_signal_number(
     direction: str,
     existing_signals: list[dict],
 ) -> int:
-    """
-    Return the next NN for this (symbol, class, direction).
-    Looks for signals with the prefix
-    Cl-{SYMBOL}-{CLASS}-Si- and the matching direction suffix.
-    """
     prefix = f"Cl-{sanitise_symbol(symbol)}-{class_code}-Si-"
     suffix = f"-{direction_suffix(direction)}"
     max_nn = 0
@@ -146,7 +168,6 @@ def next_signal_number(
 # ============================================================
 # SIGNAL CREATE / TOUCH
 # ============================================================
-
 def create_signal(
     class_row: dict,
     symbol: str,
@@ -170,8 +191,6 @@ def create_signal(
         "status":      "watching",
     }
 
-    log.info("Creating signal %s for Class %s", code, class_code)
-
     return sb.upsert_signal(payload)
 
 
@@ -188,6 +207,7 @@ def touch_signal(signal: dict) -> None:
             .eq("id", signal["id"])
             .execute()
         )
+        signal["recurrences"] = new_count
     except Exception as e:
         log.warning("touch_signal failed: %s", e)
 
@@ -195,7 +215,6 @@ def touch_signal(signal: dict) -> None:
 # ============================================================
 # OPEN EXPERIMENT
 # ============================================================
-
 def open_experiment(
     signal: dict,
     class_row: dict,
@@ -203,22 +222,25 @@ def open_experiment(
     direction: str,
     forward_window: int,
     duration_minutes: int,
+    entry_at: datetime,
 ) -> dict | None:
+    """
+    Open a paper experiment with entry_at = the bar's datetime.
+    For live cycles this is "now"; for backfill it is the bar's
+    historical timestamp.
+    """
     ctx = conditions.get("_context") or {}
     entry_price = ctx.get("close")
     symbol = ctx.get("symbol")
     timeframe = ctx.get("timeframe")
 
     if entry_price is None or not symbol or not timeframe:
-        log.warning("Cannot open experiment — missing context")
         return None
 
     if duration_minutes <= 0:
-        log.warning("Cannot open experiment — invalid duration for %s", timeframe)
         return None
 
     duration = timedelta(minutes=duration_minutes * forward_window)
-    now = datetime.now(timezone.utc)
 
     payload = {
         "signal_id":      signal["id"],
@@ -227,9 +249,9 @@ def open_experiment(
         "timeframe":      timeframe,
         "direction":      direction,
         "entry_price":    float(entry_price),
-        "entry_at":       now.isoformat(),
+        "entry_at":       entry_at.isoformat(),
         "forward_window": forward_window,
-        "expires_at":     (now + duration).isoformat(),
+        "expires_at":     (entry_at + duration).isoformat(),
         "favorable_pips": 0,
         "adverse_pips":   0,
         "status":         "open",
@@ -241,9 +263,8 @@ def open_experiment(
 # ============================================================
 # MAIN PIPELINE
 # ============================================================
-
 def run() -> int:
-    log.info("=== signal_engine starting ===")
+    log.info("=== signal_engine starting (batch mode) ===")
 
     if not sb.is_pipeline_running():
         log.info("Pipeline is stopped. Exiting.")
@@ -259,7 +280,8 @@ def run() -> int:
         log.info("No active sessions. Exiting.")
         return 0
 
-    processed = 0
+    total_processed = 0
+    total_skipped = 0
 
     for s in sessions:
         symbol = s.get("symbol")
@@ -270,76 +292,115 @@ def run() -> int:
         for tf in tf_codes:
             tf_meta = timeframes.get(tf)
             if not tf_meta:
-                log.debug("Unknown timeframe '%s' — skipping", tf)
                 continue
             duration_minutes = tf_meta["duration_minutes"]
 
-            conditions = rds.load_conditions(symbol, tf)
-            if not conditions or not conditions.get("_context"):
+            history = rds.load_conditions(symbol, tf)
+            if not history:
                 continue
 
-            bars = rds.load_bars(symbol, tf)
-            if not bars:
-                continue
-            last_bar_dt = bars[-1].get("datetime")
-            if not last_bar_dt:
-                continue
-
-            if already_processed(symbol, tf, last_bar_dt):
-                log.debug("Bar already processed for %s %s — skipping", symbol, tf)
+            # Normalise into a list (backward compatible)
+            if isinstance(history, dict):
+                history = [history]
+            if not isinstance(history, list):
                 continue
 
-            fp = rds.get_json(f"run:{symbol}:{tf}:fingerprint")
-            fingerprint = (fp or {}).get("fingerprint")
-            if not fingerprint:
-                log.debug("No fingerprint for %s %s — skipping", symbol, tf)
+            # Build the class index once per (symbol, tf)
+            class_index = build_class_index(symbol, tf, version=1)
+            if not class_index["by_fp"]:
+                log.debug("No classes indexed for %s %s — skipping", symbol, tf)
                 continue
 
-            class_row = find_matching_class(symbol, tf, fingerprint)
-            if not class_row:
-                log.warning("No class matched for %s %s — skipping", symbol, tf)
-                continue
-
-            variations = build_variation_snapshot(conditions)
-
-            existing_signals = fetch_signals_for_class(class_row["id"])
+            last_processed = get_last_processed(symbol, tf)
             forward_window = config.FORWARD_WINDOW
 
-            for direction in ("long", "short"):
-                signal = find_matching_signal(existing_signals, direction, variations)
+            # Signal cache: class_id → list of signals
+            signal_cache: dict[str, list[dict]] = {}
 
-                if signal:
-                    touch_signal(signal)
-                    log.info("  ✔ %s %s → existing signal %s (%s)",
-                             symbol, tf, signal["signal_code"], direction)
-                else:
-                    signal = create_signal(
-                        class_row, symbol, direction, variations, existing_signals,
+            processed_this = 0
+            skipped_this = 0
+
+            for entry in history:
+                bar_dt_str = entry.get("_bar_dt")
+                if not bar_dt_str:
+                    skipped_this += 1
+                    continue
+
+                if last_processed and bar_dt_str <= last_processed:
+                    skipped_this += 1
+                    continue
+
+                entry_dt = _parse_bar_dt(bar_dt_str)
+                if entry_dt is None:
+                    skipped_this += 1
+                    continue
+
+                fingerprint = build_fingerprint(entry)
+                if not fingerprint:
+                    mark_processed(symbol, tf, bar_dt_str)
+                    skipped_this += 1
+                    continue
+
+                class_row = class_index["by_fp"].get(fingerprint)
+                if not class_row:
+                    log.debug("No class for %s %s @ %s", symbol, tf, bar_dt_str)
+                    mark_processed(symbol, tf, bar_dt_str)
+                    skipped_this += 1
+                    continue
+
+                class_id = class_row["id"]
+                if class_id not in signal_cache:
+                    signal_cache[class_id] = fetch_signals_for_class(class_id)
+
+                variations = build_variation_snapshot(entry)
+
+                for direction in ("long", "short"):
+                    signal = find_matching_signal(
+                        signal_cache[class_id], direction, variations,
                     )
+
                     if signal:
-                        log.info("  ✔ %s %s → new signal %s (%s)",
-                                 symbol, tf, signal["signal_code"], direction)
+                        touch_signal(signal)
                     else:
-                        log.warning("  ✘ %s %s → could not create %s signal",
-                                    symbol, tf, direction)
+                        signal = create_signal(
+                            class_row, symbol, direction,
+                            variations, signal_cache[class_id],
+                        )
+                        if signal:
+                            signal_cache[class_id].append(signal)
+
+                    if not signal:
+                        log.warning(
+                            "  ✘ %s %s @ %s → could not create %s signal",
+                            symbol, tf, bar_dt_str, direction,
+                        )
                         continue
 
-                exp = open_experiment(
-                    signal, class_row, conditions, direction,
-                    forward_window, duration_minutes,
+                    exp = open_experiment(
+                        signal, class_row, entry, direction,
+                        forward_window, duration_minutes, entry_dt,
+                    )
+                    if not exp:
+                        log.warning(
+                            "      could not open experiment for %s",
+                            signal.get("signal_code"),
+                        )
+
+                mark_processed(symbol, tf, bar_dt_str)
+                processed_this += 1
+
+            if processed_this or skipped_this:
+                log.info(
+                    "  %s %s: %d bars processed, %d skipped",
+                    symbol, tf, processed_this, skipped_this,
                 )
-                if exp:
-                    log.info("      opened experiment %s (expires in %d bars of %s)",
-                             exp["id"], forward_window, tf)
-                else:
-                    log.warning("      could not open experiment for %s",
-                                signal["signal_code"])
 
-            mark_processed(symbol, tf, last_bar_dt)
-            processed += 1
+            total_processed += processed_this
+            total_skipped += skipped_this
 
-    log.info("=== signal_engine finished: %d pairs processed ===", processed)
-    return processed
+    log.info("=== signal_engine finished: %d processed, %d skipped ===",
+             total_processed, total_skipped)
+    return total_processed
 
 
 # ------------------------------------------------------------
