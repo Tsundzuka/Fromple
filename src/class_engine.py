@@ -1,26 +1,23 @@
 # ============================================================
 # src/class_engine.py
 # ============================================================
-# Maps a condition dictionary (from Redis) to a registered
-# class. If no matching class exists, one is created.
+# Maps per-bar condition dictionaries to registered classes.
+#
+# BATCH MODE: iterates through every unprocessed bar in the
+# conditions history produced by conditions.py. The history is
+# a list of dicts — one per bar, ordered oldest → newest — with
+# a `_bar_dt` field identifying the bar.
+#
+# Falls back gracefully: if the history is a single dict (legacy
+# behavior), it processes just that one bar. So this file works
+# with the current conditions.py AND with the batch version.
 #
 # Entry point: python -m src.class_engine
 #
-# Per-bar guard: occurrences increment once per new bar, not
-# once per pipeline cycle. A cycle runs every 5 minutes; bars
-# arrive every 5 minutes (M5) or slower. Without the guard,
-# a single H1 bar would increment the class 12 times.
-#
-# Defining elements (class identity):
-#   regime.*     — uptrend / downtrend / consolidating
-#   state.*      — support, resistance, range position, volume,
-#                  volatility, wick behaviour
-#   cot.*        — net long/short, weekly change, extremes
-#   sentiment.*  — news events, non-calendar sentiment
-#
-# Variation elements (do NOT define the class):
-#   ind.*        — indicator confirmations
-#   cal.*        — economic calendar proximity
+# Class identity (defining elements):
+#   regime.*, state.*, cot.*, sentiment.*
+# Variation elements (not part of the identity):
+#   ind.*, cal.*, news.*
 #
 # Class codes are assigned per (symbol, timeframe, version):
 # A, B, C … Z, AA, AB … and are immutable once assigned.
@@ -54,15 +51,12 @@ VARIATION_PREFIXES = ("ind.", "cal.", "news.")
 # ============================================================
 # PER-BAR GUARD
 # ============================================================
-# Distinct key from signal_engine's guard so both stages can
-# process the same bar without blocking each other.
-
 def _class_bar_key(symbol: str, timeframe: str) -> str:
     return f"run:{symbol}:{timeframe}:last_class_bar"
 
 
-def class_bar_already_processed(symbol: str, timeframe: str, bar_dt: str) -> bool:
-    return rds.get_json(_class_bar_key(symbol, timeframe)) == bar_dt
+def get_last_class_bar(symbol: str, timeframe: str) -> str | None:
+    return rds.get_json(_class_bar_key(symbol, timeframe))
 
 
 def mark_class_bar_processed(symbol: str, timeframe: str, bar_dt: str) -> None:
@@ -72,7 +66,6 @@ def mark_class_bar_processed(symbol: str, timeframe: str, bar_dt: str) -> None:
 # ============================================================
 # FINGERPRINT
 # ============================================================
-
 def build_fingerprint(conditions: dict) -> str:
     """
     Build a stable fingerprint from the defining elements that
@@ -85,15 +78,6 @@ def build_fingerprint(conditions: dict) -> str:
         and k.startswith(DEFINING_PREFIXES)
     )
     return "|".join(active_defining)
-
-
-def build_variation_snapshot(conditions: dict) -> dict:
-    """Snapshot which variation elements fired this occurrence."""
-    return {
-        k: bool(v)
-        for k, v in conditions.items()
-        if not k.startswith("_") and k.startswith(VARIATION_PREFIXES)
-    }
 
 
 def split_conditions(conditions: dict) -> dict:
@@ -133,7 +117,6 @@ def split_conditions(conditions: dict) -> dict:
 # ============================================================
 # CLASS CODE ALLOCATION
 # ============================================================
-
 def to_class_code(n: int) -> str:
     n += 1
     result = ""
@@ -156,7 +139,6 @@ def next_available_code(existing_codes: set[str]) -> str:
 # ============================================================
 # LOOKUP AND MATCHING
 # ============================================================
-
 def fetch_existing_classes(symbol: str, timeframe: str, version: int = 1) -> list[dict]:
     try:
         res = (
@@ -196,23 +178,34 @@ def reconstruct_fingerprint(row: dict) -> str:
     return "|".join(sorted(parts))
 
 
-def find_matching_class(
-    symbol: str,
-    timeframe: str,
-    fingerprint: str,
-    version: int = 1,
-) -> dict | None:
-    classes = fetch_existing_classes(symbol, timeframe, version)
-    for row in classes:
-        if reconstruct_fingerprint(row) == fingerprint:
-            return row
-    return None
+def build_class_index(symbol: str, timeframe: str, version: int = 1) -> dict:
+    """
+    Load every class for (symbol, timeframe) once and index it by
+    fingerprint. Avoids re-querying Supabase on every bar during
+    batch processing.
+
+    Returns:
+      {
+        "by_fp":    {fingerprint: class_row},
+        "codes":    {class_code, ...},
+        "count":    n,
+      }
+    """
+    rows = fetch_existing_classes(symbol, timeframe, version)
+    by_fp: dict[str, dict] = {}
+    codes: set[str] = set()
+    for row in rows:
+        fp = reconstruct_fingerprint(row)
+        if fp:
+            by_fp[fp] = row
+        if row.get("class_code"):
+            codes.add(row["class_code"])
+    return {"by_fp": by_fp, "codes": codes, "count": len(rows)}
 
 
 # ============================================================
 # CREATE / TOUCH
 # ============================================================
-
 def create_new_class(
     symbol: str,
     timeframe: str,
@@ -236,18 +229,48 @@ def create_new_class(
         "status":             "watching",
     }
 
-    log.info("Creating new class %s for %s %s: %s",
+    log.info("  Creating new class %s for %s %s: %s",
              code, symbol, timeframe, split["regime"])
 
     return sb.create_class(payload)
 
 
 # ============================================================
+# CONDITIONS HISTORY
+# ============================================================
+def load_conditions_history(symbol: str, timeframe: str) -> list[dict]:
+    """
+    Load the per-bar conditions history for (symbol, timeframe).
+
+    Accepts three shapes for forward-compatibility:
+      - list of dicts (batch mode — preferred)
+      - single dict with `_bar_dt` (still processable)
+      - single dict without `_bar_dt` (legacy — treated as latest bar)
+
+    Returns a list of conditions dicts ordered oldest → newest.
+    """
+    key = f"run:{symbol}:{timeframe}:conditions"
+    raw = rds.get_json(key)
+
+    if raw is None:
+        return []
+
+    if isinstance(raw, list):
+        # Batch mode: list of dicts
+        return [c for c in raw if isinstance(c, dict)]
+
+    if isinstance(raw, dict):
+        # Single dict — wrap in a list
+        return [raw]
+
+    return []
+
+
+# ============================================================
 # MAIN PIPELINE
 # ============================================================
-
 def run() -> int:
-    log.info("=== class_engine starting ===")
+    log.info("=== class_engine starting (batch mode) ===")
 
     if not sb.is_pipeline_running():
         log.info("Pipeline is stopped. Exiting.")
@@ -258,8 +281,8 @@ def run() -> int:
         log.info("No active sessions. Exiting.")
         return 0
 
-    processed = 0
-    skipped = 0
+    total_processed = 0
+    total_skipped = 0
 
     for s in sessions:
         symbol = s.get("symbol")
@@ -268,69 +291,78 @@ def run() -> int:
             continue
 
         for tf in timeframes:
-            conditions = rds.load_conditions(symbol, tf)
-            if not conditions or not conditions.get("_context"):
-                log.debug("No conditions for %s %s — skipping", symbol, tf)
-                continue
-
-            fingerprint = build_fingerprint(conditions)
-            if not fingerprint:
-                log.debug("Empty fingerprint for %s %s — skipping", symbol, tf)
-                continue
-
-            # Always stash the fingerprint — the signal engine
-            # reads it every cycle regardless of bar freshness.
-            rds.set_json(
-                f"run:{symbol}:{tf}:fingerprint",
-                {
-                    "fingerprint": fingerprint,
-                    "generated_at": datetime.now(timezone.utc).isoformat(),
-                },
-            )
-
-            # --- Per-bar guard ---
-            bars = rds.load_bars(symbol, tf)
-            if not bars:
-                log.debug("No bars for %s %s — skipping", symbol, tf)
-                continue
-            last_bar_dt = bars[-1].get("datetime")
-            if not last_bar_dt:
-                continue
-
-            if class_bar_already_processed(symbol, tf, last_bar_dt):
-                log.debug("Bar already processed for %s %s — skipping increment",
+            history = load_conditions_history(symbol, tf)
+            if not history:
+                log.debug("No conditions history for %s %s — skipping",
                           symbol, tf)
-                skipped += 1
                 continue
 
-            # --- Actual class matching / incrementing ---
-            match = find_matching_class(symbol, tf, fingerprint, version=1)
+            # Build the class index once per (symbol, tf).
+            # Cheap for the first cycle; reused for every bar.
+            index = build_class_index(symbol, tf, version=1)
+            log.info("  %s %s: %d bars in history, %d classes indexed",
+                     symbol, tf, len(history), index["count"])
 
-            if match:
-                sb.touch_class(match["id"])
-                log.info("  ✔ %s %s → Class %s (matched, occurrences → %d)",
-                         symbol, tf, match["class_code"],
-                         (match.get("occurrences") or 0) + 1)
-            else:
-                existing = fetch_existing_classes(symbol, tf, version=1)
-                existing_codes = {row["class_code"] for row in existing}
-                created = create_new_class(
-                    symbol, tf, conditions, existing_codes, version=1,
-                )
-                if created:
-                    log.info("  ✔ %s %s → Class %s (new, occurrences = 1)",
-                             symbol, tf, created["class_code"])
-                else:
-                    log.warning("  ✘ %s %s → failed to create class",
-                                symbol, tf)
+            last_processed = get_last_class_bar(symbol, tf)
+            processed_this_tf = 0
+            skipped_this_tf = 0
+
+            for entry in history:
+                bar_dt = entry.get("_bar_dt")
+                if not bar_dt:
+                    # Legacy single-dict shape with no timestamp —
+                    # treat as the latest bar and process it once.
+                    bar_dt = entry.get("_generated_at") or "latest"
+
+                # Skip already-processed bars
+                if last_processed and bar_dt <= last_processed:
+                    skipped_this_tf += 1
                     continue
 
-            mark_class_bar_processed(symbol, tf, last_bar_dt)
-            processed += 1
+                fingerprint = build_fingerprint(entry)
+                if not fingerprint:
+                    # Empty fingerprint (all regime/state/cot/sentiment
+                    # flags false) — advance the guard but do nothing.
+                    mark_class_bar_processed(symbol, tf, bar_dt)
+                    skipped_this_tf += 1
+                    continue
 
-    log.info("=== class_engine finished: %d processed, %d skipped (same bar) ===",
-             processed, skipped)
-    return processed
+                match = index["by_fp"].get(fingerprint)
+
+                if match:
+                    sb.touch_class(match["id"])
+                    match["occurrences"] = (match.get("occurrences") or 0) + 1
+                    processed_this_tf += 1
+                else:
+                    created = create_new_class(
+                        symbol, tf, entry, index["codes"], version=1,
+                    )
+                    if created:
+                        # Add to index so a subsequent identical bar
+                        # doesn't create a duplicate class.
+                        new_fp = reconstruct_fingerprint(created)
+                        if new_fp:
+                            index["by_fp"][new_fp] = created
+                        if created.get("class_code"):
+                            index["codes"].add(created["class_code"])
+                        index["count"] += 1
+                        processed_this_tf += 1
+                    else:
+                        log.warning("  ✘ %s %s: failed to create class",
+                                    symbol, tf)
+                        continue
+
+                mark_class_bar_processed(symbol, tf, bar_dt)
+
+            log.info("  ✔ %s %s: processed %d, skipped %d",
+                     symbol, tf, processed_this_tf, skipped_this_tf)
+
+            total_processed += processed_this_tf
+            total_skipped += skipped_this_tf
+
+    log.info("=== class_engine finished: %d processed, %d skipped ===",
+             total_processed, total_skipped)
+    return total_processed
 
 
 # ------------------------------------------------------------
