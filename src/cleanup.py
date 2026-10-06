@@ -2,17 +2,15 @@
 # src/cleanup.py
 # ============================================================
 # Deletes regeneratable Redis scratch keys after each pipeline cycle,
-# and prunes M5 bars older than the retention window.
+# and trims M5 bars to a fixed count per symbol.
 #
 # Redis is a scratchpad, not storage. The registry lives in Supabase.
-# This script removes derived timeframe bars, computed indicators,
-# evaluated conditions, and class fingerprints — all regenerated on
-# the next cycle — and trims the M5 list to a rolling 14-day window.
 #
 # PRESERVED across cycles (must survive):
 #   run:{symbol}:M5:bars                 — source of truth for aggregation
-#                                          (pruned to last 14 days)
+#                                          (trimmed to last M5_MAX_BARS)
 #   run:{symbol}:W1:*                    — weekly, updates rarely
+#   run:{symbol}:D1:*                    — daily, updates once per day
 #   run:{symbol}:MN1:*                   — monthly, updates rarely
 #   run:{symbol}:{tf}:last_bar_dt        — fetch guard
 #   run:{symbol}:{tf}:last_class_bar     — class engine guard
@@ -28,7 +26,6 @@
 
 import logging
 import sys
-from datetime import datetime, timedelta, timezone
 
 from . import redis_client as rds
 from . import supabase_client as sb
@@ -49,18 +46,14 @@ log = logging.getLogger("cleanup")
 # ------------------------------------------------------------
 BASE_TIMEFRAME = "M5"
 
-# How many days of M5 bars to retain in Redis. Anything older is
-# pruned on every cleanup cycle. 14 days ≈ 4,032 bars at 24h/day,
-# or ~2,880 bars accounting for forex weekend closures.
-M5_RETENTION_DAYS = 14
+# Number of M5 bars to retain per symbol. Matches Twelve Data's
+# per-request maximum, so a single refetch could reseed this window.
+# 5,000 M5 bars ≈ 17 calendar days of 24h forex trading.
+M5_MAX_BARS = 5000
 
 # Timeframes whose full computed state is preserved across cycles.
 # Their bars, indicators, conditions, and fingerprints are not deleted.
-#
-# M5  — source of truth for aggregation into every higher timeframe.
-# W1  — updates once per week; regenerating every 5 min wastes CPU.
-# MN1 — updates once per month; same reasoning as W1.
-PRESERVED_TIMEFRAMES = {"M5", "W1", "MN1"}
+PRESERVED_TIMEFRAMES = {"M5", "W1", "D1", "MN1"}
 
 # Suffixes deleted each cycle, for timeframes NOT in PRESERVED_TIMEFRAMES.
 REGENERATABLE_SUFFIXES = (
@@ -74,42 +67,19 @@ REGENERATABLE_SUFFIXES = (
 # ============================================================
 # HELPERS
 # ============================================================
-def _parse_bar_dt(value: str) -> datetime | None:
-    """Parse a bar datetime string like '2026-10-06 14:30:00' (UTC)."""
-    if not value:
-        return None
-    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%d"):
-        try:
-            return datetime.strptime(str(value).strip(), fmt).replace(tzinfo=timezone.utc)
-        except ValueError:
-            continue
-    return None
-
-
-def prune_m5(symbol: str) -> int:
+def trim_m5(symbol: str) -> int:
     """
-    Read M5 bars for one symbol, drop any older than the retention
-    window, and write the trimmed list back. Returns the number of
-    bars removed.
+    Trim the M5 bars list for one symbol to the newest M5_MAX_BARS
+    entries. Returns the number of bars removed.
     """
     key = rds.bars_key(symbol, BASE_TIMEFRAME)
     bars = rds.get_json(key)
-    if not isinstance(bars, list) or not bars:
+    if not isinstance(bars, list) or len(bars) <= M5_MAX_BARS:
         return 0
 
-    cutoff = datetime.now(timezone.utc) - timedelta(days=M5_RETENTION_DAYS)
-
-    kept = []
-    for b in bars:
-        dt = _parse_bar_dt(b.get("datetime"))
-        if dt is None:
-            continue  # malformed — drop it
-        if dt >= cutoff:
-            kept.append(b)
-
-    removed = len(bars) - len(kept)
-    if removed > 0:
-        rds.set_json(key, kept)
+    trimmed = bars[-M5_MAX_BARS:]
+    removed = len(bars) - len(trimmed)
+    rds.set_json(key, trimmed)
     return removed
 
 
@@ -161,7 +131,7 @@ def cleanup_combo(symbol: str, timeframe: str) -> int:
 # ============================================================
 def run() -> int:
     log.info("=== cleanup starting ===")
-    log.info("M5 retention: %d days", M5_RETENTION_DAYS)
+    log.info("M5 retention: %d bars per symbol", M5_MAX_BARS)
     log.info("Preserved timeframes: %s", ", ".join(sorted(PRESERVED_TIMEFRAMES)))
 
     combos = active_combos()
@@ -169,17 +139,16 @@ def run() -> int:
         log.info("No active (symbol, timeframe) combinations — nothing to clean.")
         return 0
 
-    # Unique symbols across all combos
     symbols = sorted({sym for sym, _ in combos})
 
-    # 1. Prune M5 bars older than the retention window
-    total_pruned = 0
+    # 1. Trim M5 to the fixed bar count
+    total_trimmed = 0
     for symbol in symbols:
-        removed = prune_m5(symbol)
-        total_pruned += removed
+        removed = trim_m5(symbol)
+        total_trimmed += removed
         if removed > 0:
-            log.info("  %s M5: pruned %d bars older than %d days",
-                     symbol, removed, M5_RETENTION_DAYS)
+            log.info("  %s M5: trimmed %d bars (kept %d)",
+                     symbol, removed, M5_MAX_BARS)
 
     # 2. Delete scratch keys for non-preserved timeframes
     total_deleted = 0
@@ -195,11 +164,11 @@ def run() -> int:
             preserved_tfs.add(tf)
 
     log.info("=== cleanup finished ===")
-    log.info("M5 bars pruned: %d", total_pruned)
+    log.info("M5 bars trimmed: %d", total_trimmed)
     log.info("Keys deleted: %d across %d combos", total_deleted, len(combos))
     log.info("Cleaned timeframes: %s", ", ".join(sorted(cleaned_tfs)) or "(none)")
     log.info("Preserved timeframes: %s", ", ".join(sorted(preserved_tfs)) or "(none)")
-    return total_deleted + total_pruned
+    return total_deleted + total_trimmed
 
 
 # ------------------------------------------------------------
