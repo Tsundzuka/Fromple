@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Code Context Assistant</title>
+  <title>Dashboard — Fromple</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -14,45 +14,51 @@
 
   <div class="dashboard-wrapper">
 
-    <!-- SIDEBAR -->
+    <!-- ============ SIDEBAR ============ -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand">
-        <span class="brand-mark">CC</span>
-        <span class="brand-text">Code Context</span>
+        <img src="assets/icons/logo.png" alt="Fromple" class="brand-logo" />
+        <span class="brand-text">Fromple</span>
       </div>
 
       <nav class="sidebar-nav">
-        <a href="#" class="nav-item active" data-tab="paste">
+        <a href="dashboard.html" class="nav-item active">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-            <rect x="8" y="2" width="8" height="4" rx="1" />
-            <path d="M9 12h6M9 16h6M9 8h2" />
+            <rect x="3" y="3" width="7" height="9" rx="1.5"/>
+            <rect x="14" y="3" width="7" height="5" rx="1.5"/>
+            <rect x="14" y="12" width="7" height="9" rx="1.5"/>
+            <rect x="3" y="16" width="7" height="5" rx="1.5"/>
           </svg>
-          <span>Paste Code</span>
+          <span>Dashboard</span>
         </a>
-        <a href="#" class="nav-item" data-tab="generate">
+
+        <a href="documents.html" class="nav-item">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z" />
+            <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+            <path d="M14 3v6h6"/>
           </svg>
-          <span>Generate</span>
+          <span>Documents</span>
         </a>
-        <a href="#" class="nav-item" data-tab="library">
+
+        <a href="links.html" class="nav-item">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" />
+            <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/>
+            <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>
           </svg>
-          <span>Library</span>
+          <span>Links</span>
         </a>
-        <a href="#" class="nav-item" data-tab="history">
+
+        <a href="analytics.html" class="nav-item">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="9" />
-            <path d="M12 7v5l3 2" />
+            <path d="M4 20V10M10 20V4M16 20v-7M22 20V7"/>
           </svg>
-          <span>History</span>
+          <span>Analytics</span>
         </a>
-        <a href="#" class="nav-item" data-tab="config">
+
+        <a href="settings.html" class="nav-item">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3" />
-            <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
           </svg>
           <span>Settings</span>
         </a>
@@ -61,360 +67,167 @@
       <div class="sidebar-footer">
         <div class="sidebar-usage-summary">
           <div class="sidebar-usage-header">
-            <span class="sidebar-usage-label">Library</span>
-            <span class="sidebar-usage-value" id="snippetCount">0</span>
+            <span class="sidebar-usage-label">Documents</span>
+            <span class="sidebar-usage-value" id="sidebarDocCount">0 / 3</span>
           </div>
           <div class="sidebar-usage-bar">
-            <div class="sidebar-usage-fill" id="libraryFill" style="width: 0%;"></div>
+            <div class="sidebar-usage-fill" id="sidebarDocFill" style="width: 0%;"></div>
           </div>
           <div class="sidebar-usage-details">
-            <span id="chunkCount">0 chunks</span>
-            <span id="langCount">0 langs</span>
+            <span id="sidebarPlanLabel">Sandbox</span>
+            <span>Free forever</span>
           </div>
         </div>
+
         <div class="user-info">
           <div class="user-avatar" id="userAvatar">U</div>
           <div class="user-details">
-            <span class="user-name" id="userName">guest</span>
-            <span class="user-plan">Local instance</span>
+            <span class="user-name" id="userName">Loading…</span>
+            <span class="user-plan" id="userPlan">Sandbox</span>
           </div>
           <button class="logout-btn" id="logoutBtn" title="Log out">⏻</button>
         </div>
       </div>
     </aside>
 
-    <!-- MAIN -->
+    <!-- ============ MAIN ============ -->
     <main class="main-content">
 
-      <!-- TAB 1: PASTE -->
-      <section class="tab-content active" id="tab-paste">
-        <header class="dashboard-header">
-          <div>
-            <h1>Paste Code</h1>
-            <p class="page-subtitle">Add a snippet. It gets chunked, embedded, and stored in your library.</p>
+      <header class="dashboard-header">
+        <div>
+          <h1>Dashboard</h1>
+          <p class="page-subtitle">Your documents, links, and live viewer activity.</p>
+        </div>
+        <div class="dashboard-header-actions">
+          <a href="documents.html" class="btn-secondary">Upload document</a>
+          <a href="links.html" class="btn-primary">Create link</a>
+        </div>
+      </header>
+
+      <!-- KPI STRIP -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+              <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" stroke="#14B8A6" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M14 3v6h6" stroke="#14B8A6" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
           </div>
-          <div class="dashboard-header-actions">
-            <button class="btn-secondary" type="button" id="pasteClear">Clear</button>
-          </div>
-        </header>
-
-        <div class="card">
-          <div class="card-header"><h3>New snippet</h3></div>
-
-          <div class="form-row">
-            <div class="form-field">
-              <label class="form-label">Snippet name</label>
-              <input class="form-input" id="pasteTitle" placeholder="signup-form.html" />
-            </div>
-            <div class="form-field">
-              <label class="form-label">Language</label>
-              <select class="form-input" id="pasteLanguage">
-                <option value="html">HTML</option>
-                <option value="css">CSS</option>
-                <option value="js">JS</option>
-                <option value="sql">SQL</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label class="form-label">Tags</label>
-              <input class="form-input" id="pasteTags" placeholder="form, auth" />
-            </div>
-          </div>
-
-          <label class="form-label" style="margin-top:14px;">Code</label>
-          <textarea class="form-input code-input" id="pasteContent" rows="14"
-            placeholder="Paste HTML, CSS, JS, or SQL here…"></textarea>
-
-          <div class="form-actions">
-            <span class="form-status" id="pasteStatus"></span>
-            <button class="btn-primary" type="button" id="pasteSave">Save to Library</button>
+          <div class="stat-content">
+            <span class="stat-value" id="kpiDocuments">0</span>
+            <span class="stat-label">Documents</span>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <h3>Recent saves</h3>
-            <span class="card-meta" id="pasteRecentMeta">last 5</span>
+        <div class="stat-card">
+          <div class="stat-icon green">
+            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+              <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
-          <div class="table-wrap">
-            <table class="activity-table">
-              <thead>
-                <tr><th>Title</th><th>Language</th><th>Tags</th><th>Chunks</th><th>Saved</th></tr>
-              </thead>
-              <tbody id="pasteRecentBody">
-                <tr><td colspan="5" class="empty-row">No snippets yet.</td></tr>
-              </tbody>
-            </table>
+          <div class="stat-content">
+            <span class="stat-value" id="kpiLinks">0</span>
+            <span class="stat-label">Active links</span>
           </div>
         </div>
-      </section>
 
-      <!-- TAB 2: GENERATE -->
-      <section class="tab-content" id="tab-generate">
-        <header class="dashboard-header">
-          <div>
-            <h1>Generate</h1>
-            <p class="page-subtitle">Retrieve matching snippets and generate in your own style. Two passes: generate, then audit.</p>
+        <div class="stat-card">
+          <div class="stat-icon orange">
+            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="#F59E0B" stroke-width="2" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="3" stroke="#F59E0B" stroke-width="2"/>
+            </svg>
           </div>
-        </header>
-
-        <div class="card">
-          <div class="form-row">
-            <div class="form-field">
-              <label class="form-label">Task</label>
-              <select class="form-input" id="genTask">
-                <option value="schema">Schema</option>
-                <option value="code">Code (JS)</option>
-                <option value="css">CSS</option>
-                <option value="html">HTML</option>
-                <option value="lookup">Lookup</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label class="form-label">Language filter</label>
-              <select class="form-input" id="genLanguage">
-                <option value="">any</option>
-                <option value="html">html</option>
-                <option value="css">css</option>
-                <option value="js">js</option>
-                <option value="sql">sql</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label class="form-label">Tag filter</label>
-              <input class="form-input" id="genTags" placeholder="form (optional)" />
-            </div>
-            <div class="form-field form-field-sm">
-              <label class="form-label">Top K</label>
-              <input class="form-input" id="genTopK" type="number" min="1" max="20" value="5" />
-            </div>
-          </div>
-
-          <label class="form-label" style="margin-top:14px;">Request</label>
-          <textarea class="form-input code-input" id="genRequest" rows="3"
-            placeholder="e.g. generate a MySQL schema for the signup form"></textarea>
-
-          <div class="form-actions">
-            <span class="form-status" id="genStatus"></span>
-            <button class="btn-primary" type="button" id="genRun">Generate</button>
+          <div class="stat-content">
+            <span class="stat-value" id="kpiViews">0</span>
+            <span class="stat-label">Total views</span>
           </div>
         </div>
+
+        <div class="stat-card">
+          <div class="stat-icon purple">
+            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+              <circle cx="9" cy="8" r="3.5" stroke="#7C3AED" stroke-width="2"/>
+              <path d="M2 21c0-3.5 3.5-6 7-6s7 2.5 7 6" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
+              <path d="M16 3.5a3.5 3.5 0 0 1 0 7M22 21c0-3-2.5-5.5-6-5.5" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <span class="stat-value" id="kpiViewers">0</span>
+            <span class="stat-label">Unique viewers</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TWO-COLUMN: recent links + live activity -->
+      <div class="dashboard-grid">
 
         <div class="card">
           <div class="card-header">
-            <h3>Result</h3>
-            <div class="filter-tabs" id="genResultTabs">
-              <button class="filter-btn active" data-view="output" type="button">Output</button>
-              <button class="filter-btn" data-view="code" type="button">Code</button>
-              <button class="filter-btn" data-view="audit" type="button">Audit</button>
-            </div>
-          </div>
-
-          <div class="result-view active" id="view-output">
-            <pre class="output-box" id="genOutput">Output will appear here…</pre>
-          </div>
-
-          <div class="result-view" id="view-code">
-            <div class="code-blocks" id="genCode">
-              <div class="empty-row">No code blocks yet.</div>
-            </div>
-          </div>
-
-          <div class="result-view" id="view-audit">
-            <pre class="output-box" id="genAudit">Audit will appear here…</pre>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <h3>Retrieved sources</h3>
-            <span class="card-meta" id="genSourcesMeta">—</span>
-          </div>
-          <div class="signal-feed" id="genSources">
-            <div class="empty-row">Sources used in the last generation will appear here.</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 3: LIBRARY -->
-      <section class="tab-content" id="tab-library">
-        <header class="dashboard-header">
-          <div>
-            <h1>Library</h1>
-            <p class="page-subtitle">Everything you have stored. Filter, preview, delete.</p>
-          </div>
-          <div class="dashboard-header-actions">
-            <button class="btn-secondary" type="button" id="libraryRefresh">Refresh</button>
-          </div>
-        </header>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon blue">
-              <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" stroke="#14B8A6" stroke-width="2"/></svg>
-            </div>
-            <div class="stat-content">
-              <span class="stat-value" id="statSnippets">0</span>
-              <span class="stat-label">Snippets stored</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon green">
-              <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M4 6h16M4 12h16M4 18h10" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
-            <div class="stat-content">
-              <span class="stat-value" id="statChunks">0</span>
-              <span class="stat-label">Total chunks</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon orange">
-              <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><circle cx="12" cy="12" r="9" stroke="#F59E0B" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
-            <div class="stat-content">
-              <span class="stat-value" id="statLanguages">0</span>
-              <span class="stat-label">Languages</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon purple">
-              <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M12 5v14M5 12h14" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
-            <div class="stat-content">
-              <span class="stat-value" id="statLatest">—</span>
-              <span class="stat-label">Last saved</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <h3>All snippets</h3>
-            <div class="filter-tabs">
-              <button class="filter-btn active" data-filter="" type="button">All</button>
-              <button class="filter-btn" data-filter="html" type="button">HTML</button>
-              <button class="filter-btn" data-filter="css" type="button">CSS</button>
-              <button class="filter-btn" data-filter="js" type="button">JS</button>
-              <button class="filter-btn" data-filter="sql" type="button">SQL</button>
-            </div>
+            <h3>Recent links</h3>
+            <a href="links.html" class="card-link">View all →</a>
           </div>
           <div class="table-wrap">
             <table class="activity-table">
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Lang</th>
-                  <th>Tags</th>
-                  <th>Chunks</th>
-                  <th>Saved</th>
-                  <th></th>
+                  <th>Document</th>
+                  <th>Status</th>
+                  <th>Views</th>
+                  <th>Last viewed</th>
                 </tr>
               </thead>
-              <tbody id="libraryBody">
-                <tr><td colspan="6" class="empty-row">Loading…</td></tr>
+              <tbody id="recentLinksBody">
+                <tr><td colspan="4" class="empty-row">No links yet.</td></tr>
               </tbody>
             </table>
           </div>
         </div>
-
-        <div class="card">
-          <div class="card-header"><h3>Preview</h3></div>
-          <pre class="output-box" id="libraryPreview">Click a snippet row to preview its chunks.</pre>
-        </div>
-      </section>
-
-      <!-- TAB 4: HISTORY -->
-      <section class="tab-content" id="tab-history">
-        <header class="dashboard-header">
-          <div>
-            <h1>History</h1>
-            <p class="page-subtitle">Every generation call, with the request and model that produced it.</p>
-          </div>
-          <div class="dashboard-header-actions">
-            <button class="btn-secondary" type="button" id="historyRefresh">Refresh</button>
-          </div>
-        </header>
 
         <div class="card">
           <div class="card-header">
-            <h3>Recent generations</h3>
-            <span class="card-meta">last 50</span>
+            <h3>Live activity <span class="live-dot" aria-hidden="true"></span></h3>
+            <span class="card-meta">real-time</span>
           </div>
-          <div class="table-wrap">
-            <table class="activity-table">
-              <thead>
-                <tr>
-                  <th>Task</th>
-                  <th>Request</th>
-                  <th>Model</th>
-                  <th>Sources</th>
-                  <th>When</th>
-                </tr>
-              </thead>
-              <tbody id="historyBody">
-                <tr><td colspan="5" class="empty-row">Loading…</td></tr>
-              </tbody>
-            </table>
+          <div class="activity-feed" id="liveActivity">
+            <div class="empty-row">Waiting for viewer activity…</div>
           </div>
         </div>
-      </section>
 
-      <!-- TAB 5: CONFIG -->
-      <section class="tab-content" id="tab-config">
-        <header class="dashboard-header">
-          <div>
-            <h1>Settings</h1>
-            <p class="page-subtitle">Runtime configuration. Saved to the app_config table.</p>
-          </div>
-        </header>
+      </div>
 
-        <div class="settings-container">
-          <div class="card settings-card">
-            <h3 class="settings-title">Generation</h3>
-            <p class="settings-hint">Controls how many snippets are retrieved and how the LLM is prompted.</p>
-            <div class="settings-form">
-              <div class="settings-field">
-                <label class="settings-label">Top K (chunks retrieved)</label>
-                <input class="form-input" id="cfgTopK" type="number" min="1" max="20" />
-              </div>
-              <div class="settings-field">
-                <label class="settings-label">Chunk max lines</label>
-                <input class="form-input" id="cfgChunkLines" type="number" min="100" max="2000" />
-              </div>
-              <div class="settings-field">
-                <label class="settings-label">Generation model</label>
-                <input class="form-input mono" id="cfgGenModel" />
-              </div>
-              <div class="settings-field">
-                <label class="settings-label">Fallback model</label>
-                <input class="form-input mono" id="cfgFallbackModel" />
-              </div>
-              <div class="settings-field">
-                <label class="settings-label">Temperature · schema</label>
-                <input class="form-input" id="cfgTempSchema" type="number" step="0.05" min="0" max="1" />
-              </div>
-              <div class="settings-field">
-                <label class="settings-label">Temperature · code</label>
-                <input class="form-input" id="cfgTempCode" type="number" step="0.05" min="0" max="1" />
-              </div>
-              <div class="settings-field">
-                <label class="settings-label">Max tokens</label>
-                <input class="form-input" id="cfgMaxTokens" type="number" min="256" max="8192" />
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <span class="form-status" id="cfgStatus"></span>
-              <button class="btn-primary" type="button" id="cfgSave">Save settings</button>
-            </div>
-          </div>
+      <!-- TOP DOCUMENTS -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Top documents</h3>
+          <span class="card-meta">by engagement</span>
         </div>
-      </section>
+        <div class="table-wrap">
+          <table class="activity-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Pages</th>
+                <th>Views</th>
+                <th>Avg time</th>
+                <th>Completion</th>
+              </tr>
+            </thead>
+            <tbody id="topDocumentsBody">
+              <tr><td colspan="5" class="empty-row">No documents yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
     </main>
   </div>
 
-  <script src="js/app.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/footer.js"></script>
+  <script type="module" src="js/dashboard.js"></script>
 </body>
 </html>
