@@ -80,135 +80,93 @@
                                     </div>
                                     <div class="chart-price">
                                         <span class="price">1,842</span>
-                                        <span class="change up">+12% this week</span>
+                                        <span class="change up">total views</span>
                                     </div>
                                 </div>
 
-                                <!-- Per-page engagement chart -->
-                                <div class="candle-chart">
+                                <!-- Per-page engagement heatmap -->
+                                <div class="page-chart">
                                     <svg viewBox="0 0 400 224" aria-hidden="true">
-                                        <g stroke="#ededf0" stroke-width="1">
-                                            <line x1="0" y1="50" x2="400" y2="50"/>
-                                            <line x1="0" y1="90" x2="400" y2="90"/>
-                                            <line x1="0" y1="130" x2="400" y2="130"/>
-                                            <line x1="0" y1="170" x2="400" y2="170"/>
-                                            <line x1="0" y1="176" x2="400" y2="176"/>
+
+                                        <!-- Row 1 — pages 1–8 -->
+                                        <rect x="12"  y="20" width="40" height="56" rx="3" fill="#f1f1f3"/>
+                                        <rect x="60"  y="20" width="40" height="56" rx="3" fill="#a7f3d0"/>
+                                        <rect x="108" y="20" width="40" height="56" rx="3" fill="#5eead4"/>
+                                        <rect x="156" y="20" width="40" height="56" rx="3" fill="#e4e4e7"/>
+                                        <rect x="204" y="20" width="40" height="56" rx="3" fill="#14b8a6"/>
+                                        <rect x="252" y="20" width="40" height="56" rx="3" fill="#5eead4"/>
+                                        <rect x="300" y="20" width="40" height="56" rx="3" fill="#f1f1f3"/>
+                                        <rect x="348" y="20" width="40" height="56" rx="3" fill="#14b8a6"/>
+
+                                        <!-- Row 2 — pages 9–16 -->
+                                        <rect x="12"  y="84" width="40" height="56" rx="3" fill="#0d9488"/>
+                                        <rect x="60"  y="84" width="40" height="56" rx="3" fill="#fbbf24"/>
+                                        <rect x="108" y="84" width="40" height="56" rx="3" fill="#e4e4e7"/>
+                                        <rect x="156" y="84" width="40" height="56" rx="3" fill="#a7f3d0"/>
+                                        <rect x="204" y="84" width="40" height="56" rx="3" fill="#5eead4"/>
+                                        <rect x="252" y="84" width="40" height="56" rx="3" fill="#f1f1f3"/>
+                                        <rect x="300" y="84" width="40" height="56" rx="3" fill="#a7f3d0"/>
+                                        <rect x="348" y="84" width="40" height="56" rx="3" fill="#e4e4e7"/>
+
+                                        <!-- Row 3 — pages 17–24 -->
+                                        <rect x="12"  y="148" width="40" height="56" rx="3" fill="#5eead4"/>
+                                        <rect x="60"  y="148" width="40" height="56" rx="3" fill="#a7f3d0"/>
+                                        <rect x="108" y="148" width="40" height="56" rx="3" fill="#f1f1f3"/>
+                                        <rect x="156" y="148" width="40" height="56" rx="3" fill="#e4e4e7"/>
+                                        <rect x="204" y="148" width="40" height="56" rx="3" fill="#a7f3d0"/>
+                                        <rect x="252" y="148" width="40" height="56" rx="3" fill="#f1f1f3"/>
+                                        <rect x="300" y="148" width="40" height="56" rx="3" fill="#f1f1f3"/>
+                                        <rect x="348" y="148" width="40" height="56" rx="3" fill="#e4e4e7"/>
+
+                                        <!-- Page numbers -->
+                                        <g font-family="'JetBrains Mono', monospace"
+                                           font-size="9" font-weight="500" text-anchor="middle">
+
+                                            <!-- Row 1 -->
+                                            <text x="32"  y="53" fill="#a1a1aa">1</text>
+                                            <text x="80"  y="53" fill="#0f766e">2</text>
+                                            <text x="128" y="53" fill="#0f766e">3</text>
+                                            <text x="176" y="53" fill="#71717a">4</text>
+                                            <text x="224" y="53" fill="#ffffff">5</text>
+                                            <text x="272" y="53" fill="#0f766e">6</text>
+                                            <text x="320" y="53" fill="#a1a1aa">7</text>
+                                            <text x="368" y="53" fill="#ffffff">8</text>
+
+                                            <!-- Row 2 -->
+                                            <text x="32"  y="117" fill="#ffffff">9</text>
+                                            <text x="80"  y="117" fill="#78350f">10</text>
+                                            <text x="128" y="117" fill="#71717a">11</text>
+                                            <text x="176" y="117" fill="#0f766e">12</text>
+                                            <text x="224" y="117" fill="#0f766e">13</text>
+                                            <text x="272" y="117" fill="#a1a1aa">14</text>
+                                            <text x="320" y="117" fill="#0f766e">15</text>
+                                            <text x="368" y="117" fill="#71717a">16</text>
+
+                                            <!-- Row 3 -->
+                                            <text x="32"  y="181" fill="#0f766e">17</text>
+                                            <text x="80"  y="181" fill="#0f766e">18</text>
+                                            <text x="128" y="181" fill="#a1a1aa">19</text>
+                                            <text x="176" y="181" fill="#71717a">20</text>
+                                            <text x="224" y="181" fill="#0f766e">21</text>
+                                            <text x="272" y="181" fill="#a1a1aa">22</text>
+                                            <text x="320" y="181" fill="#a1a1aa">23</text>
+                                            <text x="368" y="181" fill="#71717a">24</text>
                                         </g>
 
-                                        <!-- drop-off marker -->
-                                        <line x1="336" y1="14" x2="336" y2="174" stroke="#14b8a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.5"/>
-
-                                        <!-- engagement bands -->
-                                        <line x1="0" y1="78" x2="400" y2="78" stroke="#ef4444" stroke-width="1" stroke-dasharray="4 5" opacity="0.42"/>
-                                        <line x1="0" y1="120" x2="400" y2="120" stroke="#14b8a6" stroke-width="1" stroke-dasharray="4 5" opacity="0.5"/>
-
-                                        <!-- per-page time bars -->
-                                        <g>
-                                            <line x1="12" y1="148" x2="12" y2="165" stroke="#ef4444" stroke-width="1"/>
-                                            <rect x="7.5" y="156" width="9" height="5" fill="#ef4444" rx="0.5"/>
-
-                                            <line x1="30" y1="140" x2="30" y2="158" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="25.5" y="142" width="9" height="13" fill="#14b8a6" rx="0.5"/>
-
-                                            <line x1="48" y1="128" x2="48" y2="145" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="43.5" y="132" width="9" height="10" fill="#14b8a6" rx="0.5"/>
-
-                                            <line x1="66" y1="120" x2="66" y2="135" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="61.5" y="124" width="9" height="8" fill="#14b8a6" rx="0.5"/>
-
-                                            <line x1="84" y1="115" x2="84" y2="130" stroke="#ef4444" stroke-width="1"/>
-                                            <rect x="79.5" y="124" width="9" height="4" fill="#ef4444" rx="0.5"/>
-
-                                            <line x1="102" y1="110" x2="102" y2="127" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="97.5" y="112" width="9" height="15" fill="#14b8a6" rx="0.5"/>
-
-                                            <line x1="120" y1="100" x2="120" y2="115" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="115.5" y="103" width="9" height="9" fill="#14b8a6" rx="0.5"/>
-
-                                            <line x1="138" y1="95" x2="138" y2="108" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="133.5" y="98" width="9" height="5" fill="#14b8a6" rx="0.5"/>
-
-                                            <line x1="156" y1="88" x2="156" y2="102" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="151.5" y="92" width="9" height="6" fill="#14b8a6" rx="0.5"/>
-
-                                            <line x1="174" y1="85" x2="174" y2="100" stroke="#ef4444" stroke-width="1"/>
-                                            <rect x="169.5" y="92" width="9" height="4" fill="#ef4444" rx="0.5"/>
-
-                                            <line x1="192" y1="82" x2="192" y2="95" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="187.5" y="88" width="9" height="7" fill="#14b8a6" rx="0.5"/>
-
-                                            <line x1="210" y1="76" x2="210" y2="92" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="205.5" y="80" width="9" height="8" fill="#14b8a6" rx="0.5"/>
-
-                                            <line x1="228" y1="74" x2="228" y2="88" stroke="#ef4444" stroke-width="1"/>
-                                            <rect x="223.5" y="80" width="9" height="5" fill="#ef4444" rx="0.5"/>
-
-                                            <line x1="246" y1="80" x2="246" y2="94" stroke="#ef4444" stroke-width="1"/>
-                                            <rect x="241.5" y="84" width="9" height="7" fill="#ef4444" rx="0.5"/>
-
-                                            <line x1="264" y1="85" x2="264" y2="98" stroke="#ef4444" stroke-width="1"/>
-                                            <rect x="259.5" y="90" width="9" height="5" fill="#ef4444" rx="0.5"/>
-
-                                            <line x1="282" y1="90" x2="282" y2="105" stroke="#ef4444" stroke-width="1"/>
-                                            <rect x="277.5" y="94" width="9" height="7" fill="#ef4444" rx="0.5"/>
-
-                                            <line x1="300" y1="98" x2="300" y2="112" stroke="#ef4444" stroke-width="1"/>
-                                            <rect x="295.5" y="100" width="9" height="8" fill="#ef4444" rx="0.5"/>
-
-                                            <line x1="318" y1="105" x2="318" y2="120" stroke="#ef4444" stroke-width="1"/>
-                                            <rect x="313.5" y="108" width="9" height="7" fill="#ef4444" rx="0.5"/>
-
-                                            <line x1="336" y1="100" x2="336" y2="118" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="331.5" y="102" width="9" height="13" fill="#14b8a6" rx="0.5"/>
-
-                                            <line x1="354" y1="88" x2="354" y2="105" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="349.5" y="90" width="9" height="12" fill="#14b8a6" rx="0.5"/>
-
-                                            <line x1="372" y1="78" x2="372" y2="92" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="367.5" y="82" width="9" height="8" fill="#14b8a6" rx="0.5"/>
-
-                                            <line x1="390" y1="72" x2="390" y2="88" stroke="#14b8a6" stroke-width="1"/>
-                                            <rect x="385.5" y="76" width="9" height="6" fill="#14b8a6" rx="0.5"/>
-                                        </g>
-
-                                        <!-- trendline -->
-                                        <path d="M12,160 Q100,132 200,110 T390,88"
-                                              fill="none" stroke="#71717a" stroke-width="1.2" opacity="0.8"/>
-
-                                        <!-- volume / density -->
-                                        <g>
-                                            <rect x="7.5"   y="206" width="9" height="12" fill="#ef4444" opacity="0.3" rx="0.5"/>
-                                            <rect x="25.5"  y="198" width="9" height="20" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                            <rect x="43.5"  y="202" width="9" height="16" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                            <rect x="61.5"  y="194" width="9" height="24" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                            <rect x="79.5"  y="208" width="9" height="10" fill="#ef4444" opacity="0.3" rx="0.5"/>
-                                            <rect x="97.5"  y="190" width="9" height="28" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                            <rect x="115.5" y="196" width="9" height="22" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                            <rect x="133.5" y="204" width="9" height="14" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                            <rect x="151.5" y="198" width="9" height="20" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                            <rect x="169.5" y="206" width="9" height="12" fill="#ef4444" opacity="0.3" rx="0.5"/>
-                                            <rect x="187.5" y="194" width="9" height="24" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                            <rect x="205.5" y="186" width="9" height="32" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                            <rect x="223.5" y="200" width="9" height="18" fill="#ef4444" opacity="0.3" rx="0.5"/>
-                                            <rect x="241.5" y="202" width="9" height="16" fill="#ef4444" opacity="0.3" rx="0.5"/>
-                                            <rect x="259.5" y="204" width="9" height="14" fill="#ef4444" opacity="0.3" rx="0.5"/>
-                                            <rect x="277.5" y="198" width="9" height="20" fill="#ef4444" opacity="0.3" rx="0.5"/>
-                                            <rect x="295.5" y="192" width="9" height="26" fill="#ef4444" opacity="0.3" rx="0.5"/>
-                                            <rect x="313.5" y="188" width="9" height="30" fill="#ef4444" opacity="0.3" rx="0.5"/>
-                                            <rect x="331.5" y="184" width="9" height="34" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                            <rect x="349.5" y="190" width="9" height="28" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                            <rect x="367.5" y="196" width="9" height="22" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                            <rect x="385.5" y="192" width="9" height="26" fill="#14b8a6" opacity="0.32" rx="0.5"/>
-                                        </g>
+                                        <!-- Live viewer on page 9 -->
+                                        <rect class="live-ring"
+                                              x="9" y="81" width="46" height="62" rx="5"
+                                              fill="none" stroke="#14b8a6" stroke-width="2"/>
                                     </svg>
                                 </div>
 
                                 <!-- legend -->
                                 <div class="chart-legend">
-                                    <span class="legend-item"><i class="dot ma"></i>Reading time</span>
-                                    <span class="legend-item"><i class="dot res"></i>Drop-off</span>
-                                    <span class="legend-item"><i class="dot sup"></i>Peak page</span>
-                                    <span class="legend-item signal"><i class="dot sig"></i>Live viewer on p.12</span>
+                                    <span class="legend-item"><i class="dot cold"></i>Skimmed</span>
+                                    <span class="legend-item"><i class="dot warm"></i>Engaged</span>
+                                    <span class="legend-item"><i class="dot hot"></i>Deep read</span>
+                                    <span class="legend-item"><i class="dot drop"></i>Drop-off</span>
+                                    <span class="legend-item signal"><i class="dot sig"></i>Live on p9</span>
                                 </div>
                             </div>
                         </div>
