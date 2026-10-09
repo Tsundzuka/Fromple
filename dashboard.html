@@ -50,14 +50,6 @@
           </svg>
           <span>Analytics</span>
         </a>
-
-        <a href="#" class="nav-item" data-tab="settings">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
-          </svg>
-          <span>Settings</span>
-        </a>
       </nav>
 
       <div class="sidebar-footer">
@@ -467,102 +459,6 @@
               </tbody>
             </table>
           </div>
-        </div>
-
-      </section>
-
-      <section class="tab-content" data-tab="settings">
-
-        <header class="dashboard-header">
-          <div>
-            <h1>Settings</h1>
-            <p class="page-subtitle">Account, plan, and preferences.</p>
-          </div>
-        </header>
-
-        <div class="settings-container">
-
-          <div class="card settings-card">
-            <h3 class="settings-title">Profile</h3>
-            <p class="settings-hint">Your name and contact details.</p>
-
-            <div class="settings-form">
-              <div class="settings-field">
-                <label class="settings-label">Full name</label>
-                <input class="form-input" id="setFullName" placeholder="John Doe" />
-              </div>
-              <div class="settings-field">
-                <label class="settings-label">Company</label>
-                <input class="form-input" id="setCompany" placeholder="Acme Inc." />
-              </div>
-              <div class="settings-field">
-                <label class="settings-label">Email</label>
-                <input class="form-input" id="setEmail" type="email" disabled />
-              </div>
-              <div class="settings-field">
-                <label class="settings-label">Default link expiry (days)</label>
-                <input class="form-input" id="setDefaultExpiry" type="number" min="1" max="365" value="30" />
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <span class="form-status" id="profileStatus"></span>
-              <button class="btn-primary" type="button" id="saveProfile">Save profile</button>
-            </div>
-          </div>
-
-          <div class="card settings-card">
-            <h3 class="settings-title">Plan</h3>
-            <p class="settings-hint">You're on the <strong id="planName">Sandbox</strong> plan.</p>
-
-            <div class="usage-block">
-              <div class="usage-row">
-                <span class="usage-label">Active documents</span>
-                <span class="usage-value" id="usageDocs">0 / 3</span>
-              </div>
-              <div class="usage-bar"><div class="usage-fill" id="usageDocsFill" style="width: 0%"></div></div>
-            </div>
-
-            <div class="usage-block">
-              <div class="usage-row">
-                <span class="usage-label">Monthly egress</span>
-                <span class="usage-value" id="usageEgress">0 MB / 5 GB</span>
-              </div>
-              <div class="usage-bar"><div class="usage-fill" id="usageEgressFill" style="width: 0%"></div></div>
-            </div>
-
-            <a href="pricing.html" class="btn-primary" style="margin-top:8px;">Upgrade plan</a>
-          </div>
-
-          <div class="card settings-card">
-            <h3 class="settings-title">Security</h3>
-            <p class="settings-hint">Password and session management.</p>
-
-            <div class="settings-form">
-              <div class="settings-field">
-                <label class="settings-label">New password</label>
-                <input class="form-input" id="setNewPassword" type="password" placeholder="••••••••" />
-              </div>
-              <div class="settings-field">
-                <label class="settings-label">Confirm password</label>
-                <input class="form-input" id="setConfirmPassword" type="password" placeholder="••••••••" />
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <span class="form-status" id="passwordStatus"></span>
-              <button class="btn-primary" type="button" id="savePassword">Change password</button>
-            </div>
-          </div>
-
-          <div class="card settings-card settings-danger">
-            <h3 class="settings-title">Danger zone</h3>
-            <p class="settings-hint">Permanently delete your account and all data.</p>
-            <div class="form-actions" style="justify-content:flex-start;">
-              <button class="btn-secondary settings-danger-btn" type="button" id="deleteAccount">Delete account</button>
-            </div>
-          </div>
-
         </div>
 
       </section>
