@@ -17,6 +17,7 @@
   --gray-800: #1F2937;
   --gray-900: #111827;
   --sidebar-width: 220px;
+  --site-header-h: 64px;
   --radius: 8px;
   --radius-lg: 12px;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -32,28 +33,19 @@
 
 * { box-sizing: border-box; }
 
-html, body {
-  margin: 0;
-  height: 100%;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  color: var(--gray-800);
-  background: var(--gray-50);
-}
-
 /* ============================================================
    DASHBOARD LAYOUT
    ============================================================ */
 .dashboard-wrapper {
   display: grid;
   grid-template-columns: var(--sidebar-width) 1fr;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--site-header-h));
 }
 
 .sidebar {
   position: sticky;
-  top: 0;
-  height: 100vh;
+  top: var(--site-header-h);
+  height: calc(100vh - var(--site-header-h));
   background: #fff;
   border-right: 1px solid var(--gray-200);
   display: flex;
@@ -1004,7 +996,9 @@ html, body {
 
   .sidebar {
     position: fixed;
+    top: var(--site-header-h);
     width: 240px;
+    height: calc(100vh - var(--site-header-h));
     z-index: 1000;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
