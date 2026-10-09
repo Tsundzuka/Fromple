@@ -261,7 +261,14 @@ html, body {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
+  align-items: center;
 }
+
+/* ============================================================
+   TAB SWITCHING
+   ============================================================ */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
 /* ============================================================
    CARDS
@@ -561,6 +568,38 @@ html, body {
 .activity-table tbody tr.clickable { cursor: pointer; }
 
 /* ============================================================
+   ROW ACTIONS
+   ============================================================ */
+.row-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.row-btn {
+  background: transparent;
+  border: 1px solid var(--gray-200);
+  color: var(--gray-500);
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-size: 11.5px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.row-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.row-btn.danger:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* ============================================================
    BADGES
    ============================================================ */
 .badge {
@@ -577,7 +616,7 @@ html, body {
 .badge.muted   { background: var(--gray-100); color: var(--gray-500); }
 
 /* ============================================================
-   STATUS PILLS (links table)
+   STATUS PILLS
    ============================================================ */
 .pill {
   display: inline-block;
@@ -615,7 +654,7 @@ html, body {
 }
 
 /* ============================================================
-   ACTIVITY FEED (live viewer events)
+   ACTIVITY FEED
    ============================================================ */
 .activity-feed {
   display: flex;
@@ -693,7 +732,123 @@ html, body {
 }
 
 /* ============================================================
-   SETTINGS PAGE
+   UPLOAD ZONE
+   ============================================================ */
+.upload-card { padding: 0; overflow: hidden; }
+
+.upload-zone {
+  padding: 48px 24px;
+  text-align: center;
+  border: 2px dashed var(--gray-300);
+  border-radius: var(--radius-lg);
+  margin: 18px;
+  transition: var(--transition);
+  color: var(--gray-500);
+}
+
+.upload-zone:hover,
+.upload-zone.dragging {
+  border-color: var(--primary);
+  background: var(--primary-lightest);
+  color: var(--primary-dark);
+}
+
+.upload-icon {
+  color: var(--gray-400);
+  margin-bottom: 12px;
+}
+.upload-zone:hover .upload-icon,
+.upload-zone.dragging .upload-icon { color: var(--primary); }
+
+.upload-zone h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin: 0 0 6px;
+}
+
+.upload-zone p {
+  font-size: 13px;
+  color: var(--gray-500);
+  margin: 0;
+}
+
+.upload-link {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+/* ============================================================
+   LINK CREATE PANEL
+   ============================================================ */
+.link-create-card {
+  border-left: 3px solid var(--primary);
+}
+
+.link-create-card .form-row {
+  grid-template-columns: 1.4fr 1.4fr 0.8fr;
+}
+
+/* ============================================================
+   BAR CHART
+   ============================================================ */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  min-height: 200px;
+  padding: 16px 4px 0;
+  border-bottom: 1px solid var(--gray-200);
+  overflow-x: auto;
+}
+
+.bar-col {
+  flex: 1;
+  min-width: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+  border-radius: 4px 4px 0 0;
+  transition: height 0.4s ease;
+  min-height: 4px;
+  position: relative;
+}
+
+.bar-fill:hover { filter: brightness(1.08); }
+
+.bar-value {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-700);
+  font-family: 'JetBrains Mono', monospace;
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.bar-label {
+  font-size: 10.5px;
+  color: var(--gray-400);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 6px;
+}
+
+/* ============================================================
+   SETTINGS
    ============================================================ */
 .settings-container {
   max-width: 780px;
@@ -734,12 +889,114 @@ html, body {
 }
 
 /* ============================================================
+   DANGER ZONE
+   ============================================================ */
+.settings-danger {
+  border-color: #FEE2E2;
+}
+
+.settings-danger .settings-title { color: var(--danger); }
+
+.settings-danger-btn {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+.settings-danger-btn:hover {
+  background: var(--danger);
+  color: #fff;
+  border-color: var(--danger);
+}
+
+/* ============================================================
+   USAGE BLOCK
+   ============================================================ */
+.usage-block { margin-bottom: 14px; }
+
+.usage-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.usage-label {
+  font-size: 12.5px;
+  color: var(--gray-600);
+}
+
+.usage-value {
+  font-size: 12.5px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--gray-700);
+  font-weight: 500;
+}
+
+.usage-bar {
+  height: 6px;
+  background: var(--gray-200);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.usage-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+/* ============================================================
+   COPY LINK ROW
+   ============================================================ */
+.copy-link-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  margin-top: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--gray-700);
+}
+
+.copy-link-row input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font: inherit;
+  color: inherit;
+  outline: none;
+  min-width: 0;
+}
+
+.copy-link-row button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.copy-link-row button:hover { background: var(--primary-dark); }
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 1024px) {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .dashboard-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr 1fr; }
+  .link-create-card .form-row { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 768px) {
@@ -759,8 +1016,10 @@ html, body {
   .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
   .dashboard-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
+  .link-create-card .form-row { grid-template-columns: 1fr; }
   .settings-form { grid-template-columns: 1fr; }
   .dashboard-header { flex-direction: column; align-items: flex-start; }
+  .upload-zone { padding: 32px 16px; margin: 12px; }
 }
 
 @media (max-width: 480px) {
@@ -769,4 +1028,5 @@ html, body {
   .stat-value { font-size: 16px; }
   .card { padding: 12px 14px; }
   .table-wrap { margin: 0 -14px; padding: 0 14px; }
+  .upload-zone { padding: 24px 12px; }
 }
