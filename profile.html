@@ -3,136 +3,279 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile</title>
+    <title>Profile — Fromple</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
-    <link rel="stylesheet" href="css/base/variables.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/pages/dashboard.css" />
-    <link rel="stylesheet" href="css/admin.css" />
 
-    <!-- ============================================================
-         NEW STYLES (to be moved into css/pages/dashboard.css later)
-         ============================================================ -->
     <style>
-        .toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; cursor: pointer; flex-shrink: 0; }
+        /* ----------------------------------------------------------
+           PROFILE-SPECIFIC STYLES (move into css/pages/profile.css)
+           ---------------------------------------------------------- */
+
+        /* Profile hero */
+        .profile-hero {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 24px 28px;
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .profile-hero-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .profile-hero-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .profile-hero-info h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: 0 0 4px;
+        }
+
+        .profile-hero-info p {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin: 0 0 8px;
+        }
+
+        .profile-hero-badges {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .profile-hero-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Toggle switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider { position: absolute; inset: 0; background: var(--gray-300); border-radius: 22px; transition: background .2s; }
-        .toggle-slider::before { content: ''; position: absolute; height: 16px; width: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            background: var(--gray-300);
+            border-radius: 22px;
+            transition: background .2s;
+        }
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            top: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform .2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,.2);
+        }
         .toggle-switch input:checked + .toggle-slider { background: var(--primary); }
         .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
         .toggle-switch input:disabled + .toggle-slider { opacity: .5; }
-        .toggle-lg { width: 56px; height: 30px; }
-        .toggle-lg .toggle-slider::before { height: 24px; width: 24px; }
-        .toggle-lg input:checked + .toggle-slider::before { transform: translateX(26px); }
 
-        .sb-pipeline { padding: 12px 14px; border-bottom: 1px solid var(--gray-200); }
-        .sb-pipeline-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .sb-pipeline-label { font-size: 12px; font-weight: 600; color: var(--gray-700); }
-        .sb-api-head { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray-600); margin-bottom: 4px; }
-        .sb-api-bar { height: 4px; background: var(--gray-100); border-radius: 2px; overflow: hidden; }
-        .sb-api-fill { height: 100%; background: var(--primary); transition: width .3s; }
-        .sb-api-fill.warning { background: #F59E0B; }
-        .sb-api-fill.danger  { background: #EF4444; }
+        /* Preference rows (Settings) */
+        .pref-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .pref-row:last-child { border-bottom: none; }
+        .pref-row-info { flex: 1; min-width: 0; }
+        .pref-row-info strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 2px;
+        }
+        .pref-row-info span {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
 
-        .pipeline-strip { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 14px 18px; margin-bottom: 20px; background: #fff; border-radius: var(--radius); border: 1px solid var(--gray-200); }
-        .pipeline-strip-main { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
-        .pipeline-strip-status strong { display: block; font-size: 14px; }
-        .pipeline-strip-status span { font-size: 12px; color: var(--gray-500); }
-        .pipeline-strip-right { display: flex; align-items: center; gap: 18px; }
-        .pipeline-strip-meta { display: flex; gap: 18px; }
-        .pipeline-strip-meta-item { display: flex; flex-direction: column; }
-        .pipeline-strip-meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--gray-400); }
-        .pipeline-strip-meta-value { font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--gray-700); }
+        /* Sessions list (Security) */
+        .session-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-        .sys-status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gray-400); flex-shrink: 0; }
-        .sys-status-dot.on { background: #10B981; box-shadow: 0 0 0 4px rgba(16,185,129,.18); }
+        .session-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+        }
 
-        .settings-container { display: flex; flex-direction: column; gap: 16px; }
-        .settings-card { padding: 20px 24px; }
-        .settings-title { font-size: 16px; font-weight: 700; margin: 0 0 4px; }
-        .settings-hint { font-size: 12px; color: var(--gray-500); margin: 0 0 16px; }
+        .session-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--primary-lightest);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
 
-        .settings-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-        .settings-field { display: flex; flex-direction: column; gap: 4px; }
-        .settings-label { font-size: 11px; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: .04em; }
+        .session-info { flex: 1; min-width: 0; }
+        .session-info strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 2px;
+        }
+        .session-info span {
+            font-size: 12px;
+            color: var(--gray-500);
+            font-family: 'JetBrains Mono', monospace;
+        }
 
-        .form-input, .form-select { padding: 8px 10px; border: 1px solid var(--gray-200); border-radius: 6px; font-size: 13px; background: #fff; font-family: inherit; color: var(--gray-800); width: 100%; }
-        .form-input:focus, .form-select:focus { outline: 2px solid var(--primary); outline-offset: -1px; border-color: var(--primary); }
-        .form-input.mono { font-family: 'JetBrains Mono', monospace; }
+        .session-tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: #D1FAE5;
+            color: #065F46;
+            white-space: nowrap;
+        }
 
-        .sys-control-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px 18px; background: var(--gray-50, #F9FAFB); border-radius: 8px; border: 1px solid var(--gray-200); }
-        .sys-control-info { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
-        .sys-control-text strong { display: block; font-size: 14px; margin-bottom: 2px; }
-        .sys-control-text span { font-size: 12px; color: var(--gray-500); }
+        /* Login history table */
+        .login-history {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .login-history th {
+            text-align: left;
+            padding: 10px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--gray-500);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .login-history td {
+            padding: 12px;
+            border-bottom: 1px solid var(--gray-100);
+            color: var(--gray-700);
+        }
+        .login-history tr:last-child td { border-bottom: none; }
 
-        .sys-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 16px; }
-        .sys-meta-item { display: flex; flex-direction: column; gap: 2px; }
-        .sys-meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--gray-400); }
-        .sys-meta-value { font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--gray-700); }
+        .login-status {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+        .login-status.success { background: #D1FAE5; color: #065F46; }
+        .login-status.failed  { background: #FEE2E2; color: #991B1B; }
 
-        .quota-warning { margin-top: 14px; padding: 12px 16px; background: #FEF3C7; border-left: 3px solid #F59E0B; border-radius: 8px; font-size: 12px; display: flex; flex-direction: column; gap: 3px; }
+        /* Two-factor block */
+        .tfa-block {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 18px 20px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+        }
+        .tfa-info { flex: 1; min-width: 0; }
+        .tfa-info strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 3px;
+        }
+        .tfa-info span {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
 
-        .inst-table { width: 100%; border-collapse: collapse; }
-        .inst-table th, .inst-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--gray-100); font-size: 13px; vertical-align: middle; }
-        .inst-table th { font-size: 11px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: .04em; background: var(--gray-50, #F9FAFB); }
-        .inst-table input[type="time"] { padding: 4px 6px; border: 1px solid var(--gray-200); border-radius: 5px; font-family: 'JetBrains Mono', monospace; font-size: 12px; width: 88px; }
-        .mini-tf-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-        .mini-tf-grid label { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; color: var(--gray-600); cursor: pointer; }
-        .mini-tf-grid input { margin: 0; }
+        /* Danger zone */
+        .settings-danger-card {
+            border: 1px solid #FEE2E2;
+            border-left: 4px solid var(--danger);
+        }
+        .settings-danger-card .settings-title { color: var(--danger); }
+        .settings-danger-card .settings-hint { color: var(--gray-600); }
+        .danger-btn {
+            background: #FEE2E2;
+            color: #991B1B;
+            border: 1px solid #FECACA;
+            padding: 9px 16px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+        .danger-btn:hover {
+            background: var(--danger);
+            color: #fff;
+            border-color: var(--danger);
+        }
 
-        .settings-inline-note { font-size: 12px; color: var(--gray-500); margin-top: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .settings-inline-note strong { color: var(--gray-700); }
-        .settings-inline-note strong.neg { color: #EF4444; }
-
-        .api-usage-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-        .api-card { padding: 14px 16px; border: 1px solid var(--gray-200); border-radius: 8px; background: #fff; }
-        .api-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .api-name { font-weight: 600; font-size: 13px; }
-        .api-card-tag { font-size: 10px; color: var(--gray-500); padding: 2px 6px; background: var(--gray-100); border-radius: 4px; font-family: 'JetBrains Mono', monospace; }
-        .usage-meter { height: 6px; background: var(--gray-100); border-radius: 3px; overflow: hidden; }
-        .usage-fill { height: 100%; background: var(--primary); transition: width .3s, background .3s; }
-        .usage-fill.warning { background: #F59E0B; }
-        .usage-fill.danger  { background: #EF4444; }
-        .api-card-foot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: var(--gray-500); }
-        .api-card-foot .mono { font-family: 'JetBrains Mono', monospace; }
-
-        .ds-block { padding: 16px 18px; border: 1px solid var(--gray-200); border-radius: 8px; margin-bottom: 12px; }
-        .ds-block:last-child { margin-bottom: 0; }
-        .ds-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-        .ds-head-info strong { display: block; font-size: 14px; margin-bottom: 2px; }
-        .ds-head-info span { font-size: 11px; color: var(--gray-500); }
-        .ds-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
-
-        .chip-multi { display: flex; flex-wrap: wrap; gap: 6px; }
-        .chip-check { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border: 1px solid var(--gray-200); border-radius: 12px; font-size: 11px; cursor: pointer; background: #fff; color: var(--gray-600); user-select: none; transition: all .15s; }
-        .chip-check input { margin: 0; }
-        .chip-check:has(input:checked) { background: #F0FDFA; color: #0D9488; border-color: var(--primary); }
-
-        .ind-table { width: 100%; border-collapse: collapse; }
-        .ind-table th, .ind-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--gray-100); font-size: 13px; vertical-align: middle; }
-        .ind-table th { font-size: 11px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: .04em; background: var(--gray-50, #F9FAFB); }
-
-        .notification-options { display: flex; flex-direction: column; gap: 10px; }
-        .notification-options label { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--gray-700); cursor: pointer; }
-        .notification-options input[type="checkbox"] { margin: 0; }
+        /* Small card wrapper */
+        .card { margin-bottom: 18px; }
 
         @media (max-width: 768px) {
-            .pipeline-strip { flex-direction: column; align-items: stretch; }
-            .pipeline-strip-right { flex-direction: column; align-items: stretch; gap: 12px; }
-            .sys-control-row { flex-direction: column; align-items: stretch; }
+            .profile-hero { flex-direction: column; text-align: center; }
+            .profile-hero-actions { width: 100%; }
+            .profile-hero-actions .btn-primary,
+            .profile-hero-actions .btn-secondary { flex: 1; }
+            .session-item { flex-wrap: wrap; }
         }
     </style>
 </head>
 <body>
-
-    <div id="authLoadingOverlay" class="auth-loading-overlay">
-        <img src="assets/icons/logo.png" alt="" class="auth-loading-logo" />
-        <div class="auth-loading-spinner"></div>
-        <p class="auth-loading-text">Loading...</p>
-    </div>
 
     <div id="header"></div>
 
@@ -142,1244 +285,545 @@
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active" data-tab="overview">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="3" width="7" height="9" rx="1.5"/>
+                        <rect x="14" y="3" width="7" height="5" rx="1.5"/>
+                        <rect x="14" y="12" width="7" height="9" rx="1.5"/>
+                        <rect x="3" y="16" width="7" height="5" rx="1.5"/>
                     </svg>
                     <span>Overview</span>
                 </a>
-                <a href="#" data-tab="review">
+
+                <a href="#" class="nav-item" data-tab="security">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 11l3 3L22 4" />
-                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                        <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/>
+                        <path d="M9 12l2 2 4-4"/>
                     </svg>
-                    <span>Review</span>
+                    <span>Security</span>
                 </a>
-                <a href="#" data-tab="usage">
+
+                <a href="#" class="nav-item" data-tab="settings">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 17l5-6 4 4 9-10" />
-                    </svg>
-                    <span>Usage &amp; Analytics</span>
-                </a>
-                <a href="#" data-tab="settings">
-                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="3" />
-                        <path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" />
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
                     </svg>
                     <span>Settings</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-
-                <div class="sb-pipeline">
-                    <div class="sb-pipeline-head">
-                        <span class="sb-pipeline-label">Pipeline</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="sbPipelineToggle" />
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    <div class="sb-api" data-provider="twelvedata">
-                        <div class="sb-api-head">
-                            <span class="sb-api-name">Twelve Data</span>
-                            <span class="sb-api-count mono" data-usage-text>— / 800</span>
-                        </div>
-                        <div class="sb-api-bar"><div class="sb-api-fill" data-usage-fill style="width: 0%"></div></div>
-                    </div>
-                </div>
-
                 <div class="sidebar-usage-summary">
                     <div class="sidebar-usage-header">
-                        <span class="sidebar-usage-label">Registry load</span>
-                        <span class="sidebar-usage-value">2,936</span>
+                        <span class="sidebar-usage-label">Documents</span>
+                        <span class="sidebar-usage-value" id="sidebarDocCount">0 / 3</span>
                     </div>
                     <div class="sidebar-usage-bar">
-                        <div class="sidebar-usage-fill" style="width: 72%;"></div>
+                        <div class="sidebar-usage-fill" id="sidebarDocFill" style="width: 0%;"></div>
                     </div>
                     <div class="sidebar-usage-details">
-                        <span>72% capacity</span>
-                        <span>8 classes</span>
+                        <span id="sidebarPlanLabel">Sandbox</span>
+                        <span>Free forever</span>
                     </div>
                 </div>
+
                 <div class="user-info">
-                    <div class="user-avatar">JD</div>
+                    <div class="user-avatar" id="userAvatar">U</div>
                     <div class="user-details">
-                        <span class="user-name">John Doe</span>
-                        <span class="user-plan" id="userPlan">Research</span>
+                        <span class="user-name" id="userName">Loading…</span>
+                        <span class="user-plan" id="userPlan">Sandbox</span>
                     </div>
+                    <button class="logout-btn" id="logoutBtn" title="Log out">⏻</button>
                 </div>
             </div>
         </aside>
 
-        <main class="main-content" id="mainContent">
+        <main class="main-content">
 
-            <button class="admin-sidebar-toggle" id="adminSidebarToggle" aria-label="Toggle navigation">
-                <span class="trigger-box">
-                    <span class="trigger-line"></span>
-                </span>
-                <span class="menu-text">Menu</span>
-            </button>
+            <!-- ============================================================
+                 TAB 1: OVERVIEW
+                 ============================================================ -->
+            <section class="tab-content active" data-tab="overview">
 
-            <!-- ============================================================ -->
-            <!-- TAB 1: OVERVIEW                                              -->
-            <!-- ============================================================ -->
-            <section class="tab-content active" id="tab-overview">
                 <header class="dashboard-header">
                     <div>
-                        <h1>Overview</h1>
-                        <p class="page-subtitle">Welcome back. Here's your registry summary and pipeline status.</p>
+                        <h1>Profile</h1>
+                        <p class="page-subtitle">Your account summary, plan, and activity.</p>
                     </div>
                 </header>
 
-                <!-- Pipeline quick control -->
-                <div class="pipeline-strip">
-                    <div class="pipeline-strip-main">
-                        <span class="sys-status-dot" id="ovPipelineDot"></span>
-                        <div class="pipeline-strip-status">
-                            <strong id="ovPipelineLabel">Pipeline stopped</strong>
-                            <span id="ovPipelineSub">API queries are disabled.</span>
+                <!-- Profile hero -->
+                <div class="profile-hero">
+                    <div class="profile-hero-avatar" id="heroAvatar">U</div>
+                    <div class="profile-hero-info">
+                        <h2 id="heroName">Loading…</h2>
+                        <p id="heroEmail">—</p>
+                        <div class="profile-hero-badges">
+                            <span class="pill pill-active" id="heroPlan">Sandbox</span>
+                            <span class="badge muted" id="heroMemberSince">Member since —</span>
                         </div>
                     </div>
-                    <div class="pipeline-strip-right">
-                        <div class="pipeline-strip-meta">
-                            <div class="pipeline-strip-meta-item">
-                                <span class="pipeline-strip-meta-label">Last run</span>
-                                <span class="pipeline-strip-meta-value" id="ovLastRun">—</span>
-                            </div>
-                            <div class="pipeline-strip-meta-item">
-                                <span class="pipeline-strip-meta-label">TD credits</span>
-                                <span class="pipeline-strip-meta-value" id="ovTdUsage">— / 800</span>
-                            </div>
-                        </div>
-                        <label class="toggle-switch toggle-lg">
-                            <input type="checkbox" id="ovPipelineToggle" />
-                            <span class="toggle-slider"></span>
-                        </label>
+                    <div class="profile-hero-actions">
+                        <button class="btn-secondary" type="button" data-goto="settings">Edit profile</button>
+                        <a href="pricing.html" class="btn-primary">Upgrade plan</a>
                     </div>
                 </div>
 
+                <!-- Stats -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon blue">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M4 6h16M4 12h16M4 18h10" stroke="#14B8A6" stroke-width="2" stroke-linecap="round"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                                <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" stroke="#14B8A6" stroke-width="2" stroke-linejoin="round"/>
+                                <path d="M14 3v6h6" stroke="#14B8A6" stroke-width="2" stroke-linejoin="round"/>
+                            </svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">2,936</span>
-                            <span class="stat-label">Total observations</span>
+                            <span class="stat-value" id="ovDocuments">0</span>
+                            <span class="stat-label">Documents</span>
                         </div>
                     </div>
+
                     <div class="stat-card">
                         <div class="stat-icon green">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#10B981" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#10B981" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#10B981" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#10B981" stroke-width="2"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                                <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">8</span>
-                            <span class="stat-label">Classes registered</span>
+                            <span class="stat-value" id="ovLinks">0</span>
+                            <span class="stat-label">Links created</span>
                         </div>
                     </div>
+
                     <div class="stat-card">
                         <div class="stat-icon orange">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M2 12h3l3-8 4 16 3-10 3 4h4" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="#F59E0B" stroke-width="2" stroke-linejoin="round"/>
+                                <circle cx="12" cy="12" r="3" stroke="#F59E0B" stroke-width="2"/>
+                            </svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">37</span>
-                            <span class="stat-label">Active signals</span>
+                            <span class="stat-value" id="ovViews">0</span>
+                            <span class="stat-label">Views tracked</span>
                         </div>
                     </div>
+
                     <div class="stat-card">
                         <div class="stat-icon purple">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 4h18l-7 8v6l-4-2v-4L3 4z" stroke="#7C3AED" stroke-width="2" stroke-linejoin="round"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                                <circle cx="9" cy="8" r="3.5" stroke="#7C3AED" stroke-width="2"/>
+                                <path d="M2 21c0-3.5 3.5-6 7-6s7 2.5 7 6" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M16 3.5a3.5 3.5 0 0 1 0 7M22 21c0-3-2.5-5.5-6-5.5" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
                         </div>
                         <div class="stat-content">
-                            <span class="stat-value">3</span>
-                            <span class="stat-label">Filtered setups</span>
+                            <span class="stat-value" id="ovViewers">0</span>
+                            <span class="stat-label">Unique viewers</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid-2col">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Top Performing Classes</h3>
-                            <span class="badge info">Top 5</span>
-                        </div>
-                        <div class="feature-usage-list">
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">Class G · Post-event drift</span>
-                                    <span class="feature-usage-count">72% long</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 72%;"></div></div>
-                            </div>
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">Class C · Trend continuation</span>
-                                    <span class="feature-usage-count">68% long</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 68%;"></div></div>
-                            </div>
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">Class A · Trend + volume</span>
-                                    <span class="feature-usage-count">58% long</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 58%;"></div></div>
-                            </div>
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">Class E · Breakout follow-through</span>
-                                    <span class="feature-usage-count">54% long</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 54%;"></div></div>
-                            </div>
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">Class B · Reversal near resistance</span>
-                                    <span class="feature-usage-count">47% short</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 47%;"></div></div>
-                            </div>
-                        </div>
-                        <p class="feature-usage-hint">Ranked by favorable-movement ratio across all observations.</p>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Category Load</h3>
-                            <span class="badge info">28 conditions</span>
-                        </div>
-                        <div class="adoption-list">
-                            <div class="adoption-item">
-                                <div class="adoption-info">
-                                    <span class="adoption-module">Structure</span>
-                                    <span class="adoption-count">6/28</span>
-                                </div>
-                                <div class="adoption-bar"><div class="adoption-fill" style="width: 21%;"></div></div>
-                            </div>
-                            <div class="adoption-item">
-                                <div class="adoption-info">
-                                    <span class="adoption-module">Technical</span>
-                                    <span class="adoption-count">5/28</span>
-                                </div>
-                                <div class="adoption-bar"><div class="adoption-fill" style="width: 18%;"></div></div>
-                            </div>
-                            <div class="adoption-item">
-                                <div class="adoption-info">
-                                    <span class="adoption-module">Indicator</span>
-                                    <span class="adoption-count">8/28</span>
-                                </div>
-                                <div class="adoption-bar"><div class="adoption-fill" style="width: 29%;"></div></div>
-                            </div>
-                            <div class="adoption-item">
-                                <div class="adoption-info">
-                                    <span class="adoption-module">Calendar</span>
-                                    <span class="adoption-count">4/28</span>
-                                </div>
-                                <div class="adoption-bar"><div class="adoption-fill" style="width: 14%;"></div></div>
-                            </div>
-                            <div class="adoption-item">
-                                <div class="adoption-info">
-                                    <span class="adoption-module">Fundamental</span>
-                                    <span class="adoption-count">5/28</span>
-                                </div>
-                                <div class="adoption-bar"><div class="adoption-fill" style="width: 18%;"></div></div>
-                            </div>
-                        </div>
-                        <p class="adoption-hint">All 28 conditions are currently categorised.</p>
-                    </div>
-                </div>
-
+                <!-- Plan & usage -->
                 <div class="card">
                     <div class="card-header">
-                        <h3>Recent Registry Activity</h3>
-                        <span class="badge info">last 24 hours</span>
+                        <h3>Plan &amp; usage</h3>
+                        <span class="pill pill-active" id="planPill">Sandbox</span>
                     </div>
-                    <div class="activity-summary">
-                        <div class="activity-summary-item">
-                            <span>📊</span>
-                            <span><span class="count">47</span> new observations</span>
+
+                    <div class="usage-block">
+                        <div class="usage-row">
+                            <span class="usage-label">Active documents</span>
+                            <span class="usage-value" id="usageDocs">0 / 3</span>
                         </div>
-                        <div class="activity-summary-item">
-                            <span>✅</span>
-                            <span><span class="count">31</span> closed experiments</span>
-                        </div>
-                        <div class="activity-summary-item">
-                            <span>⏳</span>
-                            <span><span class="count">16</span> still open</span>
-                        </div>
+                        <div class="usage-bar"><div class="usage-fill" id="usageDocsFill" style="width: 0%"></div></div>
                     </div>
-                    <div class="activity-container">
-                        <table class="activity-table">
-                            <thead>
-                                <tr><th>Event</th><th>Detail</th><th>Class</th><th>Time</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Signal recognized</strong></td>
-                                    <td>Post-event drift · 834 obs</td>
-                                    <td>Class G</td>
-                                    <td class="activity-time">18m ago</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>New setup registered</strong></td>
-                                    <td>Combination not previously seen</td>
-                                    <td>Class H</td>
-                                    <td class="activity-time">3h ago</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Signal recognized</strong></td>
-                                    <td>Trend continuation · 621 obs</td>
-                                    <td>Class C</td>
-                                    <td class="activity-time">2h ago</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Setup filtered</strong></td>
-                                    <td>Mean-reversion · low favorable ratio</td>
-                                    <td>Class D</td>
-                                    <td class="activity-time">6h ago</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Signal recognized</strong></td>
-                                    <td>Breakout follow-through · 402 obs</td>
-                                    <td>Class E</td>
-                                    <td class="activity-time">9h ago</td>
-                                </tr>
-                            </tbody>
-                        </table>
+
+                    <div class="usage-block">
+                        <div class="usage-row">
+                            <span class="usage-label">Monthly egress</span>
+                            <span class="usage-value" id="usageEgress">0 MB / 5 GB</span>
+                        </div>
+                        <div class="usage-bar"><div class="usage-fill" id="usageEgressFill" style="width: 0%"></div></div>
+                    </div>
+
+                    <div class="form-actions" style="justify-content: flex-start;">
+                        <a href="pricing.html" class="btn-primary">Upgrade plan</a>
+                        <button class="btn-secondary" type="button">Manage billing</button>
                     </div>
                 </div>
-            </section>
 
-            <!-- ============================================================ -->
-            <!-- TAB 2: REVIEW                                                -->
-            <!-- ============================================================ -->
-            <section class="tab-content" id="tab-review">
-                <header class="dashboard-header">
-                    <div>
-                        <h1>Review</h1>
-                        <p class="page-subtitle">Setups that need attention before they are surfaced as signals.</p>
-                    </div>
-                </header>
-
+                <!-- Recent activity -->
                 <div class="card">
                     <div class="card-header">
-                        <h3>Awaiting Review</h3>
-                        <span class="badge warning">4 pending</span>
+                        <h3>Recent account activity</h3>
+                        <span class="card-meta">last 7 days</span>
                     </div>
                     <div class="table-wrap">
                         <table class="activity-table">
                             <thead>
                                 <tr>
-                                    <th>Setup</th>
-                                    <th>Reason</th>
-                                    <th>Observations</th>
-                                    <th>Detected</th>
+                                    <th>Event</th>
+                                    <th>Detail</th>
+                                    <th>When</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="activityBody">
+                                <tr><td colspan="3" class="empty-row">No activity yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ============================================================
+                 TAB 2: SECURITY
+                 ============================================================ -->
+            <section class="tab-content" data-tab="security">
+
+                <header class="dashboard-header">
+                    <div>
+                        <h1>Security</h1>
+                        <p class="page-subtitle">Sessions, login history, and account protection.</p>
+                    </div>
+                </header>
+
+                <!-- 2FA -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Two-factor authentication</h3>
+                        <span class="badge warning">Recommended</span>
+                    </div>
+
+                    <div class="tfa-block">
+                        <div class="tfa-info">
+                            <strong>Authenticator app</strong>
+                            <span>Add a second step when signing in. Uses any TOTP app (1Password, Authy, Google Authenticator).</span>
+                        </div>
+                        <button class="btn-primary" type="button" id="enableTfa">Enable 2FA</button>
+                    </div>
+
+                    <div class="tfa-block" style="margin-bottom: 0;">
+                        <div class="tfa-info">
+                            <strong>Recovery codes</strong>
+                            <span>One-time codes used if you lose access to your authenticator.</span>
+                        </div>
+                        <button class="btn-secondary" type="button" id="genRecovery">Generate</button>
+                    </div>
+                </div>
+
+                <!-- Active sessions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Active sessions</h3>
+                        <button class="btn-secondary" type="button" id="logoutAll">Log out everywhere</button>
+                    </div>
+
+                    <div class="session-list" id="sessionList">
+                        <div class="session-item">
+                            <div class="session-icon">
+                                <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+                                    <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                                    <path d="M3 10h18" stroke="currentColor" stroke-width="1.8"/>
+                                </svg>
+                            </div>
+                            <div class="session-info">
+                                <strong>Windows · Chrome</strong>
+                                <span>197.184.•••.••• · Johannesburg, ZA</span>
+                            </div>
+                            <span class="session-tag">Current</span>
+                        </div>
+
+                        <div class="session-item">
+                            <div class="session-icon">
+                                <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+                                    <rect x="7" y="3" width="10" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                                    <circle cx="12" cy="17" r="1" fill="currentColor"/>
+                                </svg>
+                            </div>
+                            <div class="session-info">
+                                <strong>iPhone · Safari</strong>
+                                <span>41.76.•••.••• · Cape Town, ZA</span>
+                            </div>
+                            <button class="row-btn danger" type="button">Revoke</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Login history -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent sign-ins</h3>
+                        <span class="card-meta">last 10 attempts</span>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="login-history">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">H</div>
-                                            <div class="class-cell-info">
-                                                <strong>Class H · Signal H-1</strong>
-                                                <span>New combination — gathering data</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="status-badge in-progress">New setup</span></td>
-                                    <td>44</td>
-                                    <td class="activity-time">1d ago</td>
+                                    <th>When</th>
+                                    <th>Device</th>
+                                    <th>Location</th>
+                                    <th>IP</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="loginHistoryBody">
+                                <tr>
+                                    <td>2 minutes ago</td>
+                                    <td>Chrome · Windows</td>
+                                    <td>Johannesburg, ZA</td>
+                                    <td>197.184.120.44</td>
+                                    <td><span class="login-status success">Success</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">D</div>
-                                            <div class="class-cell-info">
-                                                <strong>Class D · Signal D-1</strong>
-                                                <span>Mean-reversion in range</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="status-badge pending">Low ratio</span></td>
-                                    <td>148</td>
-                                    <td class="activity-time">6h ago</td>
+                                    <td>Yesterday · 18:42</td>
+                                    <td>Safari · iPhone</td>
+                                    <td>Cape Town, ZA</td>
+                                    <td>41.76.203.11</td>
+                                    <td><span class="login-status success">Success</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">F</div>
-                                            <div class="class-cell-info">
-                                                <strong>Class F · Signal F-2</strong>
-                                                <span>Range exhaustion</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="status-badge pending">Insufficient history</span></td>
-                                    <td>91</td>
-                                    <td class="activity-time">2d ago</td>
+                                    <td>2 days ago · 09:15</td>
+                                    <td>Chrome · Windows</td>
+                                    <td>Johannesburg, ZA</td>
+                                    <td>197.184.120.44</td>
+                                    <td><span class="login-status success">Success</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">B</div>
-                                            <div class="class-cell-info">
-                                                <strong>Class B · Signal B-9</strong>
-                                                <span>Reversal near resistance</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="status-badge pending">Short-side borderline</span></td>
-                                    <td>312</td>
-                                    <td class="activity-time">5h ago</td>
+                                    <td>3 days ago · 22:08</td>
+                                    <td>Unknown</td>
+                                    <td>Frankfurt, DE</td>
+                                    <td>91.198.174.192</td>
+                                    <td><span class="login-status failed">Failed · wrong password</span></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <div class="card settings-card">
-                    <h3 class="settings-title">Review Thresholds</h3>
-                    <p class="settings-hint">Setups that fall below these thresholds are held here instead of being surfaced as signals.</p>
-                    <div class="settings-form">
-                        <div class="settings-field">
-                            <label class="settings-label">Minimum observations</label>
-                            <input type="number" class="form-input mono" id="reviewMinObs" value="100" min="1" />
-                        </div>
-                        <div class="settings-field">
-                            <label class="settings-label">Ratio floor</label>
-                            <input type="number" class="form-input mono" id="reviewRatioFloor" value="1.5" min="0" step="0.1" />
-                        </div>
-                        <div class="settings-field">
-                            <label class="settings-label">Class similarity threshold</label>
-                            <input type="number" class="form-input mono" id="reviewSimilarity" value="0.75" min="0" max="1" step="0.05" />
-                        </div>
-                        <div class="settings-field">
-                            <label class="settings-label">Holding window</label>
-                            <select class="form-select" id="reviewHoldWindow">
-                                <option value="24">24 hours</option>
-                                <option value="48" selected>48 hours</option>
-                                <option value="72">72 hours</option>
-                                <option value="168">1 week</option>
-                            </select>
-                        </div>
+                <!-- Data retention -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Data retention</h3>
                     </div>
-                    <div style="margin-top:16px;">
-                        <button class="btn-primary btn-sm" id="saveReviewThresholds" type="button">Save Thresholds</button>
+
+                    <div class="pref-row">
+                        <div class="pref-row-info">
+                            <strong>Purge viewer IPs after 90 days</strong>
+                            <span>Automatic. Aligns with our privacy policy and GDPR requirements.</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked disabled />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="pref-row">
+                        <div class="pref-row-info">
+                            <strong>Export all analytics on demand</strong>
+                            <span>Download every view and page-level record as CSV.</span>
+                        </div>
+                        <button class="btn-secondary" type="button" id="exportAllAnalytics">Export</button>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Review Criteria</h3>
-                        <span class="card-meta">explanation</span>
-                    </div>
-                    <p class="review-text">
-                        A setup is added to this list automatically when it meets any of the following
-                        conditions. The thresholds above control exactly what triggers a review.
-                    </p>
-                    <p class="review-text">
-                        · Fewer than the minimum required observations.<br />
-                        · Favorable-to-adverse ratio below the configured floor.<br />
-                        · Recently added to the registry and not yet validated.
-                    </p>
-                </div>
             </section>
 
-            <!-- ============================================================ -->
-            <!-- TAB 3: USAGE & ANALYTICS                                     -->
-            <!-- ============================================================ -->
-            <section class="tab-content" id="tab-usage">
-                <header class="dashboard-header">
-                    <div>
-                        <h1>Usage &amp; Analytics</h1>
-                        <p class="page-subtitle">API quotas, data source ranges, and observation volume over time.</p>
-                    </div>
-                    <button class="btn-secondary btn-sm" type="button" id="exportUsageBtn">
-                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
-                        Export Data
-                    </button>
-                </header>
+            <!-- ============================================================
+                 TAB 3: SETTINGS
+                 ============================================================ -->
+            <section class="tab-content" data-tab="settings">
 
-                <!-- API USAGE -->
-                <div class="card" style="margin-bottom: 20px;">
-                    <div class="card-header">
-                        <h3>API Usage</h3>
-                        <span class="card-meta" id="apiResetMeta">Resets at 00:00 UTC</span>
-                    </div>
-                    <div class="api-usage-grid" id="apiUsageGrid">
-                        <div class="api-card" data-provider="twelvedata">
-                            <div class="api-card-head">
-                                <span class="api-name">Twelve Data</span>
-                                <span class="api-card-tag">800/day</span>
-                            </div>
-                            <div class="usage-meter"><div class="usage-fill" data-usage-fill style="width: 0%"></div></div>
-                            <div class="api-card-foot">
-                                <span class="mono" data-usage-text>— / 800</span>
-                                <span>OHLCV</span>
-                            </div>
-                        </div>
-                        <div class="api-card" data-provider="finnhub">
-                            <div class="api-card-head">
-                                <span class="api-name">Finnhub</span>
-                                <span class="api-card-tag">60/min</span>
-                            </div>
-                            <div class="usage-meter"><div class="usage-fill" data-usage-fill style="width: 0%"></div></div>
-                            <div class="api-card-foot">
-                                <span class="mono" data-usage-text>— / 60</span>
-                                <span>Calendar</span>
-                            </div>
-                        </div>
-                        <div class="api-card" data-provider="fxnewsbias">
-                            <div class="api-card-head">
-                                <span class="api-name">FXNewsBias</span>
-                                <span class="api-card-tag">25/day</span>
-                            </div>
-                            <div class="usage-meter"><div class="usage-fill" data-usage-fill style="width: 0%"></div></div>
-                            <div class="api-card-foot">
-                                <span class="mono" data-usage-text>— / 25</span>
-                                <span>News</span>
-                            </div>
-                        </div>
-                        <div class="api-card" data-provider="upstash">
-                            <div class="api-card-head">
-                                <span class="api-name">Upstash Redis</span>
-                                <span class="api-card-tag">10k/day</span>
-                            </div>
-                            <div class="usage-meter"><div class="usage-fill" data-usage-fill style="width: 0%"></div></div>
-                            <div class="api-card-foot">
-                                <span class="mono" data-usage-text>— / 10,000</span>
-                                <span>Temp state</span>
-                            </div>
-                        </div>
-                        <div class="api-card" data-provider="cftc">
-                            <div class="api-card-head">
-                                <span class="api-name">CFTC Socrata</span>
-                                <span class="api-card-tag">Public</span>
-                            </div>
-                            <div class="usage-meter"><div class="usage-fill" data-usage-fill style="width: 0%"></div></div>
-                            <div class="api-card-foot">
-                                <span class="mono" data-usage-text>—</span>
-                                <span>COT</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DATA SOURCE RANGES -->
-                <div class="card" style="margin-bottom: 20px;">
-                    <div class="card-header">
-                        <h3>Data Source Ranges</h3>
-                        <span class="card-meta">lookback windows per source</span>
-                    </div>
-
-                    <div class="ds-block" data-source="cot">
-                        <div class="ds-head">
-                            <div class="ds-head-info">
-                                <strong>COT</strong>
-                                <span>CFTC Socrata · weekly</span>
-                            </div>
-                            <label class="toggle-switch"><input type="checkbox" checked data-ds-toggle /><span class="toggle-slider"></span></label>
-                        </div>
-                        <div class="ds-grid">
-                            <div class="settings-field">
-                                <label class="settings-label">Lookback</label>
-                                <select class="form-select" data-ds-value>
-                                    <option value="26">26 weeks</option>
-                                    <option value="52" selected>52 weeks</option>
-                                    <option value="104">104 weeks</option>
-                                    <option value="all">All available</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ds-block" data-source="calendar">
-                        <div class="ds-head">
-                            <div class="ds-head-info">
-                                <strong>Economic Calendar</strong>
-                                <span>Finnhub · 60/min</span>
-                            </div>
-                            <label class="toggle-switch"><input type="checkbox" checked data-ds-toggle /><span class="toggle-slider"></span></label>
-                        </div>
-                        <div class="ds-grid">
-                            <div class="settings-field">
-                                <label class="settings-label">Lookahead</label>
-                                <select class="form-select" data-ds-value>
-                                    <option value="1">1 day</option>
-                                    <option value="3" selected>3 days</option>
-                                    <option value="7">7 days</option>
-                                    <option value="14">14 days</option>
-                                </select>
-                            </div>
-                            <div class="settings-field">
-                                <label class="settings-label">Min impact</label>
-                                <select class="form-select">
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="high" selected>High only</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ds-block" data-source="news">
-                        <div class="ds-head">
-                            <div class="ds-head-info">
-                                <strong>News &amp; Sentiment</strong>
-                                <span>FXNewsBias · 25/day</span>
-                            </div>
-                            <label class="toggle-switch"><input type="checkbox" checked data-ds-toggle /><span class="toggle-slider"></span></label>
-                        </div>
-                        <div class="ds-grid">
-                            <div class="settings-field">
-                                <label class="settings-label">Lookback</label>
-                                <select class="form-select" data-ds-value>
-                                    <option value="6">6 hours</option>
-                                    <option value="12" selected>12 hours</option>
-                                    <option value="24">24 hours</option>
-                                    <option value="72">72 hours</option>
-                                </select>
-                            </div>
-                            <div class="settings-field">
-                                <label class="settings-label">Fetch cadence</label>
-                                <select class="form-select">
-                                    <option value="1">Every hour</option>
-                                    <option value="3" selected>Every 3 hours</option>
-                                    <option value="4">Every 4 hours</option>
-                                    <option value="6">Every 6 hours</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ds-block" data-source="sentiment">
-                        <div class="ds-head">
-                            <div class="ds-head-info">
-                                <strong>Sentiment Scoring</strong>
-                                <span>Applies to news items</span>
-                            </div>
-                            <label class="toggle-switch"><input type="checkbox" checked data-ds-toggle /><span class="toggle-slider"></span></label>
-                        </div>
-                        <div class="ds-grid">
-                            <div class="settings-field">
-                                <label class="settings-label">Min score</label>
-                                <input type="number" class="form-input mono" value="0.3" step="0.1" min="0" max="1" data-ds-value />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top:16px;">
-                        <button class="btn-primary btn-sm" id="saveDataRanges" type="button">Save Ranges</button>
-                    </div>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon blue">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M4 6h16M4 12h16M4 18h10" stroke="#14B8A6" stroke-width="2" stroke-linecap="round"/></svg>
-                        </div>
-                        <div class="stat-content">
-                            <span class="stat-value">28</span>
-                            <span class="stat-label">Conditions tracked</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#10B981" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>
-                        </div>
-                        <div class="stat-content">
-                            <span class="stat-value">2,936</span>
-                            <span class="stat-label">Total observations</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 2l3 6 6 .9-4.5 4.2 1.1 6.4L12 16.6 6.4 19.5l1.1-6.4L3 8.9 9 8z" stroke="#F59E0B" stroke-width="2" stroke-linejoin="round"/></svg>
-                        </div>
-                        <div class="stat-content">
-                            <span class="stat-value">8</span>
-                            <span class="stat-label">Classes registered</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 17l5-6 4 4 9-10" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </div>
-                        <div class="stat-content">
-                            <span class="stat-value">147</span>
-                            <span class="stat-label">Observations today</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid-2col">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Most Used Conditions</h3>
-                        </div>
-                        <div class="feature-usage-list">
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">Trend up</span>
-                                    <span class="feature-usage-count">2,184 obs</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 92%;"></div></div>
-                            </div>
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">Volume high</span>
-                                    <span class="feature-usage-count">1,938 obs</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 82%;"></div></div>
-                            </div>
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">Support holding</span>
-                                    <span class="feature-usage-count">1,876 obs</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 79%;"></div></div>
-                            </div>
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">RSI &gt; 55</span>
-                                    <span class="feature-usage-count">1,846 obs</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 78%;"></div></div>
-                            </div>
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">MA20 rising</span>
-                                    <span class="feature-usage-count">1,806 obs</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 76%;"></div></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Least Used Conditions</h3>
-                        </div>
-                        <div class="feature-usage-list">
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">COT extreme positioning</span>
-                                    <span class="feature-usage-count">364 obs</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 15%;"></div></div>
-                            </div>
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">Rate decision imminent</span>
-                                    <span class="feature-usage-count">418 obs</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 18%;"></div></div>
-                            </div>
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">COT net short falling</span>
-                                    <span class="feature-usage-count">486 obs</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 20%;"></div></div>
-                            </div>
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">Wick rejection</span>
-                                    <span class="feature-usage-count">512 obs</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 22%;"></div></div>
-                            </div>
-                            <div class="feature-usage-item">
-                                <div class="feature-usage-info">
-                                    <span class="feature-usage-name">Bollinger squeeze</span>
-                                    <span class="feature-usage-count">534 obs</span>
-                                </div>
-                                <div class="feature-usage-bar"><div class="feature-usage-fill" style="width: 23%;"></div></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Observations by Category</h3>
-                    </div>
-                    <div class="adoption-list-full">
-                        <div class="adoption-item-full">
-                            <div class="adoption-info-full">
-                                <span class="adoption-module">Structure</span>
-                                <span class="adoption-count">8,332 obs</span>
-                                <span class="adoption-percent">31%</span>
-                            </div>
-                            <div class="adoption-bar"><div class="adoption-fill" style="width: 31%;"></div></div>
-                        </div>
-                        <div class="adoption-item-full">
-                            <div class="adoption-info-full">
-                                <span class="adoption-module">Indicator</span>
-                                <span class="adoption-count">7,706 obs</span>
-                                <span class="adoption-percent">29%</span>
-                            </div>
-                            <div class="adoption-bar"><div class="adoption-fill" style="width: 29%;"></div></div>
-                        </div>
-                        <div class="adoption-item-full">
-                            <div class="adoption-info-full">
-                                <span class="adoption-module">Technical</span>
-                                <span class="adoption-count">5,888 obs</span>
-                                <span class="adoption-percent">22%</span>
-                            </div>
-                            <div class="adoption-bar"><div class="adoption-fill" style="width: 22%;"></div></div>
-                        </div>
-                        <div class="adoption-item-full">
-                            <div class="adoption-info-full">
-                                <span class="adoption-module">Fundamental</span>
-                                <span class="adoption-count">3,786 obs</span>
-                                <span class="adoption-percent">14%</span>
-                            </div>
-                            <div class="adoption-bar"><div class="adoption-fill" style="width: 14%;"></div></div>
-                        </div>
-                        <div class="adoption-item-full">
-                            <div class="adoption-info-full">
-                                <span class="adoption-module">Calendar</span>
-                                <span class="adoption-count">3,696 obs</span>
-                                <span class="adoption-percent">14%</span>
-                            </div>
-                            <div class="adoption-bar"><div class="adoption-fill" style="width: 14%;"></div></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Observations Over Time</h3>
-                    </div>
-                    <div class="usage-timeline">
-                        <div class="usage-week">
-                            <span class="usage-week-label">Week 1</span>
-                            <div class="usage-week-bars">
-                                <div class="usage-day-bar" style="height:12px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:18px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:22px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:16px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:24px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:14px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:20px;background:var(--primary);"></div>
-                            </div>
-                            <span class="usage-week-total">618 obs</span>
-                        </div>
-                        <div class="usage-week">
-                            <span class="usage-week-label">Week 2</span>
-                            <div class="usage-week-bars">
-                                <div class="usage-day-bar" style="height:18px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:22px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:16px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:24px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:28px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:20px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:18px;background:var(--primary);"></div>
-                            </div>
-                            <span class="usage-week-total">742 obs</span>
-                        </div>
-                        <div class="usage-week">
-                            <span class="usage-week-label">Week 3</span>
-                            <div class="usage-week-bars">
-                                <div class="usage-day-bar" style="height:20px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:24px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:28px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:22px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:18px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:26px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:24px;background:var(--primary);"></div>
-                            </div>
-                            <span class="usage-week-total">806 obs</span>
-                        </div>
-                        <div class="usage-week">
-                            <span class="usage-week-label">Week 4</span>
-                            <div class="usage-week-bars">
-                                <div class="usage-day-bar" style="height:24px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:26px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:22px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:28px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:24px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:30px;background:var(--primary);"></div>
-                                <div class="usage-day-bar" style="height:22px;background:var(--primary);"></div>
-                            </div>
-                            <span class="usage-week-total">770 obs</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- TAB 4: SETTINGS                                              -->
-            <!-- ============================================================ -->
-            <section class="tab-content" id="tab-settings">
                 <header class="dashboard-header">
                     <div>
                         <h1>Settings</h1>
-                        <p class="page-subtitle">Manage your account, pipeline control, instruments, and preferences.</p>
+                        <p class="page-subtitle">Profile details, password, and notifications.</p>
                     </div>
-                    <button class="btn-primary btn-sm" id="saveAllSettingsBtn" type="button">Save All Changes</button>
                 </header>
 
                 <div class="settings-container">
 
-                    <!-- SYSTEM CONTROL -->
-                    <div class="card settings-card" style="border-left: 4px solid var(--primary);">
-                        <h3 class="settings-title">System Control</h3>
-                        <p class="settings-hint">Emergency stop for the pipeline. When off, no API calls are made regardless of schedule.</p>
-
-                        <div class="sys-control-row">
-                            <div class="sys-control-info">
-                                <span class="sys-status-dot" id="sysStatusDot"></span>
-                                <div class="sys-control-text">
-                                    <strong id="sysStatusLabel">Pipeline stopped</strong>
-                                    <span id="sysStatusSub">API queries are disabled.</span>
-                                </div>
-                            </div>
-                            <label class="toggle-switch toggle-lg">
-                                <input type="checkbox" id="sysPipelineToggle" />
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="sys-meta-grid">
-                            <div class="sys-meta-item">
-                                <span class="sys-meta-label">Cron envelope</span>
-                                <span class="sys-meta-value">*/5 22,23,0-17 * * 1-5</span>
-                            </div>
-                            <div class="sys-meta-item">
-                                <span class="sys-meta-label">Timezone</span>
-                                <span class="sys-meta-value">UTC</span>
-                            </div>
-                            <div class="sys-meta-item">
-                                <span class="sys-meta-label">Last successful run</span>
-                                <span class="sys-meta-value" id="sysLastSuccess">—</span>
-                            </div>
-                            <div class="sys-meta-item">
-                                <span class="sys-meta-label">State updated</span>
-                                <span class="sys-meta-value" id="sysStateUpdated">—</span>
-                            </div>
-                        </div>
-
-                        <div class="quota-warning" id="sysQuotaWarning" hidden>
-                            <strong>⚠ Quota warning</strong>
-                            <span>Twelve Data usage is above 80% of the daily allowance. Consider reducing fetch frequency.</span>
-                        </div>
-                    </div>
-
-                    <!-- INSTRUMENTS & TRADEABLE HOURS -->
-                    <div class="card settings-card" style="border-left: 4px solid var(--primary);">
-                        <h3 class="settings-title">Instruments &amp; Tradeable Hours</h3>
-                        <p class="settings-hint">Only enabled instruments are fetched. Sessions outside the listed window are skipped before any API call is made. Times are UTC.</p>
-
-                        <table class="inst-table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 36px;"><input type="checkbox" id="instSelectAll" aria-label="Enable all" /></th>
-                                    <th>Instrument</th>
-                                    <th>Start</th>
-                                    <th>End</th>
-                                    <th>Timeframes</th>
-                                </tr>
-                            </thead>
-                            <tbody id="instTableBody">
-                                <tr data-symbol="EUR/USD">
-                                    <td><input type="checkbox" class="inst-enabled" checked /></td>
-                                    <td><strong>EUR/USD</strong></td>
-                                    <td><input type="time" value="08:00" /></td>
-                                    <td><input type="time" value="17:00" /></td>
-                                    <td>
-                                        <div class="mini-tf-grid">
-                                            <label><input type="checkbox" data-tf="M5" />M5</label>
-                                            <label><input type="checkbox" data-tf="M15" checked />M15</label>
-                                            <label><input type="checkbox" data-tf="H1" checked />H1</label>
-                                            <label><input type="checkbox" data-tf="H4" checked />H4</label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr data-symbol="AUD/USD">
-                                    <td><input type="checkbox" class="inst-enabled" checked /></td>
-                                    <td><strong>AUD/USD</strong></td>
-                                    <td><input type="time" value="23:00" /></td>
-                                    <td><input type="time" value="08:00" /></td>
-                                    <td>
-                                        <div class="mini-tf-grid">
-                                            <label><input type="checkbox" data-tf="M5" />M5</label>
-                                            <label><input type="checkbox" data-tf="M15" checked />M15</label>
-                                            <label><input type="checkbox" data-tf="H1" checked />H1</label>
-                                            <label><input type="checkbox" data-tf="H4" checked />H4</label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr data-symbol="USD/CHF">
-                                    <td><input type="checkbox" class="inst-enabled" checked /></td>
-                                    <td><strong>USD/CHF</strong></td>
-                                    <td><input type="time" value="13:00" /></td>
-                                    <td><input type="time" value="21:00" /></td>
-                                    <td>
-                                        <div class="mini-tf-grid">
-                                            <label><input type="checkbox" data-tf="M5" />M5</label>
-                                            <label><input type="checkbox" data-tf="M15" checked />M15</label>
-                                            <label><input type="checkbox" data-tf="H1" checked />H1</label>
-                                            <label><input type="checkbox" data-tf="H4" checked />H4</label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr data-symbol="USD/CAD">
-                                    <td><input type="checkbox" class="inst-enabled" checked /></td>
-                                    <td><strong>USD/CAD</strong></td>
-                                    <td><input type="time" value="12:00" /></td>
-                                    <td><input type="time" value="21:00" /></td>
-                                    <td>
-                                        <div class="mini-tf-grid">
-                                            <label><input type="checkbox" data-tf="M5" />M5</label>
-                                            <label><input type="checkbox" data-tf="M15" checked />M15</label>
-                                            <label><input type="checkbox" data-tf="H1" checked />H1</label>
-                                            <label><input type="checkbox" data-tf="H4" checked />H4</label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr data-symbol="DXY">
-                                    <td><input type="checkbox" class="inst-enabled" checked /></td>
-                                    <td><strong>USD Index</strong></td>
-                                    <td><input type="time" value="07:30" /></td>
-                                    <td><input type="time" value="17:00" /></td>
-                                    <td>
-                                        <div class="mini-tf-grid">
-                                            <label><input type="checkbox" data-tf="M15" checked />M15</label>
-                                            <label><input type="checkbox" data-tf="H1" checked />H1</label>
-                                            <label><input type="checkbox" data-tf="H4" checked />H4</label>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <div class="settings-inline-note">
-                            <span>Estimated daily Twelve Data credits: <strong id="instCreditEstimate">~510</strong> of 800</span>
-                            <button class="btn-primary btn-sm" id="saveInstrumentsBtn" type="button">Save Instruments</button>
-                        </div>
-                    </div>
-
-                    <!-- INDICATORS -->
-                    <div class="card settings-card" style="border-left: 4px solid var(--warning);">
-                        <h3 class="settings-title">Indicators</h3>
-                        <p class="settings-hint">Enable or disable indicators and mark their role. Defining indicators shape class identity; variation indicators only describe the occurrence.</p>
-
-                        <table class="ind-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:36px;"><input type="checkbox" id="indSelectAll" aria-label="Enable all" /></th>
-                                    <th>Indicator</th>
-                                    <th>Parameters</th>
-                                    <th>Role</th>
-                                </tr>
-                            </thead>
-                            <tbody id="indTableBody">
-                                <tr>
-                                    <td><input type="checkbox" class="ind-enabled" checked /></td>
-                                    <td><strong>SMA</strong></td>
-                                    <td><input class="form-input mono" value="20, 50" /></td>
-                                    <td>
-                                        <select class="form-select">
-                                            <option>Variation</option>
-                                            <option>Defining</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" class="ind-enabled" checked /></td>
-                                    <td><strong>EMA</strong></td>
-                                    <td><input class="form-input mono" value="9, 21" /></td>
-                                    <td>
-                                        <select class="form-select">
-                                            <option>Variation</option>
-                                            <option>Defining</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" class="ind-enabled" checked /></td>
-                                    <td><strong>RSI</strong></td>
-                                    <td><input class="form-input mono" value="14" /></td>
-                                    <td>
-                                        <select class="form-select">
-                                            <option>Variation</option>
-                                            <option>Defining</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" class="ind-enabled" checked /></td>
-                                    <td><strong>MACD</strong></td>
-                                    <td><input class="form-input mono" value="12, 26, 9" /></td>
-                                    <td>
-                                        <select class="form-select">
-                                            <option>Variation</option>
-                                            <option>Defining</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" class="ind-enabled" checked /></td>
-                                    <td><strong>Bollinger Bands</strong></td>
-                                    <td><input class="form-input mono" value="20, 2" /></td>
-                                    <td>
-                                        <select class="form-select">
-                                            <option>Variation</option>
-                                            <option>Defining</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" class="ind-enabled" checked /></td>
-                                    <td><strong>ATR</strong></td>
-                                    <td><input class="form-input mono" value="14" /></td>
-                                    <td>
-                                        <select class="form-select">
-                                            <option>Defining</option>
-                                            <option>Variation</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" class="ind-enabled" checked /></td>
-                                    <td><strong>Volume</strong></td>
-                                    <td><input class="form-input mono" value="20-period avg" /></td>
-                                    <td>
-                                        <select class="form-select">
-                                            <option>Defining</option>
-                                            <option>Variation</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" class="ind-enabled" /></td>
-                                    <td><strong>ADX</strong></td>
-                                    <td><input class="form-input mono" value="14" /></td>
-                                    <td>
-                                        <select class="form-select">
-                                            <option>Defining</option>
-                                            <option>Variation</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <div class="settings-inline-note">
-                            <span>Indicator configuration is stored locally per browser.</span>
-                            <button class="btn-primary btn-sm" id="saveIndicatorsBtn" type="button">Save Indicators</button>
-                        </div>
-                    </div>
-
-                    <!-- PERSONAL PROFILE -->
+                    <!-- Personal profile -->
                     <div class="card settings-card">
-                        <h3 class="settings-title">Personal Profile</h3>
-                        <p class="settings-hint">Your personal information — used for account access and notifications.</p>
+                        <h3 class="settings-title">Personal profile</h3>
+                        <p class="settings-hint">Your name, company, and contact details.</p>
+
                         <div class="settings-form">
                             <div class="settings-field">
-                                <label class="settings-label">Full Name</label>
-                                <input type="text" class="form-input" id="personalFullName" value="John Doe" />
+                                <label class="settings-label">Full name</label>
+                                <input class="form-input" id="setFullName" placeholder="John Doe" />
                             </div>
                             <div class="settings-field">
-                                <label class="settings-label">Email Address</label>
-                                <input type="email" class="form-input" id="personalEmail" value="john.doe@example.com" />
+                                <label class="settings-label">Company</label>
+                                <input class="form-input" id="setCompany" placeholder="Acme Inc." />
                             </div>
                             <div class="settings-field">
-                                <label class="settings-label">Phone Number</label>
-                                <input type="tel" class="form-input" id="personalPhone" value="+27 82 123 4567" />
+                                <label class="settings-label">Email</label>
+                                <input class="form-input" id="setEmail" type="email" disabled />
                             </div>
                             <div class="settings-field">
                                 <label class="settings-label">Timezone</label>
-                                <select class="form-input" id="personalTimezone">
+                                <select class="form-input" id="setTimezone">
                                     <option value="UTC">UTC</option>
+                                    <option value="Africa/Johannesburg" selected>Africa / Johannesburg</option>
+                                    <option value="Europe/London">Europe / London</option>
                                     <option value="America/New_York">America / New York</option>
-                                    <option value="Europe/London" selected>Europe / London</option>
-                                    <option value="Africa/Johannesburg">Africa / Johannesburg</option>
                                     <option value="Asia/Tokyo">Asia / Tokyo</option>
                                 </select>
                             </div>
                         </div>
-                        <div style="margin-top:12px;">
-                            <button class="btn-secondary btn-sm" id="updatePersonalBtn" type="button">Update Personal Info</button>
+
+                        <div class="form-actions">
+                            <span class="form-status" id="profileStatus"></span>
+                            <button class="btn-primary" type="button" id="saveProfile">Save profile</button>
                         </div>
                     </div>
 
-                    <!-- TRADING PARAMETERS -->
-                    <div class="card settings-card" id="tradingParamsSection">
-                        <h3 class="settings-title">Trading Parameters</h3>
-                        <p class="settings-hint">These settings control how the engine classifies conditions and evaluates setups.</p>
+                    <!-- Defaults -->
+                    <div class="card settings-card">
+                        <h3 class="settings-title">Defaults</h3>
+                        <p class="settings-hint">Applied automatically when you create new links.</p>
 
                         <div class="settings-form">
                             <div class="settings-field">
-                                <label class="settings-label">Minimum observations to surface</label>
-                                <input type="number" class="form-input mono" id="paramMinObservations" value="100" />
+                                <label class="settings-label">Default link expiry (days)</label>
+                                <input class="form-input" id="setDefaultExpiry" type="number" min="1" max="365" value="30" />
                             </div>
                             <div class="settings-field">
-                                <label class="settings-label">Favorable-to-adverse ratio floor</label>
-                                <input type="number" step="0.1" class="form-input mono" id="paramRatioFloor" value="1.5" />
-                            </div>
-                            <div class="settings-field">
-                                <label class="settings-label">Movement measurement window</label>
-                                <select class="form-input" id="paramWindow">
-                                    <option value="12">12 candles</option>
-                                    <option value="24" selected>24 candles</option>
-                                    <option value="48">48 candles</option>
-                                    <option value="96">96 candles</option>
-                                </select>
-                            </div>
-                            <div class="settings-field">
-                                <label class="settings-label">Class similarity threshold</label>
-                                <input type="number" step="0.05" class="form-input mono" id="paramSimilarity" value="0.75" />
-                            </div>
-                            <div class="settings-field">
-                                <label class="settings-label">False-discovery control</label>
-                                <select class="form-input" id="paramFdr">
-                                    <option value="none">None</option>
-                                    <option value="bh" selected>Benjamini–Hochberg</option>
-                                    <option value="bonferroni">Bonferroni</option>
-                                </select>
-                            </div>
-                            <div class="settings-field">
-                                <label class="settings-label">Registry retention</label>
-                                <select class="form-input" id="paramRetention">
-                                    <option value="forever" selected>Keep indefinitely</option>
-                                    <option value="365">Trim older than 1 year</option>
-                                    <option value="730">Trim older than 2 years</option>
-                                </select>
+                                <label class="settings-label">Default link label prefix</label>
+                                <input class="form-input" id="setLabelPrefix" placeholder="e.g. Investor deck — " />
                             </div>
                         </div>
 
-                        <div style="margin-top:16px;">
-                            <button class="btn-primary btn-sm" id="updateParamsBtn" type="button">Update Parameters</button>
+                        <div class="pref-row">
+                            <div class="pref-row-info">
+                                <strong>Require name on new links</strong>
+                                <span>Viewers must enter their name before viewing.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="setRequireName" checked />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="pref-row">
+                            <div class="pref-row-info">
+                                <strong>Require email on new links</strong>
+                                <span>Viewers must enter a corporate email before viewing.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="setRequireEmail" checked />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="pref-row">
+                            <div class="pref-row-info">
+                                <strong>Enable watermarking by default</strong>
+                                <span>Overlay viewer identity on every rendered page.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="setWatermark" />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <span class="form-status" id="defaultsStatus"></span>
+                            <button class="btn-primary" type="button" id="saveDefaults">Save defaults</button>
                         </div>
                     </div>
 
-                    <!-- NOTIFICATIONS -->
+                    <!-- Password -->
+                    <div class="card settings-card">
+                        <h3 class="settings-title">Password</h3>
+                        <p class="settings-hint">Change your password. You'll be signed out of all other devices.</p>
+
+                        <div class="settings-form">
+                            <div class="settings-field">
+                                <label class="settings-label">Current password</label>
+                                <input class="form-input" id="setCurrentPassword" type="password" placeholder="••••••••" />
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-label">New password</label>
+                                <input class="form-input" id="setNewPassword" type="password" placeholder="••••••••" />
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-label">Confirm new password</label>
+                                <input class="form-input" id="setConfirmPassword" type="password" placeholder="••••••••" />
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <span class="form-status" id="passwordStatus"></span>
+                            <button class="btn-primary" type="button" id="savePassword">Change password</button>
+                        </div>
+                    </div>
+
+                    <!-- Notifications -->
                     <div class="card settings-card">
                         <h3 class="settings-title">Notifications</h3>
-                        <p class="settings-hint">Choose how you want to be notified about registry activity.</p>
-                        <div class="notification-options">
-                            <label><input type="checkbox" checked /> Notify when a new setup is registered</label>
-                            <label><input type="checkbox" checked /> Notify when a setup is filtered</label>
-                            <label><input type="checkbox" checked /> Daily registry summary</label>
-                            <label><input type="checkbox" /> Weekly digest</label>
+                        <p class="settings-hint">Control which emails Fromple sends you.</p>
+
+                        <div class="pref-row">
+                            <div class="pref-row-info">
+                                <strong>Viewer alerts</strong>
+                                <span>Email me when someone opens one of my links.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notifViewer" checked />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="pref-row">
+                            <div class="pref-row-info">
+                                <strong>Link expiry reminders</strong>
+                                <span>Email me 24 hours before a link expires.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notifExpiry" checked />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="pref-row">
+                            <div class="pref-row-info">
+                                <strong>Weekly summary</strong>
+                                <span>Every Monday: views, unique viewers, and drop-off pages.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notifWeekly" />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="pref-row">
+                            <div class="pref-row-info">
+                                <strong>Product updates</strong>
+                                <span>Occasional emails about new features.</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notifProduct" />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <span class="form-status" id="notifStatus"></span>
+                            <button class="btn-primary" type="button" id="saveNotifications">Save notifications</button>
                         </div>
                     </div>
 
-                    <!-- ACCOUNT -->
-                    <div class="card settings-card" style="border-left:4px solid var(--danger);">
-                        <h3 class="settings-title" style="color:var(--danger);">Account</h3>
-                        <p class="settings-hint">Irreversible actions.</p>
-                        <button class="btn-secondary btn-sm settings-danger" id="deleteAccountBtn" type="button">Delete Account</button>
-                        <p class="danger-warning" style="font-size:13px; color:var(--red); margin-top:8px;">This action cannot be undone. All registry data will be permanently deleted.</p>
+                    <!-- Danger zone -->
+                    <div class="card settings-card settings-danger-card">
+                        <h3 class="settings-title">Danger zone</h3>
+                        <p class="settings-hint">Permanently delete your account and all documents, links, and analytics.</p>
+                        <button class="danger-btn" type="button" id="deleteAccount">Delete account</button>
                     </div>
 
                 </div>
+
             </section>
 
         </main>
@@ -1387,6 +831,7 @@
 
     <div id="footer"></div>
 
+    <script src="js/supabase-client.js"></script>
     <script src="js/main.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
