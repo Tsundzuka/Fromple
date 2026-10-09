@@ -137,6 +137,14 @@
    ============================================================ */
 @import 'pages/services.css';
 
+/* PRICING - Plans, pricing cards, and pricing FAQ
+   Three-tier pricing grid (Sandbox / Growth / Enterprise),
+   popular card emphasis, plan badges, feature lists,
+   pricing FAQ section, and dark CTA band.
+   Pages: pricing.html
+   ============================================================ */
+@import 'pages/pricing.css';
+
 /* TEAM - Team members and individual profiles
    Team grid with avatars, roles, bios.
    Team detail with social links, bio, and expertise tags.
