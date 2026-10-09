@@ -22,17 +22,17 @@
       </div>
 
       <nav class="sidebar-nav">
-        <a href="dashboard.html" class="nav-item active">
+        <a href="#" class="nav-item active" data-tab="overview">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="9" rx="1.5"/>
             <rect x="14" y="3" width="7" height="5" rx="1.5"/>
             <rect x="14" y="12" width="7" height="9" rx="1.5"/>
             <rect x="3" y="16" width="7" height="5" rx="1.5"/>
           </svg>
-          <span>Dashboard</span>
+          <span>Overview</span>
         </a>
 
-        <a href="documents.html" class="nav-item">
+        <a href="#" class="nav-item" data-tab="documents">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
             <path d="M14 3v6h6"/>
@@ -40,7 +40,7 @@
           <span>Documents</span>
         </a>
 
-        <a href="links.html" class="nav-item">
+        <a href="#" class="nav-item" data-tab="links">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/>
             <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>
@@ -48,14 +48,14 @@
           <span>Links</span>
         </a>
 
-        <a href="analytics.html" class="nav-item">
+        <a href="#" class="nav-item" data-tab="analytics">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 20V10M10 20V4M16 20v-7M22 20V7"/>
           </svg>
           <span>Analytics</span>
         </a>
 
-        <a href="settings.html" class="nav-item">
+        <a href="#" class="nav-item" data-tab="settings">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/>
             <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
@@ -93,133 +93,512 @@
     <!-- ============ MAIN ============ -->
     <main class="main-content">
 
-      <header class="dashboard-header">
-        <div>
-          <h1>Dashboard</h1>
-          <p class="page-subtitle">Your documents, links, and live viewer activity.</p>
-        </div>
-        <div class="dashboard-header-actions">
-          <a href="documents.html" class="btn-secondary">Upload document</a>
-          <a href="links.html" class="btn-primary">Create link</a>
-        </div>
-      </header>
+      <!-- ============================================================
+           TAB 1: OVERVIEW
+           ============================================================ -->
+      <section class="tab-content active" data-tab="overview">
 
-      <!-- KPI STRIP -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon blue">
-            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
-              <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" stroke="#14B8A6" stroke-width="2" stroke-linejoin="round"/>
-              <path d="M14 3v6h6" stroke="#14B8A6" stroke-width="2" stroke-linejoin="round"/>
+        <header class="dashboard-header">
+          <div>
+            <h1>Overview</h1>
+            <p class="page-subtitle">Your documents, links, and live viewer activity.</p>
+          </div>
+          <div class="dashboard-header-actions">
+            <button class="btn-secondary" type="button" data-goto="documents">Upload document</button>
+            <button class="btn-primary" type="button" data-goto="links">Create link</button>
+          </div>
+        </header>
+
+        <!-- KPI strip -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" stroke="#14B8A6" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M14 3v6h6" stroke="#14B8A6" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value" id="kpiDocuments">0</span>
+              <span class="stat-label">Documents</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value" id="kpiLinks">0</span>
+              <span class="stat-label">Active links</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="#F59E0B" stroke-width="2" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="3" stroke="#F59E0B" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value" id="kpiViews">0</span>
+              <span class="stat-label">Total views</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                <circle cx="9" cy="8" r="3.5" stroke="#7C3AED" stroke-width="2"/>
+                <path d="M2 21c0-3.5 3.5-6 7-6s7 2.5 7 6" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
+                <path d="M16 3.5a3.5 3.5 0 0 1 0 7M22 21c0-3-2.5-5.5-6-5.5" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value" id="kpiViewers">0</span>
+              <span class="stat-label">Unique viewers</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two-column: recent links + live activity -->
+        <div class="dashboard-grid">
+          <div class="card">
+            <div class="card-header">
+              <h3>Recent links</h3>
+              <a href="#" class="card-link" data-goto="links">View all →</a>
+            </div>
+            <div class="table-wrap">
+              <table class="activity-table">
+                <thead>
+                  <tr>
+                    <th>Document</th>
+                    <th>Status</th>
+                    <th>Views</th>
+                    <th>Last viewed</th>
+                  </tr>
+                </thead>
+                <tbody id="recentLinksBody">
+                  <tr><td colspan="4" class="empty-row">No links yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Live activity <span class="live-dot" aria-hidden="true"></span></h3>
+              <span class="card-meta">real-time</span>
+            </div>
+            <div class="activity-feed" id="liveActivity">
+              <div class="empty-row">Waiting for viewer activity…</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top documents -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Top documents</h3>
+            <span class="card-meta">by engagement</span>
+          </div>
+          <div class="table-wrap">
+            <table class="activity-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Pages</th>
+                  <th>Views</th>
+                  <th>Avg time</th>
+                  <th>Completion</th>
+                </tr>
+              </thead>
+              <tbody id="topDocumentsBody">
+                <tr><td colspan="5" class="empty-row">No documents yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================================
+           TAB 2: DOCUMENTS
+           ============================================================ -->
+      <section class="tab-content" data-tab="documents">
+
+        <header class="dashboard-header">
+          <div>
+            <h1>Documents</h1>
+            <p class="page-subtitle">Upload PDFs and manage your library.</p>
+          </div>
+          <div class="dashboard-header-actions">
+            <button class="btn-primary" type="button" id="uploadBtn">Upload document</button>
+          </div>
+        </header>
+
+        <!-- Upload dropzone -->
+        <div class="card upload-card">
+          <div class="upload-zone" id="uploadZone">
+            <svg viewBox="0 0 24 24" fill="none" width="40" height="40" class="upload-icon">
+              <path d="M12 16V4M6 10l6-6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-          </div>
-          <div class="stat-content">
-            <span class="stat-value" id="kpiDocuments">0</span>
-            <span class="stat-label">Documents</span>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon green">
-            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
-              <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="stat-content">
-            <span class="stat-value" id="kpiLinks">0</span>
-            <span class="stat-label">Active links</span>
+            <h3>Drag &amp; drop a PDF here</h3>
+            <p>or <button type="button" class="upload-link" id="uploadPick">browse your files</button> — PDF only, max 50 MB</p>
+            <input type="file" id="uploadInput" accept="application/pdf" hidden />
           </div>
         </div>
-
-        <div class="stat-card">
-          <div class="stat-icon orange">
-            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
-              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="#F59E0B" stroke-width="2" stroke-linejoin="round"/>
-              <circle cx="12" cy="12" r="3" stroke="#F59E0B" stroke-width="2"/>
-            </svg>
-          </div>
-          <div class="stat-content">
-            <span class="stat-value" id="kpiViews">0</span>
-            <span class="stat-label">Total views</span>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon purple">
-            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
-              <circle cx="9" cy="8" r="3.5" stroke="#7C3AED" stroke-width="2"/>
-              <path d="M2 21c0-3.5 3.5-6 7-6s7 2.5 7 6" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
-              <path d="M16 3.5a3.5 3.5 0 0 1 0 7M22 21c0-3-2.5-5.5-6-5.5" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="stat-content">
-            <span class="stat-value" id="kpiViewers">0</span>
-            <span class="stat-label">Unique viewers</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- TWO-COLUMN: recent links + live activity -->
-      <div class="dashboard-grid">
 
         <div class="card">
           <div class="card-header">
-            <h3>Recent links</h3>
-            <a href="links.html" class="card-link">View all →</a>
+            <h3>All documents</h3>
+            <span class="card-meta" id="documentsCount">0</span>
+          </div>
+          <div class="table-wrap">
+            <table class="activity-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Size</th>
+                  <th>Pages</th>
+                  <th>Links</th>
+                  <th>Uploaded</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="documentsBody">
+                <tr><td colspan="6" class="empty-row">No documents yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================================
+           TAB 3: LINKS
+           ============================================================ -->
+      <section class="tab-content" data-tab="links">
+
+        <header class="dashboard-header">
+          <div>
+            <h1>Links</h1>
+            <p class="page-subtitle">Create and manage secure share links.</p>
+          </div>
+          <div class="dashboard-header-actions">
+            <button class="btn-primary" type="button" id="createLinkBtn">Create link</button>
+          </div>
+        </header>
+
+        <!-- Create link panel -->
+        <div class="card link-create-card">
+          <div class="card-header">
+            <h3>Create a new link</h3>
+            <button class="btn-secondary" type="button" id="toggleCreateLink">Hide</button>
+          </div>
+          <div id="createLinkBody">
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label">Document</label>
+                <select class="form-input" id="linkDocument">
+                  <option value="">Select a document…</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label">Link label (optional)</label>
+                <input class="form-input" id="linkLabel" placeholder="Investor deck — Series A" />
+              </div>
+              <div class="form-field">
+                <label class="form-label">Expires</label>
+                <input class="form-input" id="linkExpires" type="date" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label">Require name</label>
+                <select class="form-input" id="linkRequireName">
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label">Require email</label>
+                <select class="form-input" id="linkRequireEmail">
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label">Watermark</label>
+                <select class="form-input" id="linkWatermark">
+                  <option value="true">Enabled</option>
+                  <option value="false">Disabled</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">Allowed email domains (optional, comma-separated)</label>
+              <input class="form-input" id="linkDomains" placeholder="sequoiacap.com, a16z.com" />
+            </div>
+
+            <div class="form-actions">
+              <span class="form-status" id="createLinkStatus"></span>
+              <button class="btn-primary" type="button" id="createLinkSubmit">Generate link</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Links table -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Active links</h3>
+            <div class="filter-tabs">
+              <button class="filter-btn active" data-filter="all" type="button">All</button>
+              <button class="filter-btn" data-filter="active" type="button">Active</button>
+              <button class="filter-btn" data-filter="revoked" type="button">Revoked</button>
+              <button class="filter-btn" data-filter="expired" type="button">Expired</button>
+            </div>
           </div>
           <div class="table-wrap">
             <table class="activity-table">
               <thead>
                 <tr>
                   <th>Document</th>
+                  <th>Label</th>
                   <th>Status</th>
                   <th>Views</th>
-                  <th>Last viewed</th>
+                  <th>Expires</th>
+                  <th>Created</th>
+                  <th></th>
                 </tr>
               </thead>
-              <tbody id="recentLinksBody">
-                <tr><td colspan="4" class="empty-row">No links yet.</td></tr>
+              <tbody id="linksBody">
+                <tr><td colspan="7" class="empty-row">No links yet.</td></tr>
               </tbody>
             </table>
           </div>
         </div>
 
+      </section>
+
+      <!-- ============================================================
+           TAB 4: ANALYTICS
+           ============================================================ -->
+      <section class="tab-content" data-tab="analytics">
+
+        <header class="dashboard-header">
+          <div>
+            <h1>Analytics</h1>
+            <p class="page-subtitle">Per-page engagement across all your links.</p>
+          </div>
+          <div class="dashboard-header-actions">
+            <select class="form-input" id="analyticsLinkSelect" style="max-width: 260px;">
+              <option value="">All links</option>
+            </select>
+            <button class="btn-secondary" type="button" id="exportAnalytics">Export CSV</button>
+          </div>
+        </header>
+
+        <!-- Analytics summary -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                <circle cx="12" cy="12" r="9" stroke="#14B8A6" stroke-width="2"/>
+                <path d="M12 7v5l3 2" stroke="#14B8A6" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value" id="anaAvgTime">0s</span>
+              <span class="stat-label">Avg time per view</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                <path d="M5 12l5 5L20 7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value" id="anaCompletion">0%</span>
+              <span class="stat-label">Completion rate</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                <path d="M3 7l5 6 4-4 9 10" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value" id="anaDropoff">—</span>
+              <span class="stat-label">Biggest drop-off page</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                <path d="M4 20V10M10 20V4M16 20v-7M22 20V7" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value" id="anaEngagement">0</span>
+              <span class="stat-label">Engagement score</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Per-page engagement chart -->
         <div class="card">
           <div class="card-header">
-            <h3>Live activity <span class="live-dot" aria-hidden="true"></span></h3>
-            <span class="card-meta">real-time</span>
+            <h3>Time per page</h3>
+            <span class="card-meta">average across all views</span>
           </div>
-          <div class="activity-feed" id="liveActivity">
-            <div class="empty-row">Waiting for viewer activity…</div>
+          <div class="bar-chart" id="pageTimeChart">
+            <div class="empty-row" style="padding:60px 0;">No analytics data yet.</div>
           </div>
         </div>
 
-      </div>
+        <!-- Viewer journeys -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Viewer journeys</h3>
+            <span class="card-meta">last 50 views</span>
+          </div>
+          <div class="table-wrap">
+            <table class="activity-table">
+              <thead>
+                <tr>
+                  <th>Viewer</th>
+                  <th>Email</th>
+                  <th>IP</th>
+                  <th>Started</th>
+                  <th>Duration</th>
+                  <th>Pages read</th>
+                  <th>Completed</th>
+                </tr>
+              </thead>
+              <tbody id="viewersBody">
+                <tr><td colspan="7" class="empty-row">No views yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-      <!-- TOP DOCUMENTS -->
-      <div class="card">
-        <div class="card-header">
-          <h3>Top documents</h3>
-          <span class="card-meta">by engagement</span>
+      </section>
+
+      <!-- ============================================================
+           TAB 5: SETTINGS
+           ============================================================ -->
+      <section class="tab-content" data-tab="settings">
+
+        <header class="dashboard-header">
+          <div>
+            <h1>Settings</h1>
+            <p class="page-subtitle">Account, plan, and preferences.</p>
+          </div>
+        </header>
+
+        <div class="settings-container">
+
+          <!-- Profile -->
+          <div class="card settings-card">
+            <h3 class="settings-title">Profile</h3>
+            <p class="settings-hint">Your name and contact details.</p>
+
+            <div class="settings-form">
+              <div class="settings-field">
+                <label class="settings-label">Full name</label>
+                <input class="form-input" id="setFullName" placeholder="John Doe" />
+              </div>
+              <div class="settings-field">
+                <label class="settings-label">Company</label>
+                <input class="form-input" id="setCompany" placeholder="Acme Inc." />
+              </div>
+              <div class="settings-field">
+                <label class="settings-label">Email</label>
+                <input class="form-input" id="setEmail" type="email" disabled />
+              </div>
+              <div class="settings-field">
+                <label class="settings-label">Default link expiry (days)</label>
+                <input class="form-input" id="setDefaultExpiry" type="number" min="1" max="365" value="30" />
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <span class="form-status" id="profileStatus"></span>
+              <button class="btn-primary" type="button" id="saveProfile">Save profile</button>
+            </div>
+          </div>
+
+          <!-- Plan -->
+          <div class="card settings-card">
+            <h3 class="settings-title">Plan</h3>
+            <p class="settings-hint">You're on the <strong id="planName">Sandbox</strong> plan.</p>
+
+            <div class="usage-block">
+              <div class="usage-row">
+                <span class="usage-label">Active documents</span>
+                <span class="usage-value" id="usageDocs">0 / 3</span>
+              </div>
+              <div class="usage-bar"><div class="usage-fill" id="usageDocsFill" style="width: 0%"></div></div>
+            </div>
+
+            <div class="usage-block">
+              <div class="usage-row">
+                <span class="usage-label">Monthly egress</span>
+                <span class="usage-value" id="usageEgress">0 MB / 5 GB</span>
+              </div>
+              <div class="usage-bar"><div class="usage-fill" id="usageEgressFill" style="width: 0%"></div></div>
+            </div>
+
+            <a href="pricing.html" class="btn-primary" style="margin-top:8px;">Upgrade plan</a>
+          </div>
+
+          <!-- Security -->
+          <div class="card settings-card">
+            <h3 class="settings-title">Security</h3>
+            <p class="settings-hint">Password and session management.</p>
+
+            <div class="settings-form">
+              <div class="settings-field">
+                <label class="settings-label">New password</label>
+                <input class="form-input" id="setNewPassword" type="password" placeholder="••••••••" />
+              </div>
+              <div class="settings-field">
+                <label class="settings-label">Confirm password</label>
+                <input class="form-input" id="setConfirmPassword" type="password" placeholder="••••••••" />
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <span class="form-status" id="passwordStatus"></span>
+              <button class="btn-primary" type="button" id="savePassword">Change password</button>
+            </div>
+          </div>
+
+          <!-- Danger zone -->
+          <div class="card settings-card settings-danger">
+            <h3 class="settings-title">Danger zone</h3>
+            <p class="settings-hint">Permanently delete your account and all data.</p>
+            <div class="form-actions" style="justify-content:flex-start;">
+              <button class="btn-secondary settings-danger-btn" type="button" id="deleteAccount">Delete account</button>
+            </div>
+          </div>
+
         </div>
-        <div class="table-wrap">
-          <table class="activity-table">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Pages</th>
-                <th>Views</th>
-                <th>Avg time</th>
-                <th>Completion</th>
-              </tr>
-            </thead>
-            <tbody id="topDocumentsBody">
-              <tr><td colspan="5" class="empty-row">No documents yet.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+
+      </section>
 
     </main>
   </div>
