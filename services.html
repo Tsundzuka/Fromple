@@ -4,265 +4,212 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Services — Fromple</title>
-    <meta name="description" content="Secure document sharing for founders, sales teams, agencies, and M&A brokers. See how Fromple solves the same problem for every workflow." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="css/styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/home.css" />
+    <link rel="stylesheet" href="css/services.css" />
 </head>
 <body>
 
     <div id="header"></div>
 
-    <!-- ========== PAGE HERO ========== -->
-    <section class="page-hero">
-        <div class="container">
-            <span class="section-tag">Use cases</span>
-            <h1>What Fromple does for you</h1>
-            <p>Every industry shares the same problem — sending something sensitive to someone you don't fully trust yet, and losing visibility the moment it leaves your outbox. Here's how Fromple solves it, by role.</p>
-        </div>
-    </section>
+    <main>
 
-    <!-- ========== USE CASES ========== -->
-    <section class="use-cases">
-        <div class="container">
-            <div class="use-case-grid">
+        <!-- ========== SERVICES HERO + LIFECYCLE ========== -->
+        <section class="svc-hero">
+            <div class="container">
+                <header class="svc-hero-head">
+                    <span class="eyebrow">
+                        <span class="eyebrow-dot"></span>
+                        Secure Document Sharing
+                    </span>
+                    <h1>End-to-end control over every file you send.</h1>
+                    <p>Upload, restrict, share, and track — from a single dashboard. Know who read what, for how long, and pull the plug the moment you want it back.</p>
+                </header>
 
-                <!-- FOUNDERS -->
-                <article class="use-case-card">
-                    <div class="use-case-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 3v18h18"/>
-                            <path d="M7 15l4-4 3 3 5-6"/>
-                        </svg>
-                    </div>
-                    <h3>For founders raising rounds</h3>
-                    <p>Send your pitch deck as a tracked link. Know which investor read the financial model, which one skimmed page 3, and which one forwarded it to a partner before replying.</p>
-                    <ul class="use-case-list">
-                        <li>Per-page reading time on financials</li>
-                        <li>Forward detection via new IPs</li>
-                        <li>Revoke access mid-diligence if talks stall</li>
-                    </ul>
-                </article>
-
-                <!-- SALES -->
-                <article class="use-case-card">
-                    <div class="use-case-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 4h16v16H4z"/>
-                            <path d="M8 9h8M8 13h5"/>
-                        </svg>
-                    </div>
-                    <h3>For B2B sales teams</h3>
-                    <p>Send proposals and contracts without attachments. Your rep sees the moment the prospect opens the pricing page — and can follow up while attention is still warm.</p>
-                    <ul class="use-case-list">
-                        <li>Live activity feed on every link</li>
-                        <li>Slack/email alerts when pricing is viewed</li>
-                        <li>Identity gate captures name + company domain</li>
-                    </ul>
-                </article>
-
-                <!-- AGENCIES -->
-                <article class="use-case-card">
-                    <div class="use-case-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="9"/>
-                            <path d="M12 7v5l3 3"/>
-                        </svg>
-                    </div>
-                    <h3>For freelance agencies</h3>
-                    <p>Deliver client work through branded links instead of email attachments. Every deliverable is tracked, watermarked with the reviewer's identity, and revocable if the engagement ends.</p>
-                    <ul class="use-case-list">
-                        <li>White-label links on your own domain</li>
-                        <li>Automatic watermark with reviewer email</li>
-                        <li>Expiry dates for time-limited review windows</li>
-                    </ul>
-                </article>
-
-                <!-- M&A -->
-                <article class="use-case-card">
-                    <div class="use-case-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="7" height="7" rx="1"/>
-                            <rect x="14" y="3" width="7" height="7" rx="1"/>
-                            <rect x="3" y="14" width="7" height="7" rx="1"/>
-                            <rect x="14" y="14" width="7" height="7" rx="1"/>
-                        </svg>
-                    </div>
-                    <h3>For M&amp;A brokers</h3>
-                    <p>Run virtual data rooms without paying VDR prices. Assemble multi-file deal rooms, gate them by buyer domain, and log every document a party touches during diligence.</p>
-                    <ul class="use-case-list">
-                        <li>Multi-file deal rooms with folders</li>
-                        <li>Domain whitelisting (e.g. only @acquirer.com)</li>
-                        <li>Full audit log export for compliance</li>
-                    </ul>
-                </article>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== CAPABILITIES DEEP DIVE ========== -->
-    <section class="capabilities">
-        <div class="container">
-
-            <header class="section-header">
-                <span class="section-tag">Capabilities</span>
-                <h2>Six things email attachments can't do</h2>
-                <p>Everything below works out of the box. No plugins, no browser extensions, no compliance review.</p>
-            </header>
-
-            <!-- Capability 1 -->
-            <div class="capability-row">
-                <div class="capability-content">
-                    <span class="capability-index">01</span>
-                    <h3>Protected canvas viewer</h3>
-                    <p>Your PDF renders inside a locked HTML5 canvas. No right-click, no copy, no download, no print command. The raw file never reaches the browser — only a signed render pass.</p>
-                </div>
-                <div class="capability-visual">
-                    <div class="visual-doc">
-                        <div class="visual-doc-bar"></div>
-                        <div class="visual-doc-line" style="width: 80%;"></div>
-                        <div class="visual-doc-line" style="width: 60%;"></div>
-                        <div class="visual-doc-line" style="width: 72%;"></div>
-                        <div class="visual-doc-shield">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                            </svg>
+                <ol class="svc-flow">
+                    <li class="svc-card">
+                        <div class="svc-card-head">
+                            <span class="svc-index">01</span>
+                            <span class="svc-tag">Upload</span>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Capability 2 -->
-            <div class="capability-row capability-row--reverse">
-                <div class="capability-content">
-                    <span class="capability-index">02</span>
-                    <h3>Per-page engagement</h3>
-                    <p>Millisecond-precision reading time on every page. See where attention peaks, where it dies, and exactly which slide lost the room. Not opens — actual engagement.</p>
-                </div>
-                <div class="capability-visual">
-                    <div class="visual-bars">
-                        <span style="height: 34%"></span>
-                        <span style="height: 62%"></span>
-                        <span style="height: 48%"></span>
-                        <span style="height: 88%" class="peak"></span>
-                        <span style="height: 40%"></span>
-                        <span style="height: 22%" class="drop"></span>
-                        <span style="height: 55%"></span>
-                        <span style="height: 30%"></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Capability 3 -->
-            <div class="capability-row">
-                <div class="capability-content">
-                    <span class="capability-index">03</span>
-                    <h3>Instant revocation</h3>
-                    <p>Kill any link in one click. If someone is reading page 12 right now, their viewer locks and shows an access-revoked screen within seconds. No re-send, no awkward email.</p>
-                </div>
-                <div class="capability-visual">
-                    <div class="visual-lock">
-                        <div class="visual-lock-ring"></div>
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="11" rx="2"/>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Capability 4 -->
-            <div class="capability-row capability-row--reverse">
-                <div class="capability-content">
-                    <span class="capability-index">04</span>
-                    <h3>Dynamic watermarking</h3>
-                    <p>Every page renders with the viewer's email, IP, and timestamp overlaid in a shifting translucent grid. If a screenshot leaks, the source is identifiable — and the shift defeats clean camera captures.</p>
-                </div>
-                <div class="capability-visual">
-                    <div class="visual-watermark">
-                        <span>alex@acme.com</span>
-                        <span>alex@acme.com</span>
-                        <span>alex@acme.com</span>
-                        <span>alex@acme.com</span>
-                        <span>alex@acme.com</span>
-                        <span>alex@acme.com</span>
-                        <span>alex@acme.com</span>
-                        <span>alex@acme.com</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Capability 5 -->
-            <div class="capability-row">
-                <div class="capability-content">
-                    <span class="capability-index">05</span>
-                    <h3>Virtual data rooms</h3>
-                    <p>Move beyond single links. Assemble deal rooms with folders, mixed file types, and per-item access controls. Run diligence without paying enterprise VDR prices.</p>
-                </div>
-                <div class="capability-visual">
-                    <div class="visual-rooms">
-                        <div class="visual-room-folder">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        <h3>Private Document Vault</h3>
+                        <p>Drop any PDF into a private bucket. Your file never sits on a public URL.</p>
+                        <ul class="svc-features">
+                            <li>Encrypted at rest</li>
+                            <li>Signed access URLs</li>
+                            <li>Unlimited revisions</li>
+                        </ul>
+                        <a href="service-detail.html?module=upload" class="svc-link">
+                            Learn more
+                            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            Legal
+                        </a>
+                    </li>
+
+                    <li class="svc-card">
+                        <div class="svc-card-head">
+                            <span class="svc-index">02</span>
+                            <span class="svc-tag">Restrict</span>
                         </div>
-                        <div class="visual-room-folder">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        <h3>Access Control Per Link</h3>
+                        <p>Decide exactly who can open each file — by name, email, domain, or password.</p>
+                        <ul class="svc-features">
+                            <li>Name + email gate</li>
+                            <li>Domain whitelisting</li>
+                            <li>Password &amp; expiry</li>
+                        </ul>
+                        <a href="service-detail.html?module=restrict" class="svc-link">
+                            Learn more
+                            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            Financials
+                        </a>
+                    </li>
+
+                    <li class="svc-card">
+                        <div class="svc-card-head">
+                            <span class="svc-index">03</span>
+                            <span class="svc-tag">Share</span>
                         </div>
-                        <div class="visual-room-folder">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        <h3>One Link, No Attachments</h3>
+                        <p>Send a single secure URL. It renders in a locked canvas — no download, no print, no copy.</p>
+                        <ul class="svc-features">
+                            <li>Protected canvas viewer</li>
+                            <li>Dynamic watermarking</li>
+                            <li>Instant revocation</li>
+                        </ul>
+                        <a href="service-detail.html?module=share" class="svc-link">
+                            Learn more
+                            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            Product
+                        </a>
+                    </li>
+
+                    <li class="svc-card">
+                        <div class="svc-card-head">
+                            <span class="svc-index">04</span>
+                            <span class="svc-tag">Track</span>
                         </div>
+                        <h3>Full Engagement Analytics</h3>
+                        <p>See per-page reading time, drop-off points, and every viewer's identity in real time.</p>
+                        <ul class="svc-features">
+                            <li>Per-page duration</li>
+                            <li>Live viewer feed</li>
+                            <li>Drop-off triage</li>
+                        </ul>
+                        <a href="service-detail.html?module=track" class="svc-link">
+                            Learn more
+                            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- ========== CIRCULAR ORBIT DIAGRAM ========== -->
+        <section class="funnel-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">The Fromple Ecosystem</span>
+                    <h2>Complete <span class="gradient-text">Document Security</span> Intelligence</h2>
+                    <p>From upload to revocation, every layer of your document workflow is covered.</p>
+                </div>
+                <div class="orbit-wrapper">
+                    <div class="orbit-container">
+
+                        <div class="orbit-ring orbit-ring-1"></div>
+                        <div class="orbit-ring orbit-ring-2"></div>
+                        <div class="orbit-ring orbit-ring-3"></div>
+
+                        <div class="orbit-center">
+                            <div class="orbit-center-glow"></div>
+                            <div class="orbit-center-inner">
+                                <img src="assets/icons/logo.png" alt="" class="center-logo" aria-hidden="true" />
+                                <h4>Fromple</h4>
+                                <p>Workspace</p>
+                            </div>
+                            <div class="center-pulse"></div>
+                        </div>
+
+                        <div class="orbit-node node-1">
+                            <div class="orbit-number-badge">1</div>
+                            <div class="orbit-content">
+                                <span class="orbit-icon">📄</span>
+                                <h4>UPLOAD</h4>
+                                <p>Private encrypted storage</p>
+                                <span class="orbit-badge">Vault</span>
+                            </div>
+                            <div class="orbit-arrow orbit-arrow-out">→</div>
+                        </div>
+
+                        <div class="orbit-node node-2">
+                            <div class="orbit-number-badge">2</div>
+                            <div class="orbit-content">
+                                <span class="orbit-icon">🔒</span>
+                                <h4>RESTRICT</h4>
+                                <p>Gate by identity and domain</p>
+                                <span class="orbit-badge competitor">Access Control</span>
+                            </div>
+                            <div class="orbit-arrow orbit-arrow-in">→</div>
+                        </div>
+
+                        <div class="orbit-node node-3 highlight">
+                            <div class="orbit-number-badge">3</div>
+                            <div class="orbit-content">
+                                <span class="orbit-icon">🛡️</span>
+                                <h4>PROTECT</h4>
+                                <p>Canvas DRM + watermarking</p>
+                                <span class="orbit-badge cta">Viewer Security</span>
+                            </div>
+                            <div class="orbit-arrow orbit-arrow-out">→</div>
+                        </div>
+
+                        <div class="orbit-node node-4">
+                            <div class="orbit-number-badge">4</div>
+                            <div class="orbit-content">
+                                <span class="orbit-icon">📊</span>
+                                <h4>TRACK</h4>
+                                <p>Per-page engagement data</p>
+                                <span class="orbit-badge">Analytics</span>
+                            </div>
+                            <div class="orbit-arrow orbit-arrow-in">→</div>
+                        </div>
+
+                        <div class="orbit-node node-5">
+                            <div class="orbit-number-badge">5</div>
+                            <div class="orbit-content">
+                                <span class="orbit-icon">📡</span>
+                                <h4>MONITOR</h4>
+                                <p>Live viewer activity feed</p>
+                                <span class="orbit-badge competitor">Real-time</span>
+                            </div>
+                            <div class="orbit-arrow orbit-arrow-out">→</div>
+                        </div>
+
+                        <div class="orbit-node node-6">
+                            <div class="orbit-number-badge">6</div>
+                            <div class="orbit-content">
+                                <span class="orbit-icon">⛔</span>
+                                <h4>REVOKE</h4>
+                                <p>Kill access instantly</p>
+                                <span class="orbit-badge cta">Mid-session</span>
+                            </div>
+                            <div class="orbit-arrow orbit-arrow-in">→</div>
+                        </div>
+
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Capability 6 -->
-            <div class="capability-row capability-row--reverse">
-                <div class="capability-content">
-                    <span class="capability-index">06</span>
-                    <h3>Custom domains</h3>
-                    <p>Host every link under your own subdomain. deals.youragency.com instead of fromple.app/v/x8k2. SSL provisioned automatically. Full white-label on Enterprise.</p>
-                </div>
-                <div class="capability-visual">
-                    <div class="visual-domain">
-                        <span class="visual-domain-scheme">https://</span><span class="visual-domain-brand">deals.</span><span class="visual-domain-rest">acme.com</span><span class="visual-domain-cursor">|</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- ========== DARK CTA ========== -->
-    <section class="cta-dark">
-        <div class="container">
-            <div class="cta-dark-inner">
-                <h2>
-                    Whichever role you're in,<br />
-                    <span class="cta-dark-accent">the loop is the same.</span>
-                </h2>
-                <p>Upload, restrict, share, track. Start on the free tier and see it work on your next deck.</p>
-                <div class="cta-dark-actions">
-                    <a href="signup.html" class="btn-dark-primary">
-                        Start free
-                        <svg class="btn-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                    <a href="pricing.html" class="btn-dark-ghost">See pricing</a>
-                </div>
-            </div>
-        </div>
-    </section>
+    </main>
 
     <div id="footer"></div>
 
