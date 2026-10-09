@@ -1,1701 +1,419 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
-    <link rel="stylesheet" href="css/base/variables.css" />
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/pages/dashboard.css" />
-    <link rel="stylesheet" href="css/admin.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Context Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 
-    <div id="authLoadingOverlay" class="auth-loading-overlay">
-        <img src="assets/icons/logo.png" alt="Fromple" class="auth-loading-logo" />
-        <div class="auth-loading-spinner"></div>
-        <p class="auth-loading-text">Loading...</p>
-    </div>
+  <div class="dashboard-wrapper">
 
-    <div id="header"></div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-mark">CC</span>
+        <span class="brand-text">Code Context</span>
+      </div>
 
-    <div class="dashboard-wrapper">
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-tab="paste">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+            <rect x="8" y="2" width="8" height="4" rx="1" />
+            <path d="M9 12h6M9 16h6M9 8h2" />
+          </svg>
+          <span>Paste Code</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="generate">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z" />
+          </svg>
+          <span>Generate</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="library">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" />
+          </svg>
+          <span>Library</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="history">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 2" />
+          </svg>
+          <span>History</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="config">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
+          </svg>
+          <span>Settings</span>
+        </a>
+      </nav>
 
-        <aside class="sidebar" id="sidebar">
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-tab="classes">
-                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
-                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                    </svg>
-                    <span>Class Generation</span>
-                </a>
-                <a href="#" data-tab="categorisation">
-                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 7l4-4 4 4M7 3v14" />
-                        <path d="M21 17l-4 4-4-4M17 21V7" />
-                    </svg>
-                    <span>Data Categorisation</span>
-                </a>
-                <a href="#" data-tab="paper-trading">
-                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 20V10M9 20V4M14 20v-7M19 20V7" />
-                    </svg>
-                    <span>Paper Trading</span>
-                </a>
-                <a href="#" data-tab="signals">
-                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 12h3l3-8 4 16 3-10 3 4h4" />
-                    </svg>
-                    <span>Signal Generation</span>
-                </a>
-                <a href="#" data-tab="monitoring">
-                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
-                        <circle cx="12" cy="12" r="3" />
-                    </svg>
-                    <span>Monitoring</span>
-                </a>
-            </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-usage-summary">
+          <div class="sidebar-usage-header">
+            <span class="sidebar-usage-label">Library</span>
+            <span class="sidebar-usage-value" id="snippetCount">0</span>
+          </div>
+          <div class="sidebar-usage-bar">
+            <div class="sidebar-usage-fill" id="libraryFill" style="width: 0%;"></div>
+          </div>
+          <div class="sidebar-usage-details">
+            <span id="chunkCount">0 chunks</span>
+            <span id="langCount">0 langs</span>
+          </div>
+        </div>
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <div class="user-details">
+            <span class="user-name" id="userName">guest</span>
+            <span class="user-plan">Local instance</span>
+          </div>
+          <button class="logout-btn" id="logoutBtn" title="Log out">⏻</button>
+        </div>
+      </div>
+    </aside>
 
-            <div class="sidebar-footer">
-                <div class="sidebar-usage-summary">
-                    <div class="sidebar-usage-header">
-                        <span class="sidebar-usage-label">Registry load</span>
-                        <span class="sidebar-usage-value">2,936</span>
-                    </div>
-                    <div class="sidebar-usage-bar">
-                        <div class="sidebar-usage-fill" style="width: 72%;"></div>
-                    </div>
-                    <div class="sidebar-usage-details">
-                        <span>72% capacity</span>
-                        <span>8 classes</span>
-                    </div>
-                </div>
-                <div class="user-info">
-                    <div class="user-avatar">JD</div>
-                    <div class="user-details">
-                        <span class="user-name">John Doe</span>
-                        <span class="user-plan" id="userPlan">Research</span>
-                    </div>
-                </div>
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- TAB 1: PASTE -->
+      <section class="tab-content active" id="tab-paste">
+        <header class="dashboard-header">
+          <div>
+            <h1>Paste Code</h1>
+            <p class="page-subtitle">Add a snippet. It gets chunked, embedded, and stored in your library.</p>
+          </div>
+          <div class="dashboard-header-actions">
+            <button class="btn-secondary" type="button" id="pasteClear">Clear</button>
+          </div>
+        </header>
+
+        <div class="card">
+          <div class="card-header"><h3>New snippet</h3></div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">Snippet name</label>
+              <input class="form-input" id="pasteTitle" placeholder="signup-form.html" />
             </div>
-        </aside>
+            <div class="form-field">
+              <label class="form-label">Language</label>
+              <select class="form-input" id="pasteLanguage">
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="js">JS</option>
+                <option value="sql">SQL</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Tags</label>
+              <input class="form-input" id="pasteTags" placeholder="form, auth" />
+            </div>
+          </div>
 
-        <main class="main-content" id="mainContent">
+          <label class="form-label" style="margin-top:14px;">Code</label>
+          <textarea class="form-input code-input" id="pasteContent" rows="14"
+            placeholder="Paste HTML, CSS, JS, or SQL here…"></textarea>
 
-            <button class="admin-sidebar-toggle" id="adminSidebarToggle" aria-label="Toggle navigation">
-                <span class="trigger-box">
-                    <span class="trigger-line"></span>
-                </span>
-                <span class="menu-text">Menu</span>
-            </button>
+          <div class="form-actions">
+            <span class="form-status" id="pasteStatus"></span>
+            <button class="btn-primary" type="button" id="pasteSave">Save to Library</button>
+          </div>
+        </div>
 
-            <!-- ============================================================ -->
-            <!-- TAB 1: CLASS GENERATION                                      -->
-            <!-- ============================================================ -->
-            <section class="tab-content active" id="tab-classes">
-                <header class="dashboard-header">
-                    <div>
-                        <h1>Class Generation</h1>
-                        <p class="page-subtitle">Registered setups, the conditions that compose them, and accumulated performance.</p>
-                    </div>
-                    <div class="dashboard-header-actions">
-                        <button class="btn-secondary" type="button" onclick="exportClasses()">Export</button>
-                        <button class="btn-primary" type="button" onclick="newClass()">+ New Class</button>
-                    </div>
-                </header>
+        <div class="card">
+          <div class="card-header">
+            <h3>Recent saves</h3>
+            <span class="card-meta" id="pasteRecentMeta">last 5</span>
+          </div>
+          <div class="table-wrap">
+            <table class="activity-table">
+              <thead>
+                <tr><th>Title</th><th>Language</th><th>Tags</th><th>Chunks</th><th>Saved</th></tr>
+              </thead>
+              <tbody id="pasteRecentBody">
+                <tr><td colspan="5" class="empty-row">No snippets yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon blue">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M4 6h16M4 12h16M4 18h10" stroke="#14B8A6" stroke-width="2" stroke-linecap="round"/></svg>
-                        </div>
-                        <div class="stat-content">
-                            <span class="stat-value">8</span>
-                            <span class="stat-label">Classes registered</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#10B981" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>
-                        </div>
-                        <div class="stat-content">
-                            <span class="stat-value">2,936</span>
-                            <span class="stat-label">Total observations</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 2l3 6 6 .9-4.5 4.2 1.1 6.4L12 16.6 6.4 19.5l1.1-6.4L3 8.9 9 8z" stroke="#F59E0B" stroke-width="2" stroke-linejoin="round"/></svg>
-                        </div>
-                        <div class="stat-content">
-                            <span class="stat-value">5</span>
-                            <span class="stat-label">Winners</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 5v14M5 12l7 7 7-7" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </div>
-                        <div class="stat-content">
-                            <span class="stat-value">3</span>
-                            <span class="stat-label">Losers</span>
-                        </div>
-                    </div>
-                </div>
+      <!-- TAB 2: GENERATE -->
+      <section class="tab-content" id="tab-generate">
+        <header class="dashboard-header">
+          <div>
+            <h1>Generate</h1>
+            <p class="page-subtitle">Retrieve matching snippets and generate in your own style. Two passes: generate, then audit.</p>
+          </div>
+        </header>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Registered Classes</h3>
-                        <div class="filter-tabs">
-                            <button class="filter-btn active" type="button">All</button>
-                            <button class="filter-btn" type="button">Active</button>
-                            <button class="filter-btn" type="button">Filtered</button>
-                            <button class="filter-btn" type="button">New</button>
-                        </div>
-                    </div>
+        <div class="card">
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">Task</label>
+              <select class="form-input" id="genTask">
+                <option value="schema">Schema</option>
+                <option value="code">Code (JS)</option>
+                <option value="css">CSS</option>
+                <option value="html">HTML</option>
+                <option value="lookup">Lookup</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Language filter</label>
+              <select class="form-input" id="genLanguage">
+                <option value="">any</option>
+                <option value="html">html</option>
+                <option value="css">css</option>
+                <option value="js">js</option>
+                <option value="sql">sql</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Tag filter</label>
+              <input class="form-input" id="genTags" placeholder="form (optional)" />
+            </div>
+            <div class="form-field form-field-sm">
+              <label class="form-label">Top K</label>
+              <input class="form-input" id="genTopK" type="number" min="1" max="20" value="5" />
+            </div>
+          </div>
 
-                    <div class="timeframe-bar">
-                        <span class="timeframe-label">Timeframe</span>
-                        <div class="timeframe-tabs" id="classTimeframes">
-                            <button class="timeframe-btn" type="button" data-tf="M1">M1</button>
-                            <button class="timeframe-btn" type="button" data-tf="M5">M5</button>
-                            <button class="timeframe-btn" type="button" data-tf="M15">M15</button>
-                            <button class="timeframe-btn" type="button" data-tf="M30">M30</button>
-                            <button class="timeframe-btn" type="button" data-tf="H1">H1</button>
-                            <button class="timeframe-btn" type="button" data-tf="H2">H2</button>
-                            <button class="timeframe-btn active" type="button" data-tf="H4">H4</button>
-                            <button class="timeframe-btn" type="button" data-tf="H6">H6</button>
-                            <button class="timeframe-btn" type="button" data-tf="H8">H8</button>
-                            <button class="timeframe-btn" type="button" data-tf="H12">H12</button>
-                            <button class="timeframe-btn" type="button" data-tf="D1">D1</button>
-                            <button class="timeframe-btn" type="button" data-tf="W1">W1</button>
-                        </div>
-                        <span class="timeframe-meta" id="classSelectionInfo">All classes &middot; 8</span>
-                    </div>
+          <label class="form-label" style="margin-top:14px;">Request</label>
+          <textarea class="form-input code-input" id="genRequest" rows="3"
+            placeholder="e.g. generate a MySQL schema for the signup form"></textarea>
 
-                    <div class="table-wrap class-table-wrap">
-                        <table class="activity-table class-table">
-                            <thead>
-                                <tr>
-                                    <th class="col-check">
-                                        <input type="checkbox" class="class-check" id="classSelectAll" aria-label="Select all classes" />
-                                    </th>
-                                    <th>Class</th>
-                                    <th>Signals</th>
-                                    <th>Observations</th>
-                                    <th>Long</th>
-                                    <th>Short</th>
-                                    <th>Wins</th>
-                                    <th>Losses</th>
-                                    <th>Status</th>
-                                    <th>Last seen</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr data-class="A" data-timeframe="H4">
-                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class A" /></td>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">A</div>
-                                            <div class="class-cell-info">
-                                                <strong>Class A</strong>
-                                                <span>Trend + volume confirmation</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>12</td>
-                                    <td>487</td>
-                                    <td><span class="perf-pill long">58%</span></td>
-                                    <td><span class="perf-pill short">34%</span></td>
-                                    <td class="num-wins">283</td>
-                                    <td class="num-losses">204</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                    <td class="activity-time">2h ago</td>
-                                </tr>
-                                <tr data-class="B" data-timeframe="H4">
-                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class B" /></td>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">B</div>
-                                            <div class="class-cell-info">
-                                                <strong>Class B</strong>
-                                                <span>Reversal near resistance</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>8</td>
-                                    <td>312</td>
-                                    <td><span class="perf-pill long">41%</span></td>
-                                    <td><span class="perf-pill short">47%</span></td>
-                                    <td class="num-wins">147</td>
-                                    <td class="num-losses">165</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                    <td class="activity-time">5h ago</td>
-                                </tr>
-                                <tr data-class="C" data-timeframe="H4" class="selected-row">
-                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class C" checked /></td>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge primary">C</div>
-                                            <div class="class-cell-info">
-                                                <strong>Class C</strong>
-                                                <span>Trend continuation, elevated volume</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>17</td>
-                                    <td>621</td>
-                                    <td><span class="perf-pill long">68%</span></td>
-                                    <td><span class="perf-pill short">28%</span></td>
-                                    <td class="num-wins">421</td>
-                                    <td class="num-losses">200</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                    <td class="activity-time">2h ago</td>
-                                </tr>
-                                <tr data-class="D" data-timeframe="H4">
-                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class D" /></td>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">D</div>
-                                            <div class="class-cell-info">
-                                                <strong>Class D</strong>
-                                                <span>Mean-reversion in range</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>6</td>
-                                    <td>148</td>
-                                    <td><span class="perf-pill long">22%</span></td>
-                                    <td><span class="perf-pill short">31%</span></td>
-                                    <td class="num-wins">62</td>
-                                    <td class="num-losses">86</td>
-                                    <td><span class="status-badge pending">Filtered</span></td>
-                                    <td class="activity-time">1d ago</td>
-                                </tr>
-                                <tr data-class="E" data-timeframe="H4">
-                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class E" /></td>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">E</div>
-                                            <div class="class-cell-info">
-                                                <strong>Class E</strong>
-                                                <span>Breakout with follow-through</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>11</td>
-                                    <td>402</td>
-                                    <td><span class="perf-pill long">54%</span></td>
-                                    <td><span class="perf-pill short">39%</span></td>
-                                    <td class="num-wins">217</td>
-                                    <td class="num-losses">185</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                    <td class="activity-time">4h ago</td>
-                                </tr>
-                                <tr data-class="F" data-timeframe="H4">
-                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class F" /></td>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">F</div>
-                                            <div class="class-cell-info">
-                                                <strong>Class F</strong>
-                                                <span>Volatility expansion breakout</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>4</td>
-                                    <td>88</td>
-                                    <td><span class="perf-pill long">61%</span></td>
-                                    <td><span class="perf-pill short">43%</span></td>
-                                    <td class="num-wins">52</td>
-                                    <td class="num-losses">36</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                    <td class="activity-time">3h ago</td>
-                                </tr>
-                                <tr data-class="G" data-timeframe="H4">
-                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class G" /></td>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">G</div>
-                                            <div class="class-cell-info">
-                                                <strong>Class G</strong>
-                                                <span>Post-event drift</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>21</td>
-                                    <td>834</td>
-                                    <td><span class="perf-pill long">72%</span></td>
-                                    <td><span class="perf-pill short">21%</span></td>
-                                    <td class="num-wins">601</td>
-                                    <td class="num-losses">233</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                    <td class="activity-time">18m ago</td>
-                                </tr>
-                                <tr data-class="H" data-timeframe="H4">
-                                    <td class="col-check"><input type="checkbox" class="class-check" aria-label="Select Class H" /></td>
-                                    <td>
-                                        <div class="class-cell">
-                                            <div class="class-badge">H</div>
-                                            <div class="class-cell-info">
-                                                <strong>Class H</strong>
-                                                <span>New combination — gathering data</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>3</td>
-                                    <td>44</td>
-                                    <td><span class="perf-pill long">33%</span></td>
-                                    <td><span class="perf-pill short">30%</span></td>
-                                    <td class="num-wins">20</td>
-                                    <td class="num-losses">24</td>
-                                    <td><span class="status-badge in-progress">New</span></td>
-                                    <td class="activity-time">just now</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+          <div class="form-actions">
+            <span class="form-status" id="genStatus"></span>
+            <button class="btn-primary" type="button" id="genRun">Generate</button>
+          </div>
+        </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Profitability vs. average pip move</h3>
-                        <span class="card-meta" id="classChartMeta">All classes &middot; H4 &middot; lifespan to date</span>
-                    </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Result</h3>
+            <div class="filter-tabs" id="genResultTabs">
+              <button class="filter-btn active" data-view="output" type="button">Output</button>
+              <button class="filter-btn" data-view="code" type="button">Code</button>
+              <button class="filter-btn" data-view="audit" type="button">Audit</button>
+            </div>
+          </div>
 
-                    <div class="chart-legend">
-                        <span class="legend-item"><span class="legend-swatch teal"></span>% profitable classes</span>
-                        <span class="legend-item"><span class="legend-swatch amber"></span>Average pip move</span>
-                    </div>
+          <div class="result-view active" id="view-output">
+            <pre class="output-box" id="genOutput">Output will appear here…</pre>
+          </div>
 
-                    <div class="chart-body">
-                        <div class="chart-y-left">
-                            <span>100%</span><span>80%</span><span>60%</span><span>40%</span><span>20%</span><span>0%</span>
-                        </div>
-                        <div class="chart-plot">
-                            <svg id="classPerfChart" viewBox="0 0 960 330" preserveAspectRatio="none" role="img" aria-label="Profitability and average pip move across the class lifespan">
-                                <g class="chart-grid">
-                                    <line x1="0" y1="0" x2="960" y2="0"/><line x1="0" y1="33" x2="960" y2="33"/><line x1="0" y1="66" x2="960" y2="66"/><line x1="0" y1="99" x2="960" y2="99"/><line x1="0" y1="132" x2="960" y2="132"/><line x1="0" y1="165" x2="960" y2="165"/><line x1="0" y1="198" x2="960" y2="198"/><line x1="0" y1="231" x2="960" y2="231"/><line x1="0" y1="264" x2="960" y2="264"/><line x1="0" y1="297" x2="960" y2="297"/><line x1="0" y1="330" x2="960" y2="330"/>
-                                </g>
-                                <g class="chart-axis"><line x1="0" y1="0" x2="0" y2="330"/><line x1="960" y1="0" x2="960" y2="330"/></g>
-                                <polyline class="chart-line chart-line-pct" points="0,191.4 106.67,181.5 213.33,171.6 320,158.4 426.67,148.5 533.33,138.6 640,128.7 746.67,122.1 853.33,112.2 960,105.6"/>
-                                <g class="chart-points chart-points-pct">
-                                    <circle cx="0" cy="191.4" r="3.5"/><circle cx="106.67" cy="181.5" r="3.5"/><circle cx="213.33" cy="171.6" r="3.5"/><circle cx="320" cy="158.4" r="3.5"/><circle cx="426.67" cy="148.5" r="3.5"/><circle cx="533.33" cy="138.6" r="3.5"/><circle cx="640" cy="128.7" r="3.5"/><circle cx="746.67" cy="122.1" r="3.5"/><circle cx="853.33" cy="112.2" r="3.5"/><circle cx="960" cy="105.6" r="3.5"/>
-                                </g>
-                                <polyline class="chart-line chart-line-pips" points="0,211.2 106.67,201.3 213.33,191.4 320,178.2 426.67,168.3 533.33,158.4 640,148.5 746.67,138.6 853.33,128.7 960,118.8"/>
-                                <g class="chart-points chart-points-pips">
-                                    <circle cx="0" cy="211.2" r="3.5"/><circle cx="106.67" cy="201.3" r="3.5"/><circle cx="213.33" cy="191.4" r="3.5"/><circle cx="320" cy="178.2" r="3.5"/><circle cx="426.67" cy="168.3" r="3.5"/><circle cx="533.33" cy="158.4" r="3.5"/><circle cx="640" cy="148.5" r="3.5"/><circle cx="746.67" cy="138.6" r="3.5"/><circle cx="853.33" cy="128.7" r="3.5"/><circle cx="960" cy="118.8" r="3.5"/>
-                                </g>
-                            </svg>
-                        </div>
-                        <div class="chart-y-right">
-                            <span>500</span><span>450</span><span>400</span><span>350</span><span>300</span><span>250</span><span>200</span><span>150</span><span>100</span><span>50</span><span>0</span>
-                        </div>
-                    </div>
+          <div class="result-view" id="view-code">
+            <div class="code-blocks" id="genCode">
+              <div class="empty-row">No code blocks yet.</div>
+            </div>
+          </div>
 
-                    <div class="chart-x-bar">
-                        <div class="chart-x-spacer"></div>
-                        <div class="chart-x-labels">
-                            <span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span><span>W7</span><span>W8</span><span>W9</span><span>W10</span>
-                        </div>
-                        <div class="chart-x-spacer"></div>
-                    </div>
-                </div>
-            </section>
+          <div class="result-view" id="view-audit">
+            <pre class="output-box" id="genAudit">Audit will appear here…</pre>
+          </div>
+        </div>
 
-            <!-- ============================================================ -->
-            <!-- TAB 2: DATA CATEGORISATION                                   -->
-            <!-- ============================================================ -->
-            <section class="tab-content" id="tab-categorisation">
-                <header class="dashboard-header">
-                    <div>
-                        <h1>Data Categorisation</h1>
-                        <p class="page-subtitle">Each component's contribution to class profitability. Select a class to break down.</p>
-                    </div>
-                    <div class="dashboard-header-actions">
-                        <button class="btn-secondary" type="button" onclick="exportConditions()">Export</button>
-                        <button class="btn-primary" type="button" onclick="addCategory()">+ Add Category</button>
-                    </div>
-                </header>
+        <div class="card">
+          <div class="card-header">
+            <h3>Retrieved sources</h3>
+            <span class="card-meta" id="genSourcesMeta">—</span>
+          </div>
+          <div class="signal-feed" id="genSources">
+            <div class="empty-row">Sources used in the last generation will appear here.</div>
+          </div>
+        </div>
+      </section>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon blue">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#14B8A6" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#14B8A6" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#14B8A6" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#14B8A6" stroke-width="2"/></svg>
-                        </div>
-                        <div class="stat-content">
-                            <span class="stat-value">6</span>
-                            <span class="stat-label">Categories</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M4 6h16M4 12h16M4 18h10" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>
-                        </div>
-                        <div class="stat-content">
-                            <span class="stat-value">29</span>
-                            <span class="stat-label">Conditions categorised</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#F59E0B" stroke-width="2"/><path d="M12 8v5M12 16h.01" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>
-                        </div>
-                        <div class="stat-content">
-                            <span class="stat-value">0</span>
-                            <span class="stat-label">Uncategorised</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#7C3AED" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg>
-                        </div>
-                        <div class="stat-content">
-                            <span class="stat-value">4</span>
-                            <span class="stat-label">Added this week</span>
-                        </div>
-                    </div>
-                </div>
+      <!-- TAB 3: LIBRARY -->
+      <section class="tab-content" id="tab-library">
+        <header class="dashboard-header">
+          <div>
+            <h1>Library</h1>
+            <p class="page-subtitle">Everything you have stored. Filter, preview, delete.</p>
+          </div>
+          <div class="dashboard-header-actions">
+            <button class="btn-secondary" type="button" id="libraryRefresh">Refresh</button>
+          </div>
+        </header>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Component Valuation</h3>
-                        <span class="card-meta" id="componentValuationMeta">All classes &middot; H4</span>
-                    </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" stroke="#14B8A6" stroke-width="2"/></svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value" id="statSnippets">0</span>
+              <span class="stat-label">Snippets stored</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M4 6h16M4 12h16M4 18h10" stroke="#10B981" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value" id="statChunks">0</span>
+              <span class="stat-label">Total chunks</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><circle cx="12" cy="12" r="9" stroke="#F59E0B" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value" id="statLanguages">0</span>
+              <span class="stat-label">Languages</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M12 5v14M5 12h14" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value" id="statLatest">—</span>
+              <span class="stat-label">Last saved</span>
+            </div>
+          </div>
+        </div>
 
-                    <div class="class-filter-bar">
-                        <label class="class-filter-label" for="classFilterSelect">Breakdown by class</label>
-                        <select class="class-filter-select" id="classFilterSelect">
-                            <option value="all" selected>All classes</option>
-                            <option value="A">Class A · Trend + volume confirmation</option>
-                            <option value="B">Class B · Reversal near resistance</option>
-                            <option value="C">Class C · Trend continuation</option>
-                            <option value="D">Class D · Mean-reversion in range</option>
-                            <option value="E">Class E · Breakout follow-through</option>
-                            <option value="F">Class F · Volatility expansion breakout</option>
-                            <option value="G">Class G · Post-event drift</option>
-                            <option value="H">Class H · New combination</option>
-                        </select>
-                    </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>All snippets</h3>
+            <div class="filter-tabs">
+              <button class="filter-btn active" data-filter="" type="button">All</button>
+              <button class="filter-btn" data-filter="html" type="button">HTML</button>
+              <button class="filter-btn" data-filter="css" type="button">CSS</button>
+              <button class="filter-btn" data-filter="js" type="button">JS</button>
+              <button class="filter-btn" data-filter="sql" type="button">SQL</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="activity-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Lang</th>
+                  <th>Tags</th>
+                  <th>Chunks</th>
+                  <th>Saved</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="libraryBody">
+                <tr><td colspan="6" class="empty-row">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-                    <div class="component-grid">
-                        <div class="component-card" data-component="regime">
-                            <div class="component-head"><span class="component-name">Regime</span><span class="component-count" data-field="conditions">3 conditions</span></div>
-                            <div class="component-value"><span class="component-edge edge-pos" data-field="edge">+43</span><span class="component-value-label">Edge</span></div>
-                            <div class="component-split">
-                                <div class="split-item"><span class="split-label">Favorable</span><span class="split-value pos" data-field="favorable">84%</span></div>
-                                <div class="split-item"><span class="split-label">Unfavorable</span><span class="split-value neg" data-field="unfavorable">41%</span></div>
-                            </div>
-                            <div class="component-foot"><span class="component-foot-label">Top contributor</span><span class="component-foot-name" data-field="top">Uptrend</span></div>
-                        </div>
+        <div class="card">
+          <div class="card-header"><h3>Preview</h3></div>
+          <pre class="output-box" id="libraryPreview">Click a snippet row to preview its chunks.</pre>
+        </div>
+      </section>
 
-                        <div class="component-card" data-component="market-state">
-                            <div class="component-head"><span class="component-name">Market State</span><span class="component-count" data-field="conditions">8 conditions</span></div>
-                            <div class="component-value"><span class="component-edge edge-pos" data-field="edge">+38</span><span class="component-value-label">Edge</span></div>
-                            <div class="component-split">
-                                <div class="split-item"><span class="split-label">Favorable</span><span class="split-value pos" data-field="favorable">76%</span></div>
-                                <div class="split-item"><span class="split-label">Unfavorable</span><span class="split-value neg" data-field="unfavorable">38%</span></div>
-                            </div>
-                            <div class="component-foot"><span class="component-foot-label">Top contributor</span><span class="component-foot-name" data-field="top">Volume high</span></div>
-                        </div>
+      <!-- TAB 4: HISTORY -->
+      <section class="tab-content" id="tab-history">
+        <header class="dashboard-header">
+          <div>
+            <h1>History</h1>
+            <p class="page-subtitle">Every generation call, with the request and model that produced it.</p>
+          </div>
+          <div class="dashboard-header-actions">
+            <button class="btn-secondary" type="button" id="historyRefresh">Refresh</button>
+          </div>
+        </header>
 
-                        <div class="component-card" data-component="indicators">
-                            <div class="component-head"><span class="component-name">Indicators</span><span class="component-count" data-field="conditions">6 conditions</span></div>
-                            <div class="component-value"><span class="component-edge edge-pos" data-field="edge">+27</span><span class="component-value-label">Edge</span></div>
-                            <div class="component-split">
-                                <div class="split-item"><span class="split-label">Favorable</span><span class="split-value pos" data-field="favorable">71%</span></div>
-                                <div class="split-item"><span class="split-label">Unfavorable</span><span class="split-value neg" data-field="unfavorable">44%</span></div>
-                            </div>
-                            <div class="component-foot"><span class="component-foot-label">Top contributor</span><span class="component-foot-name" data-field="top">MA20 rising</span></div>
-                        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Recent generations</h3>
+            <span class="card-meta">last 50</span>
+          </div>
+          <div class="table-wrap">
+            <table class="activity-table">
+              <thead>
+                <tr>
+                  <th>Task</th>
+                  <th>Request</th>
+                  <th>Model</th>
+                  <th>Sources</th>
+                  <th>When</th>
+                </tr>
+              </thead>
+              <tbody id="historyBody">
+                <tr><td colspan="5" class="empty-row">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-                        <div class="component-card" data-component="calendar">
-                            <div class="component-head"><span class="component-name">Economic Calendar</span><span class="component-count" data-field="conditions">4 conditions</span></div>
-                            <div class="component-value"><span class="component-edge edge-neg" data-field="edge">−18</span><span class="component-value-label">Edge</span></div>
-                            <div class="component-split">
-                                <div class="split-item"><span class="split-label">Favorable</span><span class="split-value pos" data-field="favorable">48%</span></div>
-                                <div class="split-item"><span class="split-label">Unfavorable</span><span class="split-value neg" data-field="unfavorable">66%</span></div>
-                            </div>
-                            <div class="component-foot"><span class="component-foot-label">Top contributor</span><span class="component-foot-name" data-field="top">CPI within 3 days</span></div>
-                        </div>
+      <!-- TAB 5: CONFIG -->
+      <section class="tab-content" id="tab-config">
+        <header class="dashboard-header">
+          <div>
+            <h1>Settings</h1>
+            <p class="page-subtitle">Runtime configuration. Saved to the app_config table.</p>
+          </div>
+        </header>
 
-                        <div class="component-card" data-component="cot">
-                            <div class="component-head"><span class="component-name">COT</span><span class="component-count" data-field="conditions">5 conditions</span></div>
-                            <div class="component-value"><span class="component-edge edge-pos" data-field="edge">+5</span><span class="component-value-label">Edge</span></div>
-                            <div class="component-split">
-                                <div class="split-item"><span class="split-label">Favorable</span><span class="split-value pos" data-field="favorable">62%</span></div>
-                                <div class="split-item"><span class="split-label">Unfavorable</span><span class="split-value neg" data-field="unfavorable">57%</span></div>
-                            </div>
-                            <div class="component-foot"><span class="component-foot-label">Top contributor</span><span class="component-foot-name" data-field="top">COT net long</span></div>
-                        </div>
+        <div class="settings-container">
+          <div class="card settings-card">
+            <h3 class="settings-title">Generation</h3>
+            <p class="settings-hint">Controls how many snippets are retrieved and how the LLM is prompted.</p>
+            <div class="settings-form">
+              <div class="settings-field">
+                <label class="settings-label">Top K (chunks retrieved)</label>
+                <input class="form-input" id="cfgTopK" type="number" min="1" max="20" />
+              </div>
+              <div class="settings-field">
+                <label class="settings-label">Chunk max lines</label>
+                <input class="form-input" id="cfgChunkLines" type="number" min="100" max="2000" />
+              </div>
+              <div class="settings-field">
+                <label class="settings-label">Generation model</label>
+                <input class="form-input mono" id="cfgGenModel" />
+              </div>
+              <div class="settings-field">
+                <label class="settings-label">Fallback model</label>
+                <input class="form-input mono" id="cfgFallbackModel" />
+              </div>
+              <div class="settings-field">
+                <label class="settings-label">Temperature · schema</label>
+                <input class="form-input" id="cfgTempSchema" type="number" step="0.05" min="0" max="1" />
+              </div>
+              <div class="settings-field">
+                <label class="settings-label">Temperature · code</label>
+                <input class="form-input" id="cfgTempCode" type="number" step="0.05" min="0" max="1" />
+              </div>
+              <div class="settings-field">
+                <label class="settings-label">Max tokens</label>
+                <input class="form-input" id="cfgMaxTokens" type="number" min="256" max="8192" />
+              </div>
+            </div>
 
-                        <div class="component-card" data-component="sentiment">
-                            <div class="component-head"><span class="component-name">Sentiment</span><span class="component-count" data-field="conditions">3 conditions</span></div>
-                            <div class="component-value"><span class="component-edge edge-pos" data-field="edge">+12</span><span class="component-value-label">Edge</span></div>
-                            <div class="component-split">
-                                <div class="split-item"><span class="split-label">Favorable</span><span class="split-value pos" data-field="favorable">58%</span></div>
-                                <div class="split-item"><span class="split-label">Unfavorable</span><span class="split-value neg" data-field="unfavorable">46%</span></div>
-                            </div>
-                            <div class="component-foot"><span class="component-foot-label">Top contributor</span><span class="component-foot-name" data-field="top">News event active</span></div>
-                        </div>
-                    </div>
-                </div>
+            <div class="form-actions">
+              <span class="form-status" id="cfgStatus"></span>
+              <button class="btn-primary" type="button" id="cfgSave">Save settings</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3 id="compositionTableTitle">Class Composition</h3>
-                        <span class="card-meta" id="compositionTableMeta">8 classes &middot; all categories</span>
-                    </div>
-                    <div class="table-wrap composition-table-wrap">
-                        <table class="composition-table">
-                            <thead>
-                                <tr>
-                                    <th class="comp-name-col">Class</th>
-                                    <th>Regime</th>
-                                    <th>Market State</th>
-                                    <th>Indicators</th>
-                                    <th>Economic Calendar</th>
-                                    <th>COT</th>
-                                    <th>Sentiment</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr data-class="A">
-                                    <td><div class="class-cell"><div class="class-badge">A</div><div class="class-cell-info"><strong>Class A</strong><span>Trend + volume confirmation</span></div></div></td>
-                                    <td><span class="comp-cond">Uptrend</span></td>
-                                    <td><span class="comp-cond">Support holding</span><span class="comp-cond">Volume high</span></td>
-                                    <td><span class="comp-cond">MA20 rising</span><span class="comp-cond">MA50 rising</span></td>
-                                    <td><span class="comp-cond">No event nearby</span></td>
-                                    <td><span class="comp-empty">—</span></td>
-                                    <td><span class="comp-empty">—</span></td>
-                                </tr>
-                                <tr data-class="B">
-                                    <td><div class="class-cell"><div class="class-badge">B</div><div class="class-cell-info"><strong>Class B</strong><span>Reversal near resistance</span></div></div></td>
-                                    <td><span class="comp-cond">Downtrend</span><span class="comp-cond">Consolidating</span></td>
-                                    <td><span class="comp-cond">Resistance holding</span><span class="comp-cond">Range position · upper</span><span class="comp-cond">Wick rejection</span></td>
-                                    <td><span class="comp-cond">RSI &lt; 45</span></td>
-                                    <td><span class="comp-cond">Rate decision imminent</span></td>
-                                    <td><span class="comp-cond">COT net short</span><span class="comp-cond">COT extreme positioning</span></td>
-                                    <td><span class="comp-empty">—</span></td>
-                                </tr>
-                                <tr data-class="C" class="selected-row">
-                                    <td><div class="class-cell"><div class="class-badge primary">C</div><div class="class-cell-info"><strong>Class C</strong><span>Trend continuation, elevated volume</span></div></div></td>
-                                    <td><span class="comp-cond">Uptrend</span></td>
-                                    <td><span class="comp-cond">Support holding</span><span class="comp-cond">Volume high</span></td>
-                                    <td><span class="comp-cond">MA20 rising</span><span class="comp-cond">RSI &gt; 55</span></td>
-                                    <td><span class="comp-cond">No event nearby</span></td>
-                                    <td><span class="comp-cond">COT net long</span></td>
-                                    <td><span class="comp-empty">—</span></td>
-                                </tr>
-                                <tr data-class="D">
-                                    <td><div class="class-cell"><div class="class-badge">D</div><div class="class-cell-info"><strong>Class D</strong><span>Mean-reversion in range</span></div></div></td>
-                                    <td><span class="comp-cond">Downtrend</span><span class="comp-cond">Consolidating</span></td>
-                                    <td><span class="comp-cond">Support holding</span><span class="comp-cond">Resistance holding</span><span class="comp-cond">Range position · upper</span><span class="comp-cond">Range position · lower</span><span class="comp-cond">Volume low</span></td>
-                                    <td><span class="comp-cond">RSI &lt; 45</span></td>
-                                    <td><span class="comp-cond">No event nearby</span></td>
-                                    <td><span class="comp-cond">COT net short</span><span class="comp-cond">COT net short falling</span></td>
-                                    <td><span class="comp-cond">Sentiment negative shift</span></td>
-                                </tr>
-                                <tr data-class="E">
-                                    <td><div class="class-cell"><div class="class-badge">E</div><div class="class-cell-info"><strong>Class E</strong><span>Breakout with follow-through</span></div></div></td>
-                                    <td><span class="comp-cond">Uptrend</span></td>
-                                    <td><span class="comp-cond">Volume high</span><span class="comp-cond">Volatility expanding</span></td>
-                                    <td><span class="comp-cond">MA20 rising</span><span class="comp-cond">MA50 rising</span><span class="comp-cond">MACD cross</span></td>
-                                    <td><span class="comp-cond">Rate decision imminent</span><span class="comp-cond">No event nearby</span></td>
-                                    <td><span class="comp-empty">—</span></td>
-                                    <td><span class="comp-cond">News event active</span></td>
-                                </tr>
-                                <tr data-class="F">
-                                    <td><div class="class-cell"><div class="class-badge">F</div><div class="class-cell-info"><strong>Class F</strong><span>Volatility expansion breakout</span></div></div></td>
-                                    <td><span class="comp-empty">—</span></td>
-                                    <td><span class="comp-cond">Volume high</span><span class="comp-cond">Volatility expanding</span></td>
-                                    <td><span class="comp-cond">MACD cross</span><span class="comp-cond">Bollinger squeeze</span></td>
-                                    <td><span class="comp-empty">—</span></td>
-                                    <td><span class="comp-empty">—</span></td>
-                                    <td><span class="comp-empty">—</span></td>
-                                </tr>
-                                <tr data-class="G">
-                                    <td><div class="class-cell"><div class="class-badge">G</div><div class="class-cell-info"><strong>Class G</strong><span>Post-event drift</span></div></div></td>
-                                    <td><span class="comp-cond">Uptrend</span></td>
-                                    <td><span class="comp-cond">Volume high</span></td>
-                                    <td><span class="comp-cond">MA20 rising</span><span class="comp-cond">MA50 rising</span></td>
-                                    <td><span class="comp-cond">CPI within 3 days</span><span class="comp-cond">NFP within 2 days</span></td>
-                                    <td><span class="comp-cond">COT net long</span><span class="comp-cond">COT net long rising</span></td>
-                                    <td><span class="comp-cond">News event active</span><span class="comp-cond">Sentiment positive shift</span></td>
-                                </tr>
-                                <tr data-class="H">
-                                    <td><div class="class-cell"><div class="class-badge">H</div><div class="class-cell-info"><strong>Class H</strong><span>New combination — gathering data</span></div></div></td>
-                                    <td><span class="comp-cond">Uptrend</span></td>
-                                    <td><span class="comp-cond">Support holding</span><span class="comp-cond">Volume high</span></td>
-                                    <td><span class="comp-cond">MA20 rising</span><span class="comp-cond">RSI &gt; 55</span></td>
-                                    <td><span class="comp-cond">No event nearby</span></td>
-                                    <td><span class="comp-empty">—</span></td>
-                                    <td><span class="comp-empty">—</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+    </main>
+  </div>
 
-            <!-- ============================================================ -->
-            <!-- TAB 3: PAPER TRADING                                         -->
-            <!-- ============================================================ -->
-            <section class="tab-content" id="tab-paper-trading">
-                <header class="dashboard-header">
-                    <div>
-                        <h1>Paper Trading</h1>
-                        <p class="page-subtitle">Every detected setup is traded in both directions simultaneously. Movement is measured, not binary outcome.</p>
-                    </div>
-                    <div class="dashboard-header-actions">
-                        <button class="btn-secondary" type="button" onclick="exportTrades()">Export</button>
-                        <button class="btn-primary" type="button" onclick="newExperiment()">+ New Experiment</button>
-                    </div>
-                </header>
-
-                <div class="card">
-                    <div class="class-filter-bar">
-                        <label class="class-filter-label" for="ptClassSelect">Filter by class</label>
-                        <select class="class-filter-select" id="ptClassSelect">
-                            <option value="all" selected>All classes</option>
-                            <option value="A">Class A · Trend + volume confirmation</option>
-                            <option value="B">Class B · Reversal near resistance</option>
-                            <option value="C">Class C · Trend continuation</option>
-                            <option value="D">Class D · Mean-reversion in range</option>
-                            <option value="E">Class E · Breakout follow-through</option>
-                            <option value="F">Class F · Volatility expansion breakout</option>
-                            <option value="G">Class G · Post-event drift</option>
-                            <option value="H">Class H · New combination</option>
-                        </select>
-                        <span class="pt-view-meta" id="ptViewMeta">Showing all classes</span>
-                    </div>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 19V5M5 12l7-7 7 7" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">28</span><span class="stat-label">Open long trades</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 5v14M5 12l7 7 7-7" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">28</span><span class="stat-label">Open short trades</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M5 12l5 5L20 7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">1,847</span><span class="stat-label">Total closed</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#F59E0B" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">31</span><span class="stat-label">Closed today</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 17l5-6 4 4 9-10" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">+82.4</span><span class="stat-label">Avg favorable</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 7l5 6 4-4 9 10" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">−34.1</span><span class="stat-label">Avg adverse</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M4 6h16M4 12h16M4 18h16" stroke="#14B8A6" stroke-width="2" stroke-linecap="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">2.4×</span><span class="stat-label">Overall ratio</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 2l3 6 6 .9-4.5 4.2 1.1 6.4L12 16.6 6.4 19.5l1.1-6.4L3 8.9 9 8z" stroke="#7C3AED" stroke-width="2" stroke-linejoin="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">68%</span><span class="stat-label">Favorable close rate</span></div>
-                    </div>
-                </div>
-
-                <div class="grid-2col">
-                    <div class="card">
-                        <div class="card-header"><h3>Long side performance</h3><span class="badge success">1,042 closed</span></div>
-                        <div class="metric-grid">
-                            <div class="metric-item"><span class="metric-label">Avg favorable</span><span class="metric-value pos">+82.4</span></div>
-                            <div class="metric-item"><span class="metric-label">Avg adverse</span><span class="metric-value neg">−34.1</span></div>
-                            <div class="metric-item"><span class="metric-label">Ratio</span><span class="metric-value pos">2.4×</span></div>
-                            <div class="metric-item"><span class="metric-label">Win rate</span><span class="metric-value">71%</span></div>
-                            <div class="metric-item"><span class="metric-label">Best trade</span><span class="metric-value pos">+312.4</span></div>
-                            <div class="metric-item"><span class="metric-label">Worst trade</span><span class="metric-value neg">−142.8</span></div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header"><h3>Short side performance</h3><span class="badge warning">805 closed</span></div>
-                        <div class="metric-grid">
-                            <div class="metric-item"><span class="metric-label">Avg favorable</span><span class="metric-value pos">+38.6</span></div>
-                            <div class="metric-item"><span class="metric-label">Avg adverse</span><span class="metric-value neg">−52.7</span></div>
-                            <div class="metric-item"><span class="metric-label">Ratio</span><span class="metric-value neg">0.7×</span></div>
-                            <div class="metric-item"><span class="metric-label">Win rate</span><span class="metric-value">42%</span></div>
-                            <div class="metric-item"><span class="metric-label">Best trade</span><span class="metric-value pos">+187.2</span></div>
-                            <div class="metric-item"><span class="metric-label">Worst trade</span><span class="metric-value neg">−198.7</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid-2col">
-                    <div class="card">
-                        <div class="card-header"><h3>Statistical summary</h3><span class="card-meta">1,847 closed experiments</span></div>
-                        <div class="stat-list">
-                            <div class="stat-list-item"><span class="stat-list-label">Mean favorable</span><span class="stat-list-value pos">+82.4</span></div>
-                            <div class="stat-list-item"><span class="stat-list-label">Median favorable</span><span class="stat-list-value pos">+71.2</span></div>
-                            <div class="stat-list-item"><span class="stat-list-label">Std deviation (fav)</span><span class="stat-list-value">42.8</span></div>
-                            <div class="stat-list-item"><span class="stat-list-label">Max favorable</span><span class="stat-list-value pos">+312.4</span></div>
-                            <div class="stat-list-item"><span class="stat-list-label">Mean adverse</span><span class="stat-list-value neg">−34.1</span></div>
-                            <div class="stat-list-item"><span class="stat-list-label">Median adverse</span><span class="stat-list-value neg">−28.4</span></div>
-                            <div class="stat-list-item"><span class="stat-list-label">Std deviation (adv)</span><span class="stat-list-value">22.1</span></div>
-                            <div class="stat-list-item"><span class="stat-list-label">Max adverse</span><span class="stat-list-value neg">−198.7</span></div>
-                            <div class="stat-list-item"><span class="stat-list-label">Consistency (fav &gt; adv)</span><span class="stat-list-value pos">68.2%</span></div>
-                            <div class="stat-list-item"><span class="stat-list-label">Avg duration</span><span class="stat-list-value">6h 42m</span></div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header"><h3>Movement distribution</h3><span class="card-meta">closed experiments</span></div>
-                        <div class="dist-block">
-                            <span class="dist-label">Favorable movement (pips)</span>
-                            <div class="histogram histogram-long" aria-hidden="true">
-                                <span style="height: 12%"></span><span style="height: 22%"></span><span style="height: 38%"></span><span style="height: 58%"></span><span style="height: 78%"></span><span style="height: 94%"></span><span style="height: 100%"></span><span style="height: 82%"></span><span style="height: 62%"></span><span style="height: 42%"></span><span style="height: 26%"></span><span style="height: 14%"></span>
-                            </div>
-                            <div class="histogram-legend"><span>0</span><span>100</span><span>200</span><span>300+</span></div>
-                        </div>
-                        <div class="dist-block">
-                            <span class="dist-label">Adverse movement (pips)</span>
-                            <div class="histogram histogram-short" aria-hidden="true">
-                                <span style="height: 8%"></span><span style="height: 18%"></span><span style="height: 34%"></span><span style="height: 56%"></span><span style="height: 80%"></span><span style="height: 100%"></span><span style="height: 88%"></span><span style="height: 62%"></span><span style="height: 42%"></span><span style="height: 26%"></span><span style="height: 14%"></span><span style="height: 6%"></span>
-                            </div>
-                            <div class="histogram-legend"><span>0</span><span>50</span><span>100</span><span>150+</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header"><h3>Live open experiments</h3><span class="card-meta"><span class="live-dot-inline"></span> 56 open</span></div>
-                    <div class="table-wrap">
-                        <table class="activity-table">
-                            <thead>
-                                <tr>
-                                    <th>Signal</th><th>Class</th><th>Direction</th><th>Entry</th><th>Current</th><th>Favorable</th><th>Adverse</th><th>Ratio</th><th>Duration</th><th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td><strong>Cl-G-Si-21</strong></td><td>Class G</td><td><span class="direction-badge long">Long</span></td><td class="mono">1.0887</td><td class="mono">1.0909</td><td class="mono pos">+12.4</td><td class="mono neg">−3.1</td><td><span class="edge-pos">4.0×</span></td><td class="activity-time">18m</td><td><span class="status-badge completed">Favorable</span></td></tr>
-                                <tr><td><strong>Cl-G-Si-21</strong></td><td>Class G</td><td><span class="direction-badge short">Short</span></td><td class="mono">1.0887</td><td class="mono">1.0909</td><td class="mono pos">+4.2</td><td class="mono neg">−8.9</td><td><span class="edge-neg">0.5×</span></td><td class="activity-time">18m</td><td><span class="status-badge pending">Adverse</span></td></tr>
-                                <tr><td><strong>Cl-C-Si-17</strong></td><td>Class C</td><td><span class="direction-badge long">Long</span></td><td class="mono">1.0934</td><td class="mono">1.0968</td><td class="mono pos">+82.4</td><td class="mono neg">−34.1</td><td><span class="edge-pos">2.4×</span></td><td class="activity-time">2h 14m</td><td><span class="status-badge completed">Favorable</span></td></tr>
-                                <tr><td><strong>Cl-C-Si-17</strong></td><td>Class C</td><td><span class="direction-badge short">Short</span></td><td class="mono">1.0934</td><td class="mono">1.0968</td><td class="mono pos">+31.2</td><td class="mono neg">−58.7</td><td><span class="edge-neg">0.5×</span></td><td class="activity-time">2h 14m</td><td><span class="status-badge pending">Adverse</span></td></tr>
-                                <tr><td><strong>Cl-A-Si-12</strong></td><td>Class A</td><td><span class="direction-badge long">Long</span></td><td class="mono">1.0921</td><td class="mono">1.0947</td><td class="mono pos">+46.8</td><td class="mono neg">−22.5</td><td><span class="edge-pos">2.1×</span></td><td class="activity-time">4h 02m</td><td><span class="status-badge completed">Favorable</span></td></tr>
-                                <tr><td><strong>Cl-E-Si-11</strong></td><td>Class E</td><td><span class="direction-badge long">Long</span></td><td class="mono">1.0862</td><td class="mono">1.0871</td><td class="mono pos">+28.5</td><td class="mono neg">−17.2</td><td><span class="edge-pos">1.7×</span></td><td class="activity-time">9h 18m</td><td><span class="status-badge completed">Favorable</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header"><h3>Recent closed experiments</h3><span class="card-meta">last 24 hours</span></div>
-                    <div class="table-wrap">
-                        <table class="activity-table">
-                            <thead>
-                                <tr><th>Signal</th><th>Class</th><th>Direction</th><th>Entry</th><th>Exit</th><th>Favorable</th><th>Adverse</th><th>Ratio</th><th>Duration</th><th>Outcome</th><th>Closed</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td><strong>Cl-A-Si-12</strong></td><td>Class A</td><td><span class="direction-badge long">Long</span></td><td class="mono">1.0921</td><td class="mono">1.0947</td><td class="mono pos">+46.8</td><td class="mono neg">−22.5</td><td><span class="edge-pos">2.1×</span></td><td class="activity-time">4h 02m</td><td><span class="status-badge completed">Favorable</span></td><td class="activity-time">32m ago</td></tr>
-                                <tr><td><strong>Cl-A-Si-12</strong></td><td>Class A</td><td><span class="direction-badge short">Short</span></td><td class="mono">1.0921</td><td class="mono">1.0947</td><td class="mono pos">+18.2</td><td class="mono neg">−41.0</td><td><span class="edge-neg">0.4×</span></td><td class="activity-time">4h 02m</td><td><span class="status-badge adverse">Adverse</span></td><td class="activity-time">32m ago</td></tr>
-                                <tr><td><strong>Cl-H-Si-01</strong></td><td>Class H</td><td><span class="direction-badge long">Long</span></td><td class="mono">1.0804</td><td class="mono">1.0832</td><td class="mono pos">+28.1</td><td class="mono neg">−12.4</td><td><span class="edge-pos">2.3×</span></td><td class="activity-time">1h 42m</td><td><span class="status-badge completed">Favorable</span></td><td class="activity-time">1h ago</td></tr>
-                                <tr><td><strong>Cl-F-Si-04</strong></td><td>Class F</td><td><span class="direction-badge long">Long</span></td><td class="mono">1.1006</td><td class="mono">1.1042</td><td class="mono pos">+58.6</td><td class="mono neg">−24.3</td><td><span class="edge-pos">2.4×</span></td><td class="activity-time">3h 18m</td><td><span class="status-badge completed">Favorable</span></td><td class="activity-time">3h ago</td></tr>
-                                <tr><td><strong>Cl-D-Si-06</strong></td><td>Class D</td><td><span class="direction-badge short">Short</span></td><td class="mono">1.0765</td><td class="mono">1.0749</td><td class="mono pos">+34.2</td><td class="mono neg">−11.8</td><td><span class="edge-pos">2.9×</span></td><td class="activity-time">5h 24m</td><td><span class="status-badge completed">Favorable</span></td><td class="activity-time">5h ago</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="grid-2col" id="ptClassPerfGroup">
-                    <div class="card">
-                        <div class="card-header"><h3>Performance by class</h3><span class="card-meta">all time</span></div>
-                        <div class="table-wrap">
-                            <table class="activity-table">
-                                <thead><tr><th>Class</th><th>Long</th><th>Short</th><th>Long win</th><th>Short win</th><th>Ratio</th></tr></thead>
-                                <tbody>
-                                    <tr><td><strong>G</strong> · Post-event drift</td><td>412</td><td>422</td><td><span class="perf-pill long">72%</span></td><td><span class="perf-pill short">21%</span></td><td><span class="edge-pos">3.3×</span></td></tr>
-                                    <tr><td><strong>C</strong> · Trend continuation</td><td>318</td><td>303</td><td><span class="perf-pill long">68%</span></td><td><span class="perf-pill short">28%</span></td><td><span class="edge-pos">2.4×</span></td></tr>
-                                    <tr><td><strong>A</strong> · Trend + volume</td><td>252</td><td>235</td><td><span class="perf-pill long">58%</span></td><td><span class="perf-pill short">34%</span></td><td><span class="edge-pos">1.7×</span></td></tr>
-                                    <tr><td><strong>F</strong> · Volatility breakout</td><td>46</td><td>42</td><td><span class="perf-pill long">61%</span></td><td><span class="perf-pill short">43%</span></td><td><span class="edge-pos">1.4×</span></td></tr>
-                                    <tr><td><strong>E</strong> · Breakout follow-through</td><td>204</td><td>198</td><td><span class="perf-pill long">54%</span></td><td><span class="perf-pill short">39%</span></td><td><span class="edge-pos">1.4×</span></td></tr>
-                                    <tr><td><strong>B</strong> · Reversal near resistance</td><td>158</td><td>154</td><td><span class="perf-pill long">41%</span></td><td><span class="perf-pill short">47%</span></td><td><span class="edge-neg">0.9×</span></td></tr>
-                                    <tr><td><strong>H</strong> · New combination</td><td>22</td><td>22</td><td><span class="perf-pill long">33%</span></td><td><span class="perf-pill short">30%</span></td><td><span class="edge-neg">0.7×</span></td></tr>
-                                    <tr><td><strong>D</strong> · Mean-reversion in range</td><td>74</td><td>74</td><td><span class="perf-pill long">22%</span></td><td><span class="perf-pill short">31%</span></td><td><span class="edge-neg">0.6×</span></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header"><h3>Performance by duration</h3><span class="card-meta">closed experiments</span></div>
-                        <div class="table-wrap">
-                            <table class="activity-table">
-                                <thead><tr><th>Duration</th><th>Count</th><th>Avg fav</th><th>Avg adv</th><th>Ratio</th></tr></thead>
-                                <tbody>
-                                    <tr><td>&lt; 1h</td><td>218</td><td class="mono pos">+22.4</td><td class="mono neg">−18.6</td><td><span class="edge-pos">1.2×</span></td></tr>
-                                    <tr><td>1h – 4h</td><td>486</td><td class="mono pos">+58.2</td><td class="mono neg">−28.4</td><td><span class="edge-pos">2.1×</span></td></tr>
-                                    <tr><td>4h – 12h</td><td>624</td><td class="mono pos">+94.6</td><td class="mono neg">−38.2</td><td><span class="edge-pos">2.5×</span></td></tr>
-                                    <tr><td>12h – 24h</td><td>312</td><td class="mono pos">+108.4</td><td class="mono neg">−48.6</td><td><span class="edge-pos">2.2×</span></td></tr>
-                                    <tr><td>1d – 3d</td><td>148</td><td class="mono pos">+124.2</td><td class="mono neg">−62.8</td><td><span class="edge-pos">2.0×</span></td></tr>
-                                    <tr><td>3d – 7d</td><td>48</td><td class="mono pos">+142.6</td><td class="mono neg">−88.4</td><td><span class="edge-pos">1.6×</span></td></tr>
-                                    <tr><td>7d +</td><td>11</td><td class="mono pos">+98.2</td><td class="mono neg">−124.6</td><td><span class="edge-neg">0.8×</span></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header"><h3>Cumulative movement</h3><span class="card-meta">all closed experiments &middot; weekly</span></div>
-                    <div class="chart-legend">
-                        <span class="legend-item"><span class="legend-swatch teal"></span>Cumulative favorable</span>
-                        <span class="legend-item"><span class="legend-swatch amber"></span>Cumulative adverse</span>
-                    </div>
-                    <div class="chart-body">
-                        <div class="chart-y-left"><span>10k</span><span>8k</span><span>6k</span><span>4k</span><span>2k</span><span>0</span></div>
-                        <div class="chart-plot">
-                            <svg id="cumulativeChart" viewBox="0 0 960 330" preserveAspectRatio="none" role="img" aria-label="Cumulative favorable and adverse movement over time">
-                                <g class="chart-grid">
-                                    <line x1="0" y1="0" x2="960" y2="0"/><line x1="0" y1="33" x2="960" y2="33"/><line x1="0" y1="66" x2="960" y2="66"/><line x1="0" y1="99" x2="960" y2="99"/><line x1="0" y1="132" x2="960" y2="132"/><line x1="0" y1="165" x2="960" y2="165"/><line x1="0" y1="198" x2="960" y2="198"/><line x1="0" y1="231" x2="960" y2="231"/><line x1="0" y1="264" x2="960" y2="264"/><line x1="0" y1="297" x2="960" y2="297"/><line x1="0" y1="330" x2="960" y2="330"/>
-                                </g>
-                                <g class="chart-axis"><line x1="0" y1="0" x2="0" y2="330"/><line x1="960" y1="0" x2="960" y2="330"/></g>
-                                <polyline class="chart-line chart-line-pct" points="0,320 106.67,290 213.33,258 320,224 426.67,196 533.33,168 640,138 746.67,108 853.33,80 960,50"/>
-                                <g class="chart-points chart-points-pct"><circle cx="0" cy="320" r="3.5"/><circle cx="106.67" cy="290" r="3.5"/><circle cx="213.33" cy="258" r="3.5"/><circle cx="320" cy="224" r="3.5"/><circle cx="426.67" cy="196" r="3.5"/><circle cx="533.33" cy="168" r="3.5"/><circle cx="640" cy="138" r="3.5"/><circle cx="746.67" cy="108" r="3.5"/><circle cx="853.33" cy="80" r="3.5"/><circle cx="960" cy="50" r="3.5"/></g>
-                                <polyline class="chart-line chart-line-pips" points="0,324 106.67,306 213.33,288 320,268 426.67,250 533.33,232 640,214 746.67,198 853.33,182 960,166"/>
-                                <g class="chart-points chart-points-pips"><circle cx="0" cy="324" r="3.5"/><circle cx="106.67" cy="306" r="3.5"/><circle cx="213.33" cy="288" r="3.5"/><circle cx="320" cy="268" r="3.5"/><circle cx="426.67" cy="250" r="3.5"/><circle cx="533.33" cy="232" r="3.5"/><circle cx="640" cy="214" r="3.5"/><circle cx="746.67" cy="198" r="3.5"/><circle cx="853.33" cy="182" r="3.5"/><circle cx="960" cy="166" r="3.5"/></g>
-                            </svg>
-                        </div>
-                        <div class="chart-y-right"><span>10k</span><span>8k</span><span>6k</span><span>4k</span><span>2k</span><span>0</span></div>
-                    </div>
-                    <div class="chart-x-bar">
-                        <div class="chart-x-spacer"></div>
-                        <div class="chart-x-labels"><span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span><span>W7</span><span>W8</span><span>W9</span><span>W10</span></div>
-                        <div class="chart-x-spacer"></div>
-                    </div>
-                </div>
-
-                <div class="grid-2col" id="ptLeaderboards">
-                    <div class="card">
-                        <div class="card-header"><h3>Best performers</h3><span class="badge success">Top 5 by ratio</span></div>
-                        <div class="signal-feed">
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Cl-G-Si-21 · Long</div><div class="signal-item-desc">Class G · 3.3× ratio · +94.1 / −28.6 · 834 obs</div></div><span class="signal-item-time">18m</span></div>
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Cl-D-Si-06 · Short</div><div class="signal-item-desc">Class D · 2.9× ratio · +34.2 / −11.8</div></div><span class="signal-item-time">5h</span></div>
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Cl-C-Si-17 · Long</div><div class="signal-item-desc">Class C · 2.4× ratio · +82.4 / −34.1 · 621 obs</div></div><span class="signal-item-time">2h</span></div>
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Cl-F-Si-04 · Long</div><div class="signal-item-desc">Class F · 2.4× ratio · +58.6 / −24.3</div></div><span class="signal-item-time">3h</span></div>
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Cl-H-Si-01 · Long</div><div class="signal-item-desc">Class H · 2.3× ratio · +28.1 / −12.4</div></div><span class="signal-item-time">1h</span></div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header"><h3>Worst performers</h3><span class="badge warning">Bottom 5 by ratio</span></div>
-                        <div class="signal-feed">
-                            <div class="signal-item filtered"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Cl-F-Si-02 · Short</div><div class="signal-item-desc">Class F · 0.2× ratio · +12.4 / −52.8</div></div><span class="signal-item-time">3h</span></div>
-                            <div class="signal-item filtered"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Cl-H-Si-01 · Short</div><div class="signal-item-desc">Class H · 0.4× ratio · +6.8 / −19.2</div></div><span class="signal-item-time">1h</span></div>
-                            <div class="signal-item filtered"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Cl-A-Si-12 · Short</div><div class="signal-item-desc">Class A · 0.4× ratio · +18.2 / −41.0</div></div><span class="signal-item-time">4h</span></div>
-                            <div class="signal-item filtered"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Cl-D-Si-03 · Long</div><div class="signal-item-desc">Class D · 0.4× ratio · +8.2 / −21.6</div></div><span class="signal-item-time">5h</span></div>
-                            <div class="signal-item filtered"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Cl-C-Si-17 · Short</div><div class="signal-item-desc">Class C · 0.5× ratio · +31.2 / −58.7 · 621 obs</div></div><span class="signal-item-time">2h</span></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- TAB 4: SIGNAL GENERATION                                     -->
-            <!-- ============================================================ -->
-            <section class="tab-content" id="tab-signals">
-                <header class="dashboard-header">
-                    <div>
-                        <h1>Signal Generation</h1>
-                        <p class="page-subtitle">Signals are tied to registered classes. Track recurrence, outcomes, and per-signal performance.</p>
-                    </div>
-                    <div class="dashboard-header-actions">
-                        <button class="btn-secondary" type="button" onclick="exportSignals()">Export</button>
-                        <button class="btn-primary" type="button" onclick="manualSignal()">+ Manual Signal</button>
-                    </div>
-                </header>
-
-                <!-- TIMEFRAME + CLASS FILTERS -->
-                <div class="card">
-                    <div class="timeframe-bar">
-                        <span class="timeframe-label">Timeframe</span>
-                        <div class="timeframe-tabs" id="sgTimeframes">
-                            <button class="timeframe-btn" type="button" data-tf="M1">M1</button>
-                            <button class="timeframe-btn" type="button" data-tf="M5">M5</button>
-                            <button class="timeframe-btn" type="button" data-tf="M15">M15</button>
-                            <button class="timeframe-btn" type="button" data-tf="M30">M30</button>
-                            <button class="timeframe-btn" type="button" data-tf="H1">H1</button>
-                            <button class="timeframe-btn" type="button" data-tf="H2">H2</button>
-                            <button class="timeframe-btn active" type="button" data-tf="H4">H4</button>
-                            <button class="timeframe-btn" type="button" data-tf="H6">H6</button>
-                            <button class="timeframe-btn" type="button" data-tf="H8">H8</button>
-                            <button class="timeframe-btn" type="button" data-tf="H12">H12</button>
-                            <button class="timeframe-btn" type="button" data-tf="D1">D1</button>
-                            <button class="timeframe-btn" type="button" data-tf="W1">W1</button>
-                        </div>
-                        <span class="timeframe-meta" id="sgTimeframeMeta">H4 &middot; all signals</span>
-                    </div>
-                    <div class="class-filter-bar" style="border-bottom: none; padding-bottom: 0; margin-bottom: 0;">
-                        <label class="class-filter-label" for="sgClassSelect">Filter by class</label>
-                        <select class="class-filter-select" id="sgClassSelect">
-                            <option value="all" selected>All classes</option>
-                            <option value="A">Class A · Trend + volume confirmation</option>
-                            <option value="B">Class B · Reversal near resistance</option>
-                            <option value="C">Class C · Trend continuation</option>
-                            <option value="D">Class D · Mean-reversion in range</option>
-                            <option value="E">Class E · Breakout follow-through</option>
-                            <option value="F">Class F · Volatility expansion breakout</option>
-                            <option value="G">Class G · Post-event drift</option>
-                            <option value="H">Class H · New combination</option>
-                        </select>
-                        <span class="pt-view-meta" id="sgViewMeta">Showing all classes</span>
-                    </div>
-                </div>
-
-                <!-- KPI ROW -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon blue">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M2 12h3l3-8 4 16 3-10 3 4h4" stroke="#14B8A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </div>
-                        <div class="stat-content"><span class="stat-value">12</span><span class="stat-label">Active signals</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M5 12l5 5L20 7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </div>
-                        <div class="stat-content"><span class="stat-value">37</span><span class="stat-label">Fired today</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#7C3AED" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#7C3AED" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#7C3AED" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#7C3AED" stroke-width="2"/></svg>
-                        </div>
-                        <div class="stat-content"><span class="stat-value">6</span><span class="stat-label">Classes firing</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#F59E0B" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/></svg>
-                        </div>
-                        <div class="stat-content"><span class="stat-value">82%</span><span class="stat-label">Avg class match</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 19V5M5 12l7-7 7 7" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </div>
-                        <div class="stat-content"><span class="stat-value">29</span><span class="stat-label">Long signals today</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M12 5v14M5 12l7 7 7-7" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </div>
-                        <div class="stat-content"><span class="stat-value">8</span><span class="stat-label">Short signals today</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 4h18l-7 8v6l-4-2v-4L3 4z" stroke="#7C3AED" stroke-width="2" stroke-linejoin="round"/></svg>
-                        </div>
-                        <div class="stat-content"><span class="stat-value">3</span><span class="stat-label">Filtered today</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon blue">
-                            <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M4 6h16M4 12h16M4 18h16" stroke="#14B8A6" stroke-width="2" stroke-linecap="round"/></svg>
-                        </div>
-                        <div class="stat-content"><span class="stat-value">92%</span><span class="stat-label">Recognition rate</span></div>
-                    </div>
-                </div>
-
-                <!-- SIGNAL REGISTRY -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Signal registry</h3>
-                        <div class="filter-tabs">
-                            <button class="filter-btn active" type="button">All</button>
-                            <button class="filter-btn" type="button">Active</button>
-                            <button class="filter-btn" type="button">Filtered</button>
-                            <button class="filter-btn" type="button">Watching</button>
-                        </div>
-                    </div>
-                    <div class="table-wrap signal-registry-wrap">
-                        <table class="activity-table signal-registry-table">
-                            <thead>
-                                <tr>
-                                    <th>Signal</th>
-                                    <th>Class</th>
-                                    <th>Dir</th>
-                                    <th>Recurrences</th>
-                                    <th>Wins</th>
-                                    <th>Losses</th>
-                                    <th>Win rate</th>
-                                    <th>Avg fav</th>
-                                    <th>Avg adv</th>
-                                    <th>Ratio</th>
-                                    <th>First seen</th>
-                                    <th>Last fired</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr data-signal="Cl-G-Si-21" data-class="G">
-                                    <td><strong class="sig-id">Cl-G-Si-21</strong></td>
-                                    <td><div class="class-cell"><div class="class-badge">G</div><div class="class-cell-info"><strong>Class G</strong><span>Post-event drift</span></div></div></td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>24</td>
-                                    <td class="num-wins">18</td>
-                                    <td class="num-losses">6</td>
-                                    <td><span class="perf-pill long">75%</span></td>
-                                    <td class="mono pos">+94.1</td>
-                                    <td class="mono neg">−28.6</td>
-                                    <td><span class="edge-pos">3.3×</span></td>
-                                    <td class="activity-time">12d ago</td>
-                                    <td class="activity-time">18m ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr data-signal="Cl-C-Si-17" data-class="C">
-                                    <td><strong class="sig-id">Cl-C-Si-17</strong></td>
-                                    <td><div class="class-cell"><div class="class-badge primary">C</div><div class="class-cell-info"><strong>Class C</strong><span>Trend continuation</span></div></div></td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>31</td>
-                                    <td class="num-wins">21</td>
-                                    <td class="num-losses">10</td>
-                                    <td><span class="perf-pill long">68%</span></td>
-                                    <td class="mono pos">+82.4</td>
-                                    <td class="mono neg">−34.1</td>
-                                    <td><span class="edge-pos">2.4×</span></td>
-                                    <td class="activity-time">8d ago</td>
-                                    <td class="activity-time">2h ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr data-signal="Cl-C-Si-14" data-class="C">
-                                    <td><strong class="sig-id">Cl-C-Si-14</strong></td>
-                                    <td><div class="class-cell"><div class="class-badge primary">C</div><div class="class-cell-info"><strong>Class C</strong><span>Trend continuation</span></div></div></td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>18</td>
-                                    <td class="num-wins">14</td>
-                                    <td class="num-losses">4</td>
-                                    <td><span class="perf-pill long">78%</span></td>
-                                    <td class="mono pos">+88.2</td>
-                                    <td class="mono neg">−31.8</td>
-                                    <td><span class="edge-pos">2.8×</span></td>
-                                    <td class="activity-time">6d ago</td>
-                                    <td class="activity-time">1d ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr data-signal="Cl-A-Si-12" data-class="A">
-                                    <td><strong class="sig-id">Cl-A-Si-12</strong></td>
-                                    <td><div class="class-cell"><div class="class-badge">A</div><div class="class-cell-info"><strong>Class A</strong><span>Trend + volume</span></div></div></td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>19</td>
-                                    <td class="num-wins">11</td>
-                                    <td class="num-losses">8</td>
-                                    <td><span class="perf-pill long">58%</span></td>
-                                    <td class="mono pos">+46.8</td>
-                                    <td class="mono neg">−22.5</td>
-                                    <td><span class="edge-pos">2.1×</span></td>
-                                    <td class="activity-time">5d ago</td>
-                                    <td class="activity-time">4h ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr data-signal="Cl-A-Si-09" data-class="A">
-                                    <td><strong class="sig-id">Cl-A-Si-09</strong></td>
-                                    <td><div class="class-cell"><div class="class-badge">A</div><div class="class-cell-info"><strong>Class A</strong><span>Trend + volume</span></div></div></td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>14</td>
-                                    <td class="num-wins">9</td>
-                                    <td class="num-losses">5</td>
-                                    <td><span class="perf-pill long">64%</span></td>
-                                    <td class="mono pos">+52.4</td>
-                                    <td class="mono neg">−28.7</td>
-                                    <td><span class="edge-pos">1.8×</span></td>
-                                    <td class="activity-time">9d ago</td>
-                                    <td class="activity-time">8h ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr data-signal="Cl-E-Si-11" data-class="E">
-                                    <td><strong class="sig-id">Cl-E-Si-11</strong></td>
-                                    <td><div class="class-cell"><div class="class-badge">E</div><div class="class-cell-info"><strong>Class E</strong><span>Breakout follow-through</span></div></div></td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>22</td>
-                                    <td class="num-wins">12</td>
-                                    <td class="num-losses">10</td>
-                                    <td><span class="perf-pill long">55%</span></td>
-                                    <td class="mono pos">+38.5</td>
-                                    <td class="mono neg">−27.4</td>
-                                    <td><span class="edge-pos">1.4×</span></td>
-                                    <td class="activity-time">7d ago</td>
-                                    <td class="activity-time">9h ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr data-signal="Cl-F-Si-04" data-class="F">
-                                    <td><strong class="sig-id">Cl-F-Si-04</strong></td>
-                                    <td><div class="class-cell"><div class="class-badge">F</div><div class="class-cell-info"><strong>Class F</strong><span>Volatility breakout</span></div></div></td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>8</td>
-                                    <td class="num-wins">5</td>
-                                    <td class="num-losses">3</td>
-                                    <td><span class="perf-pill long">63%</span></td>
-                                    <td class="mono pos">+58.6</td>
-                                    <td class="mono neg">−24.3</td>
-                                    <td><span class="edge-pos">2.4×</span></td>
-                                    <td class="activity-time">3d ago</td>
-                                    <td class="activity-time">3h ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr data-signal="Cl-B-Si-08" data-class="B">
-                                    <td><strong class="sig-id">Cl-B-Si-08</strong></td>
-                                    <td><div class="class-cell"><div class="class-badge">B</div><div class="class-cell-info"><strong>Class B</strong><span>Reversal near resistance</span></div></div></td>
-                                    <td><span class="direction-badge short">Short</span></td>
-                                    <td>16</td>
-                                    <td class="num-wins">8</td>
-                                    <td class="num-losses">8</td>
-                                    <td><span class="perf-pill short">50%</span></td>
-                                    <td class="mono pos">+31.2</td>
-                                    <td class="mono neg">−32.6</td>
-                                    <td><span class="edge-neg">0.9×</span></td>
-                                    <td class="activity-time">6d ago</td>
-                                    <td class="activity-time">5h ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr data-signal="Cl-D-Si-06" data-class="D">
-                                    <td><strong class="sig-id">Cl-D-Si-06</strong></td>
-                                    <td><div class="class-cell"><div class="class-badge">D</div><div class="class-cell-info"><strong>Class D</strong><span>Mean-reversion</span></div></div></td>
-                                    <td><span class="direction-badge short">Short</span></td>
-                                    <td>12</td>
-                                    <td class="num-wins">4</td>
-                                    <td class="num-losses">8</td>
-                                    <td><span class="perf-pill short">33%</span></td>
-                                    <td class="mono pos">+22.4</td>
-                                    <td class="mono neg">−38.6</td>
-                                    <td><span class="edge-neg">0.6×</span></td>
-                                    <td class="activity-time">4d ago</td>
-                                    <td class="activity-time">6h ago</td>
-                                    <td><span class="status-badge pending">Filtered</span></td>
-                                </tr>
-                                <tr data-signal="Cl-H-Si-01" data-class="H">
-                                    <td><strong class="sig-id">Cl-H-Si-01</strong></td>
-                                    <td><div class="class-cell"><div class="class-badge">H</div><div class="class-cell-info"><strong>Class H</strong><span>New combination</span></div></div></td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>3</td>
-                                    <td class="num-wins">1</td>
-                                    <td class="num-losses">2</td>
-                                    <td><span class="perf-pill long">33%</span></td>
-                                    <td class="mono pos">+20.8</td>
-                                    <td class="mono neg">−28.4</td>
-                                    <td><span class="edge-neg">0.7×</span></td>
-                                    <td class="activity-time">1d ago</td>
-                                    <td class="activity-time">1d ago</td>
-                                    <td><span class="status-badge in-progress">Watching</span></td>
-                                </tr>
-                                <tr data-signal="Cl-D-Si-03" data-class="D">
-                                    <td><strong class="sig-id">Cl-D-Si-03</strong></td>
-                                    <td><div class="class-cell"><div class="class-badge">D</div><div class="class-cell-info"><strong>Class D</strong><span>Mean-reversion</span></div></div></td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>9</td>
-                                    <td class="num-wins">2</td>
-                                    <td class="num-losses">7</td>
-                                    <td><span class="perf-pill long">22%</span></td>
-                                    <td class="mono pos">+15.2</td>
-                                    <td class="mono neg">−42.8</td>
-                                    <td><span class="edge-neg">0.4×</span></td>
-                                    <td class="activity-time">5d ago</td>
-                                    <td class="activity-time">2d ago</td>
-                                    <td><span class="status-badge pending">Filtered</span></td>
-                                </tr>
-                                <tr data-signal="Cl-F-Si-02" data-class="F">
-                                    <td><strong class="sig-id">Cl-F-Si-02</strong></td>
-                                    <td><div class="class-cell"><div class="class-badge">F</div><div class="class-cell-info"><strong>Class F</strong><span>Volatility breakout</span></div></div></td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>6</td>
-                                    <td class="num-wins">2</td>
-                                    <td class="num-losses">4</td>
-                                    <td><span class="perf-pill long">33%</span></td>
-                                    <td class="mono pos">+24.8</td>
-                                    <td class="mono neg">−36.2</td>
-                                    <td><span class="edge-neg">0.7×</span></td>
-                                    <td class="activity-time">4d ago</td>
-                                    <td class="activity-time">3d ago</td>
-                                    <td><span class="status-badge pending">Filtered</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- CURRENT OBSERVATION -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Current market observation</h3>
-                        <span class="card-meta"><span class="live-dot-inline"></span> live</span>
-                    </div>
-
-                    <div class="obs-grid">
-                        <div class="obs-cell obs-matched"><span class="obs-cell-cat">Regime</span><span class="obs-cell-value">Uptrend</span><span class="obs-cell-note">Defining element</span></div>
-                        <div class="obs-cell obs-matched"><span class="obs-cell-cat">Market State</span><span class="obs-cell-value">At Support level</span><span class="obs-cell-note">Defining element</span></div>
-                        <div class="obs-cell obs-matched"><span class="obs-cell-cat">COT</span><span class="obs-cell-value">Net Long</span><span class="obs-cell-note">Defining element</span></div>
-                        <div class="obs-cell obs-matched"><span class="obs-cell-cat">Fundamentals</span><span class="obs-cell-value">News + Sentiment bullish</span><span class="obs-cell-note">Defining element</span></div>
-                        <div class="obs-cell obs-partial"><span class="obs-cell-cat">Indicators</span><span class="obs-cell-value">SMA 20 confirmed</span><span class="obs-cell-note">Variation</span></div>
-                        <div class="obs-cell obs-partial"><span class="obs-cell-cat">Economic Calendar</span><span class="obs-cell-value">Major events bullish</span><span class="obs-cell-note">Variation</span></div>
-                    </div>
-
-                    <div class="obs-nearest">
-                        <div class="obs-nearest-head">
-                            <span class="obs-nearest-label">Nearest registered class</span>
-                            <span class="obs-nearest-match">4 / 4 defining elements matched &middot; 87%</span>
-                        </div>
-                        <div class="obs-nearest-body">
-                            <div class="class-cell"><div class="class-badge primary">C</div><div class="class-cell-info"><strong>Class C</strong><span>Trend continuation, elevated volume</span></div></div>
-                            <div class="obs-nearest-stats">
-                                <span><strong>621</strong> observations</span>
-                                <span><strong>68%</strong> long favorable</span>
-                                <span><strong>2.4×</strong> long ratio</span>
-                                <span><strong>17</strong> signals historically</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- LIVE SIGNALS -->
-                <div class="card">
-                    <div class="card-header"><h3>Live signals</h3><span class="card-meta">12 active</span></div>
-                    <div class="live-signal-list">
-
-                        <div class="live-signal-card">
-                            <div class="live-signal-head">
-                                <div class="live-signal-id">
-                                    <span class="live-signal-name">Cl-C-Si-17</span>
-                                    <span class="live-signal-class">Class C · Trend continuation, elevated volume</span>
-                                </div>
-                                <div class="live-signal-meta">
-                                    <span class="direction-badge long">Long</span>
-                                    <span class="status-badge completed">Active</span>
-                                </div>
-                            </div>
-                            <div class="live-signal-body">
-                                <div class="live-signal-section">
-                                    <span class="live-signal-section-label">Defining elements</span>
-                                    <div class="live-signal-grid">
-                                        <div class="live-signal-field"><span class="live-signal-field-label">Regime</span><span class="live-signal-field-value">Uptrend</span></div>
-                                        <div class="live-signal-field"><span class="live-signal-field-label">Market State</span><span class="live-signal-field-value">At Support level</span></div>
-                                        <div class="live-signal-field"><span class="live-signal-field-label">COT</span><span class="live-signal-field-value">Net Long</span></div>
-                                        <div class="live-signal-field"><span class="live-signal-field-label">Fundamentals</span><span class="live-signal-field-value">News + Sentiment bullish</span></div>
-                                    </div>
-                                </div>
-                                <div class="live-signal-section">
-                                    <span class="live-signal-section-label">Confirmations this occurrence</span>
-                                    <div class="live-signal-chips">
-                                        <span class="confirm-chip on">SMA 20 ✓</span>
-                                        <span class="confirm-chip off">Bollinger ✗</span>
-                                        <span class="confirm-chip on">Major events bullish ✓</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="live-signal-foot">
-                                <span><strong>Match:</strong> 87%</span>
-                                <span><strong>Fired:</strong> 2h 14m ago</span>
-                                <span><strong>Recurrences:</strong> 31</span>
-                                <span><strong>Win rate:</strong> 68%</span>
-                                <span><strong>Long ratio:</strong> 2.4×</span>
-                            </div>
-                        </div>
-
-                        <div class="live-signal-card">
-                            <div class="live-signal-head">
-                                <div class="live-signal-id">
-                                    <span class="live-signal-name">Cl-G-Si-21</span>
-                                    <span class="live-signal-class">Class G · Post-event drift</span>
-                                </div>
-                                <div class="live-signal-meta">
-                                    <span class="direction-badge long">Long</span>
-                                    <span class="status-badge completed">Active</span>
-                                </div>
-                            </div>
-                            <div class="live-signal-body">
-                                <div class="live-signal-section">
-                                    <span class="live-signal-section-label">Defining elements</span>
-                                    <div class="live-signal-grid">
-                                        <div class="live-signal-field"><span class="live-signal-field-label">Regime</span><span class="live-signal-field-value">Uptrend</span></div>
-                                        <div class="live-signal-field"><span class="live-signal-field-label">Market State</span><span class="live-signal-field-value">At Support level</span></div>
-                                        <div class="live-signal-field"><span class="live-signal-field-label">COT</span><span class="live-signal-field-value">Net Long</span></div>
-                                        <div class="live-signal-field"><span class="live-signal-field-label">Fundamentals</span><span class="live-signal-field-value">News + Sentiment bullish</span></div>
-                                    </div>
-                                </div>
-                                <div class="live-signal-section">
-                                    <span class="live-signal-section-label">Confirmations this occurrence</span>
-                                    <div class="live-signal-chips">
-                                        <span class="confirm-chip on">MA20 rising ✓</span>
-                                        <span class="confirm-chip on">CPI within 3 days ✓</span>
-                                        <span class="confirm-chip on">NFP within 2 days ✓</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="live-signal-foot">
-                                <span><strong>Match:</strong> 92%</span>
-                                <span><strong>Fired:</strong> 18m ago</span>
-                                <span><strong>Recurrences:</strong> 24</span>
-                                <span><strong>Win rate:</strong> 75%</span>
-                                <span><strong>Long ratio:</strong> 3.3×</span>
-                            </div>
-                        </div>
-
-                        <div class="live-signal-card">
-                            <div class="live-signal-head">
-                                <div class="live-signal-id">
-                                    <span class="live-signal-name">Cl-A-Si-12</span>
-                                    <span class="live-signal-class">Class A · Trend + volume confirmation</span>
-                                </div>
-                                <div class="live-signal-meta">
-                                    <span class="direction-badge long">Long</span>
-                                    <span class="status-badge completed">Active</span>
-                                </div>
-                            </div>
-                            <div class="live-signal-body">
-                                <div class="live-signal-section">
-                                    <span class="live-signal-section-label">Defining elements</span>
-                                    <div class="live-signal-grid">
-                                        <div class="live-signal-field"><span class="live-signal-field-label">Regime</span><span class="live-signal-field-value">Uptrend</span></div>
-                                        <div class="live-signal-field"><span class="live-signal-field-label">Market State</span><span class="live-signal-field-value">At Support level</span></div>
-                                        <div class="live-signal-field"><span class="live-signal-field-label">COT</span><span class="live-signal-field-value">Net Long</span></div>
-                                        <div class="live-signal-field"><span class="live-signal-field-label">Fundamentals</span><span class="live-signal-field-value">Neutral</span></div>
-                                    </div>
-                                </div>
-                                <div class="live-signal-section">
-                                    <span class="live-signal-section-label">Confirmations this occurrence</span>
-                                    <div class="live-signal-chips">
-                                        <span class="confirm-chip on">SMA 20 ✓</span>
-                                        <span class="confirm-chip on">MA50 rising ✓</span>
-                                        <span class="confirm-chip off">No event nearby ✗</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="live-signal-foot">
-                                <span><strong>Match:</strong> 79%</span>
-                                <span><strong>Fired:</strong> 4h 02m ago</span>
-                                <span><strong>Recurrences:</strong> 19</span>
-                                <span><strong>Win rate:</strong> 58%</span>
-                                <span><strong>Long ratio:</strong> 2.1×</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- RECENT SIGNALS -->
-                <div class="card">
-                    <div class="card-header"><h3>Recent signals</h3><span class="card-meta">last 24 hours</span></div>
-                    <div class="table-wrap">
-                        <table class="activity-table">
-                            <thead>
-                                <tr>
-                                    <th>Signal</th>
-                                    <th>Class</th>
-                                    <th>Dir</th>
-                                    <th>Regime</th>
-                                    <th>Market State</th>
-                                    <th>COT</th>
-                                    <th>Fundamentals</th>
-                                    <th>Confirming</th>
-                                    <th>Calendar</th>
-                                    <th>Match</th>
-                                    <th>Fired</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong class="sig-id">Cl-G-Si-21</strong></td>
-                                    <td>Class G</td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>Uptrend</td>
-                                    <td>At Support</td>
-                                    <td>Net Long</td>
-                                    <td>Bullish</td>
-                                    <td><span class="confirm-chip on">MA20</span> <span class="confirm-chip on">MA50</span></td>
-                                    <td><span class="confirm-chip on">CPI 3d</span> <span class="confirm-chip on">NFP 2d</span></td>
-                                    <td><strong>92%</strong></td>
-                                    <td class="activity-time">18m ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong class="sig-id">Cl-C-Si-17</strong></td>
-                                    <td>Class C</td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>Uptrend</td>
-                                    <td>At Support</td>
-                                    <td>Net Long</td>
-                                    <td>Bullish</td>
-                                    <td><span class="confirm-chip on">SMA 20</span> <span class="confirm-chip off">Bollinger</span></td>
-                                    <td><span class="confirm-chip on">Events bullish</span></td>
-                                    <td><strong>87%</strong></td>
-                                    <td class="activity-time">2h ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong class="sig-id">Cl-A-Si-12</strong></td>
-                                    <td>Class A</td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>Uptrend</td>
-                                    <td>At Support</td>
-                                    <td>Net Long</td>
-                                    <td>Neutral</td>
-                                    <td><span class="confirm-chip on">SMA 20</span> <span class="confirm-chip on">MA50</span></td>
-                                    <td><span class="confirm-chip off">No event</span></td>
-                                    <td><strong>79%</strong></td>
-                                    <td class="activity-time">4h ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong class="sig-id">Cl-E-Si-11</strong></td>
-                                    <td>Class E</td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>Uptrend</td>
-                                    <td>Volume high</td>
-                                    <td>Neutral</td>
-                                    <td>News active</td>
-                                    <td><span class="confirm-chip on">MA20</span> <span class="confirm-chip on">MACD</span></td>
-                                    <td><span class="confirm-chip on">Rate imminent</span></td>
-                                    <td><strong>84%</strong></td>
-                                    <td class="activity-time">9h ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong class="sig-id">Cl-F-Si-04</strong></td>
-                                    <td>Class F</td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>—</td>
-                                    <td>Volatility exp</td>
-                                    <td>—</td>
-                                    <td>—</td>
-                                    <td><span class="confirm-chip on">MACD</span> <span class="confirm-chip on">Bollinger</span></td>
-                                    <td><span class="confirm-chip off">—</span></td>
-                                    <td><strong>76%</strong></td>
-                                    <td class="activity-time">3h ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong class="sig-id">Cl-D-Si-06</strong></td>
-                                    <td>Class D</td>
-                                    <td><span class="direction-badge short">Short</span></td>
-                                    <td>Downtrend</td>
-                                    <td>At Resistance</td>
-                                    <td>Net Short</td>
-                                    <td>Bearish</td>
-                                    <td><span class="confirm-chip on">RSI &lt; 45</span></td>
-                                    <td><span class="confirm-chip on">No event</span></td>
-                                    <td><strong>88%</strong></td>
-                                    <td class="activity-time">6h ago</td>
-                                    <td><span class="status-badge pending">Filtered</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong class="sig-id">Cl-B-Si-08</strong></td>
-                                    <td>Class B</td>
-                                    <td><span class="direction-badge short">Short</span></td>
-                                    <td>Downtrend</td>
-                                    <td>Resistance</td>
-                                    <td>Net Short</td>
-                                    <td>—</td>
-                                    <td><span class="confirm-chip on">RSI &lt; 45</span> <span class="confirm-chip on">Wick rejection</span></td>
-                                    <td><span class="confirm-chip on">Rate imminent</span></td>
-                                    <td><strong>81%</strong></td>
-                                    <td class="activity-time">5h ago</td>
-                                    <td><span class="status-badge completed">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong class="sig-id">Cl-H-Si-01</strong></td>
-                                    <td>Class H</td>
-                                    <td><span class="direction-badge long">Long</span></td>
-                                    <td>Uptrend</td>
-                                    <td>At Support</td>
-                                    <td>—</td>
-                                    <td>—</td>
-                                    <td><span class="confirm-chip on">MA20</span> <span class="confirm-chip on">RSI &gt; 55</span></td>
-                                    <td><span class="confirm-chip off">No event</span></td>
-                                    <td><strong>73%</strong></td>
-                                    <td class="activity-time">1d ago</td>
-                                    <td><span class="status-badge in-progress">Watching</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- INTERPRETATION -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Interpretation · Cl-G-Si-21</h3>
-                        <span class="badge info">AI · Inference</span>
-                    </div>
-                    <p class="review-text">
-                        Cl-G-Si-21 is a Class G (Post-event drift) signal that fired 18 minutes ago.
-                        The four defining elements — Uptrend regime, price at a support level,
-                        COT net long, and bullish news plus sentiment — all matched Class G's
-                        definition. The occurrence is confirmed by two calendar events
-                        (CPI within 3 days, NFP within 2 days) and by MA20 and MA50 both rising.
-                    </p>
-                    <p class="review-text">
-                        This signal has recurred 24 times over the past 12 days with a win rate
-                        of 75% (18 wins / 6 losses). Across 834 historical observations,
-                        Class G's long side has shown a mean favorable of +94.1 against a mean
-                        adverse of −28.6, a ratio of 3.3×. Historically this class has not been
-                        tradeable on the short side.
-                    </p>
-                </div>
-
-                <!-- FILTERED -->
-                <div class="card">
-                    <div class="card-header"><h3>Filtered signals</h3><span class="badge warning">3 today</span></div>
-                    <div class="signal-feed">
-                        <div class="signal-item filtered">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-D-Si-06 · Class D · Short</div>
-                                <div class="signal-item-desc">Mean-reversion in range · 12 recurrences · 33% win rate · below 1.5× ratio floor (0.6×)</div>
-                            </div>
-                            <span class="signal-item-time">6h ago</span>
-                        </div>
-                        <div class="signal-item filtered">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-H-Si-01 · Class H · Long</div>
-                                <div class="signal-item-desc">New combination — gathering data · 3 recurrences · below 100 observation floor</div>
-                            </div>
-                            <span class="signal-item-time">1d ago</span>
-                        </div>
-                        <div class="signal-item filtered">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-F-Si-02 · Class F · Long</div>
-                                <div class="signal-item-desc">Volatility expansion breakout · short ratio 0.7× · below 1.5× ratio floor</div>
-                            </div>
-                            <span class="signal-item-time">3h ago</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ============================================================ -->
-            <!-- TAB 5: MONITORING                                            -->
-            <!-- ============================================================ -->
-            <section class="tab-content" id="tab-monitoring">
-                <header class="dashboard-header">
-                    <div>
-                        <h1>Monitoring</h1>
-                        <p class="page-subtitle">Watching open positions and tracked setups in real time.</p>
-                    </div>
-                    <div class="dashboard-header-actions">
-                        <button class="btn-secondary" type="button" onclick="configureAlerts()">Configure Alerts</button>
-                    </div>
-                </header>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" stroke="#14B8A6" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="#14B8A6" stroke-width="2"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">8</span><span class="stat-label">Watched setups</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 17l5-6 4 4 9-10" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">24</span><span class="stat-label">Favorable so far</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M3 7l5 6 4-4 9 10" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">7</span><span class="stat-label">Adverse so far</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" stroke="#7C3AED" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg></div>
-                        <div class="stat-content"><span class="stat-value">31</span><span class="stat-label">Closed today</span></div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header"><h3>Open Positions</h3><span class="card-meta"><span class="live-dot-inline"></span> live</span></div>
-                    <div class="table-wrap">
-                        <table class="activity-table">
-                            <thead><tr><th>Signal</th><th>Direction</th><th>Age</th><th>Favorable</th><th>Adverse</th><th>Status</th></tr></thead>
-                            <tbody>
-                                <tr><td><strong>Cl-G-Si-21</strong></td><td><span class="direction-badge long">Long</span></td><td class="activity-time">18m</td><td class="mono pos">+12.4</td><td class="mono neg">−3.1</td><td><span class="status-badge completed">Favorable</span></td></tr>
-                                <tr><td><strong>Cl-C-Si-17</strong></td><td><span class="direction-badge long">Long</span></td><td class="activity-time">2h 14m</td><td class="mono pos">+82.4</td><td class="mono neg">−34.1</td><td><span class="status-badge completed">Favorable</span></td></tr>
-                                <tr><td><strong>Cl-C-Si-17</strong></td><td><span class="direction-badge short">Short</span></td><td class="activity-time">2h 14m</td><td class="mono pos">+31.2</td><td class="mono neg">−58.7</td><td><span class="status-badge pending">Adverse</span></td></tr>
-                                <tr><td><strong>Cl-A-Si-12</strong></td><td><span class="direction-badge long">Long</span></td><td class="activity-time">4h 02m</td><td class="mono pos">+46.8</td><td class="mono neg">−22.5</td><td><span class="status-badge completed">Favorable</span></td></tr>
-                                <tr><td><strong>Cl-A-Si-12</strong></td><td><span class="direction-badge short">Short</span></td><td class="activity-time">4h 02m</td><td class="mono pos">+18.2</td><td class="mono neg">−41.0</td><td><span class="status-badge pending">Adverse</span></td></tr>
-                                <tr><td><strong>Cl-E-Si-11</strong></td><td><span class="direction-badge long">Long</span></td><td class="activity-time">9h 18m</td><td class="mono pos">+28.5</td><td class="mono neg">−17.2</td><td><span class="status-badge completed">Favorable</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header"><h3>Alert Feed</h3><span class="badge info">3 new</span></div>
-                    <div class="signal-feed">
-                        <div class="signal-item new">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-G-Si-21 crossed +10 favorable</div>
-                                <div class="signal-item-desc">Long side reached the first favorable threshold</div>
-                            </div>
-                            <span class="signal-item-time">just now</span>
-                        </div>
-                        <div class="signal-item new">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-C-Si-17 short adverse crossed −50</div>
-                                <div class="signal-item-desc">Short side adverse movement exceeding historical mean</div>
-                            </div>
-                            <span class="signal-item-time">34m ago</span>
-                        </div>
-                        <div class="signal-item new">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-A-Si-12 long closed favorable</div>
-                                <div class="signal-item-desc">Position closed at +46.8 favorable / −22.5 adverse</div>
-                            </div>
-                            <span class="signal-item-time">1h ago</span>
-                        </div>
-                        <div class="signal-item">
-                            <span class="signal-dot-wrap"></span>
-                            <div class="signal-item-info">
-                                <div class="signal-item-title">Cl-H-Si-01 registered</div>
-                                <div class="signal-item-desc">Combination not previously seen — 3 recurrences so far</div>
-                            </div>
-                            <span class="signal-item-time">3h ago</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid-2col">
-                    <div class="card">
-                        <div class="card-header"><h3>Watched Setups</h3><span class="card-meta">8 active</span></div>
-                        <div class="signal-feed">
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Class G · Cl-G-Si-21</div><div class="signal-item-desc">Post-event drift · long favored</div></div><span class="signal-item-time">18m</span></div>
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Class C · Cl-C-Si-17</div><div class="signal-item-desc">Trend continuation · long favored</div></div><span class="signal-item-time">2h</span></div>
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Class A · Cl-A-Si-12</div><div class="signal-item-desc">Trend + volume · long favored</div></div><span class="signal-item-time">4h</span></div>
-                            <div class="signal-item"><span class="signal-dot-wrap"></span><div class="signal-item-info"><div class="signal-item-title">Class E · Cl-E-Si-11</div><div class="signal-item-desc">Breakout follow-through · long favored</div></div><span class="signal-item-time">9h</span></div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header"><h3>Today's Movement</h3><span class="card-meta">last 24 hours</span></div>
-                        <div class="movement-row">
-                            <div class="movement-stat"><span class="movement-label">Total favorable</span><span class="movement-value pos">+612.8</span></div>
-                            <div class="movement-stat"><span class="movement-label">Total adverse</span><span class="movement-value neg">−218.4</span></div>
-                        </div>
-                        <div class="histogram histogram-long" aria-hidden="true">
-                            <span style="height: 12%"></span><span style="height: 18%"></span><span style="height: 26%"></span><span style="height: 38%"></span><span style="height: 52%"></span><span style="height: 68%"></span><span style="height: 82%"></span><span style="height: 94%"></span><span style="height: 100%"></span><span style="height: 86%"></span><span style="height: 66%"></span><span style="height: 46%"></span><span style="height: 30%"></span><span style="height: 18%"></span><span style="height: 10%"></span><span style="height: 5%"></span>
-                        </div>
-                        <div class="histogram-legend"><span>0</span><span>25</span><span>50</span><span>75+</span></div>
-                    </div>
-                </div>
-            </section>
-
-        </main>
-    </div>
-
-    <div id="footer"></div>
-
-    <script src="js/main.js"></script>
-    <script src="js/header.js"></script>
-    <script src="js/footer.js"></script>
-    <script type="module" src="js/dashboard.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
