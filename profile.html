@@ -12,265 +12,159 @@
 
     <style>
         /* ----------------------------------------------------------
-           PROFILE-SPECIFIC STYLES (move into css/pages/profile.css)
+           TOGGLE SWITCHES
            ---------------------------------------------------------- */
-
-        /* Profile hero */
-        .profile-hero {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 24px 28px;
-            background: #fff;
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius-lg);
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .profile-hero-avatar {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .profile-hero-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .profile-hero-info h2 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--gray-900);
-            margin: 0 0 4px;
-        }
-
-        .profile-hero-info p {
-            font-size: 14px;
-            color: var(--gray-500);
-            margin: 0 0 8px;
-        }
-
-        .profile-hero-badges {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .profile-hero-actions {
-            display: flex;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
-        /* Toggle switch */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 22px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
+        .toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; cursor: pointer; flex-shrink: 0; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider {
-            position: absolute;
-            inset: 0;
-            background: var(--gray-300);
-            border-radius: 22px;
-            transition: background .2s;
-        }
-        .toggle-slider::before {
-            content: '';
-            position: absolute;
-            height: 16px;
-            width: 16px;
-            left: 3px;
-            top: 3px;
-            background: #fff;
-            border-radius: 50%;
-            transition: transform .2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,.2);
-        }
+        .toggle-slider { position: absolute; inset: 0; background: var(--gray-300); border-radius: 22px; transition: background .2s; }
+        .toggle-slider::before { content: ''; position: absolute; height: 16px; width: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
         .toggle-switch input:checked + .toggle-slider { background: var(--primary); }
         .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
         .toggle-switch input:disabled + .toggle-slider { opacity: .5; }
+        .toggle-lg { width: 56px; height: 30px; }
+        .toggle-lg .toggle-slider::before { height: 24px; width: 24px; }
+        .toggle-lg input:checked + .toggle-slider::before { transform: translateX(26px); }
 
-        /* Preference rows (Settings) */
-        .pref-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--gray-100);
-        }
-        .pref-row:last-child { border-bottom: none; }
-        .pref-row-info { flex: 1; min-width: 0; }
-        .pref-row-info strong {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gray-800);
-            margin-bottom: 2px;
-        }
-        .pref-row-info span {
-            font-size: 13px;
-            color: var(--gray-500);
-        }
+        /* ----------------------------------------------------------
+           PROFILE HERO
+           ---------------------------------------------------------- */
+        .profile-hero { display: flex; align-items: center; gap: 20px; padding: 24px 28px; background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); margin-bottom: 20px; flex-wrap: wrap; }
+        .profile-hero-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--gradient-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; flex-shrink: 0; }
+        .profile-hero-info { flex: 1; min-width: 0; }
+        .profile-hero-info h2 { font-size: 20px; font-weight: 700; color: var(--gray-900); margin: 0 0 4px; }
+        .profile-hero-info p { font-size: 14px; color: var(--gray-500); margin: 0 0 8px; }
+        .profile-hero-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+        .profile-hero-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
-        /* Sessions list (Security) */
-        .session-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        /* ----------------------------------------------------------
+           SYSTEM CONTROL
+           ---------------------------------------------------------- */
+        .sys-control-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px 18px; background: var(--gray-50, #F9FAFB); border-radius: 8px; border: 1px solid var(--gray-200); }
+        .sys-control-info { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+        .sys-control-text strong { display: block; font-size: 14px; margin-bottom: 2px; }
+        .sys-control-text span { font-size: 12px; color: var(--gray-500); }
+        .sys-status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gray-400); flex-shrink: 0; }
+        .sys-status-dot.on { background: #10B981; box-shadow: 0 0 0 4px rgba(16,185,129,.18); }
 
-        .session-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 16px;
-            background: var(--gray-50);
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius);
-        }
+        .sys-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 16px; }
+        .sys-meta-item { display: flex; flex-direction: column; gap: 2px; }
+        .sys-meta-label { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--gray-400); }
+        .sys-meta-value { font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--gray-700); }
 
-        .session-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: var(--primary-lightest);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
+        .quota-warning { margin-top: 14px; padding: 12px 16px; background: #FEF3C7; border-left: 3px solid #F59E0B; border-radius: 8px; font-size: 12px; display: flex; flex-direction: column; gap: 3px; }
 
+        /* ----------------------------------------------------------
+           SETTINGS CONTAINERS
+           ---------------------------------------------------------- */
+        .settings-container { display: flex; flex-direction: column; gap: 16px; }
+        .settings-card { padding: 20px 24px; }
+        .settings-title { font-size: 16px; font-weight: 700; margin: 0 0 4px; }
+        .settings-hint { font-size: 12px; color: var(--gray-500); margin: 0 0 16px; }
+
+        .settings-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+        .settings-field { display: flex; flex-direction: column; gap: 4px; }
+        .settings-label { font-size: 11px; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: .04em; }
+
+        .form-input, .form-select { padding: 8px 10px; border: 1px solid var(--gray-200); border-radius: 6px; font-size: 13px; background: #fff; font-family: inherit; color: var(--gray-800); width: 100%; }
+        .form-input:focus, .form-select:focus { outline: 2px solid var(--primary); outline-offset: -1px; border-color: var(--primary); }
+        .form-input.mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* ----------------------------------------------------------
+           DATA TABLES
+           ---------------------------------------------------------- */
+        .inst-table { width: 100%; border-collapse: collapse; }
+        .inst-table th, .inst-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--gray-100); font-size: 13px; vertical-align: middle; }
+        .inst-table th { font-size: 11px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: .04em; background: var(--gray-50, #F9FAFB); }
+        .inst-table input[type="time"] { padding: 4px 6px; border: 1px solid var(--gray-200); border-radius: 5px; font-family: 'JetBrains Mono', monospace; font-size: 12px; width: 88px; }
+
+        .mini-tf-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .mini-tf-grid label { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; color: var(--gray-600); cursor: pointer; }
+        .mini-tf-grid input { margin: 0; }
+
+        .ind-table { width: 100%; border-collapse: collapse; }
+        .ind-table th, .ind-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--gray-100); font-size: 13px; vertical-align: middle; }
+        .ind-table th { font-size: 11px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: .04em; background: var(--gray-50, #F9FAFB); }
+
+        .settings-inline-note { font-size: 12px; color: var(--gray-500); margin-top: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .settings-inline-note strong { color: var(--gray-700); }
+        .settings-inline-note strong.neg { color: #EF4444; }
+
+        /* ----------------------------------------------------------
+           USAGE METERS
+           ---------------------------------------------------------- */
+        .api-usage-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+        .api-card { padding: 14px 16px; border: 1px solid var(--gray-200); border-radius: 8px; background: #fff; }
+        .api-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .api-name { font-weight: 600; font-size: 13px; }
+        .api-card-tag { font-size: 10px; color: var(--gray-500); padding: 2px 6px; background: var(--gray-100); border-radius: 4px; font-family: 'JetBrains Mono', monospace; }
+        .usage-meter { height: 6px; background: var(--gray-100); border-radius: 3px; overflow: hidden; }
+        .usage-fill { height: 100%; background: var(--primary); transition: width .3s, background .3s; }
+        .usage-fill.warning { background: #F59E0B; }
+        .usage-fill.danger  { background: #EF4444; }
+        .api-card-foot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: var(--gray-500); }
+        .api-card-foot .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* ----------------------------------------------------------
+           SESSIONS
+           ---------------------------------------------------------- */
+        .session-list { display: flex; flex-direction: column; gap: 10px; }
+        .session-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius); }
+        .session-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--primary-lightest); color: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .session-info { flex: 1; min-width: 0; }
-        .session-info strong {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gray-800);
-            margin-bottom: 2px;
-        }
-        .session-info span {
-            font-size: 12px;
-            color: var(--gray-500);
-            font-family: 'JetBrains Mono', monospace;
-        }
+        .session-info strong { display: block; font-size: 14px; font-weight: 600; color: var(--gray-800); margin-bottom: 2px; }
+        .session-info span { font-size: 12px; color: var(--gray-500); font-family: 'JetBrains Mono', monospace; }
+        .session-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: #D1FAE5; color: #065F46; white-space: nowrap; }
 
-        .session-tag {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 999px;
-            background: #D1FAE5;
-            color: #065F46;
-            white-space: nowrap;
-        }
-
-        /* Login history table */
-        .login-history {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-        .login-history th {
-            text-align: left;
-            padding: 10px 12px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--gray-500);
-            border-bottom: 1px solid var(--gray-200);
-        }
-        .login-history td {
-            padding: 12px;
-            border-bottom: 1px solid var(--gray-100);
-            color: var(--gray-700);
-        }
+        .login-history { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .login-history th { text-align: left; padding: 10px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-500); border-bottom: 1px solid var(--gray-200); }
+        .login-history td { padding: 12px; border-bottom: 1px solid var(--gray-100); color: var(--gray-700); }
         .login-history tr:last-child td { border-bottom: none; }
-
-        .login-status {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 999px;
-        }
+        .login-status { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
         .login-status.success { background: #D1FAE5; color: #065F46; }
         .login-status.failed  { background: #FEE2E2; color: #991B1B; }
 
-        /* Two-factor block */
-        .tfa-block {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 18px 20px;
-            background: var(--gray-50);
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius);
-            margin-bottom: 16px;
-        }
+        /* ----------------------------------------------------------
+           2FA BLOCK
+           ---------------------------------------------------------- */
+        .tfa-block { display: flex; align-items: center; gap: 16px; padding: 18px 20px; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius); margin-bottom: 16px; }
         .tfa-info { flex: 1; min-width: 0; }
-        .tfa-info strong {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gray-800);
-            margin-bottom: 3px;
-        }
-        .tfa-info span {
-            font-size: 13px;
-            color: var(--gray-500);
-        }
+        .tfa-info strong { display: block; font-size: 14px; font-weight: 600; color: var(--gray-800); margin-bottom: 3px; }
+        .tfa-info span { font-size: 13px; color: var(--gray-500); }
 
-        /* Danger zone */
-        .settings-danger-card {
-            border: 1px solid #FEE2E2;
-            border-left: 4px solid var(--danger);
-        }
+        /* ----------------------------------------------------------
+           PREFERENCE ROWS
+           ---------------------------------------------------------- */
+        .pref-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--gray-100); }
+        .pref-row:last-child { border-bottom: none; }
+        .pref-row-info { flex: 1; min-width: 0; }
+        .pref-row-info strong { display: block; font-size: 14px; font-weight: 600; color: var(--gray-800); margin-bottom: 2px; }
+        .pref-row-info span { font-size: 13px; color: var(--gray-500); }
+
+        /* ----------------------------------------------------------
+           DANGER ZONE
+           ---------------------------------------------------------- */
+        .settings-danger-card { border: 1px solid #FEE2E2; border-left: 4px solid var(--danger); }
         .settings-danger-card .settings-title { color: var(--danger); }
         .settings-danger-card .settings-hint { color: var(--gray-600); }
-        .danger-btn {
-            background: #FEE2E2;
-            color: #991B1B;
-            border: 1px solid #FECACA;
-            padding: 9px 16px;
-            border-radius: var(--radius);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            transition: var(--transition);
-        }
-        .danger-btn:hover {
-            background: var(--danger);
-            color: #fff;
-            border-color: var(--danger);
-        }
+        .danger-btn { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; padding: 9px 16px; border-radius: var(--radius); font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: var(--transition); }
+        .danger-btn:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
 
-        /* Small card wrapper */
-        .card { margin-bottom: 18px; }
+        /* ----------------------------------------------------------
+           NOTIFICATION LIST
+           ---------------------------------------------------------- */
+        .notification-options { display: flex; flex-direction: column; gap: 10px; }
+        .notification-options label { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--gray-700); cursor: pointer; }
+        .notification-options input[type="checkbox"] { margin: 0; }
 
+        /* ----------------------------------------------------------
+           RESPONSIVE
+           ---------------------------------------------------------- */
         @media (max-width: 768px) {
             .profile-hero { flex-direction: column; text-align: center; }
             .profile-hero-actions { width: 100%; }
             .profile-hero-actions .btn-primary,
             .profile-hero-actions .btn-secondary { flex: 1; }
+            .sys-control-row { flex-direction: column; align-items: stretch; }
             .session-item { flex-wrap: wrap; }
         }
     </style>
@@ -350,7 +244,6 @@
                     </div>
                 </header>
 
-                <!-- Profile hero -->
                 <div class="profile-hero">
                     <div class="profile-hero-avatar" id="heroAvatar">U</div>
                     <div class="profile-hero-info">
@@ -367,7 +260,6 @@
                     </div>
                 </div>
 
-                <!-- Stats -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon blue">
@@ -423,7 +315,6 @@
                     </div>
                 </div>
 
-                <!-- Plan & usage -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Plan &amp; usage</h3>
@@ -452,7 +343,6 @@
                     </div>
                 </div>
 
-                <!-- Recent activity -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Recent account activity</h3>
@@ -488,7 +378,6 @@
                     </div>
                 </header>
 
-                <!-- 2FA -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Two-factor authentication</h3>
@@ -512,7 +401,6 @@
                     </div>
                 </div>
 
-                <!-- Active sessions -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Active sessions</h3>
@@ -550,7 +438,6 @@
                     </div>
                 </div>
 
-                <!-- Login history -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Recent sign-ins</h3>
@@ -601,7 +488,6 @@
                     </div>
                 </div>
 
-                <!-- Data retention -->
                 <div class="card">
                     <div class="card-header">
                         <h3>Data retention</h3>
@@ -637,33 +523,274 @@
                 <header class="dashboard-header">
                     <div>
                         <h1>Settings</h1>
-                        <p class="page-subtitle">Profile details, password, and notifications.</p>
+                        <p class="page-subtitle">Access control, security features, defaults, and preferences.</p>
                     </div>
+                    <button class="btn-primary btn-sm" id="saveAllSettingsBtn" type="button">Save all changes</button>
                 </header>
 
                 <div class="settings-container">
 
-                    <!-- Personal profile -->
+                    <div class="card settings-card" style="border-left: 4px solid var(--primary);">
+                        <h3 class="settings-title">Access Control</h3>
+                        <p class="settings-hint">Master switch for viewer gating. When off, no gate is applied to any link regardless of per-link settings.</p>
+
+                        <div class="sys-control-row">
+                            <div class="sys-control-info">
+                                <span class="sys-status-dot on" id="sysStatusDot"></span>
+                                <div class="sys-control-text">
+                                    <strong id="sysStatusLabel">Gating enabled</strong>
+                                    <span id="sysStatusSub">All new links require name and email.</span>
+                                </div>
+                            </div>
+                            <label class="toggle-switch toggle-lg">
+                                <input type="checkbox" id="sysGateToggle" checked />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="sys-meta-grid">
+                            <div class="sys-meta-item">
+                                <span class="sys-meta-label">Signed URL TTL</span>
+                                <span class="sys-meta-value">60 seconds</span>
+                            </div>
+                            <div class="sys-meta-item">
+                                <span class="sys-meta-label">IP retention</span>
+                                <span class="sys-meta-value">90 days</span>
+                            </div>
+                            <div class="sys-meta-item">
+                                <span class="sys-meta-label">Last check</span>
+                                <span class="sys-meta-value" id="sysLastCheck">—</span>
+                            </div>
+                            <div class="sys-meta-item">
+                                <span class="sys-meta-label">Config updated</span>
+                                <span class="sys-meta-value" id="sysConfigUpdated">—</span>
+                            </div>
+                        </div>
+
+                        <div class="quota-warning" id="sysQuotaWarning" hidden>
+                            <strong>⚠ Egress warning</strong>
+                            <span>Monthly egress is above 80% of your plan's allowance. Consider upgrading or reducing active documents.</span>
+                        </div>
+                    </div>
+
+                    <div class="card settings-card" style="border-left: 4px solid var(--primary);">
+                        <h3 class="settings-title">Documents &amp; Access Windows</h3>
+                        <p class="settings-hint">Per-document gating and viewing windows. Time-restricted documents can only be viewed during the listed hours (UTC).</p>
+
+                        <table class="inst-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 36px;"><input type="checkbox" id="docSelectAll" aria-label="Enable all" /></th>
+                                    <th>Document</th>
+                                    <th>Opens</th>
+                                    <th>Closes</th>
+                                    <th>Features</th>
+                                </tr>
+                            </thead>
+                            <tbody id="docTableBody">
+                                <tr data-doc="investor-deck">
+                                    <td><input type="checkbox" class="doc-enabled" checked /></td>
+                                    <td><strong>Investor deck — Series A</strong></td>
+                                    <td><input type="time" value="00:00" /></td>
+                                    <td><input type="time" value="23:59" /></td>
+                                    <td>
+                                        <div class="mini-tf-grid">
+                                            <label><input type="checkbox" data-feat="name" checked />Name</label>
+                                            <label><input type="checkbox" data-feat="email" checked />Email</label>
+                                            <label><input type="checkbox" data-feat="watermark" checked />Watermark</label>
+                                            <label><input type="checkbox" data-feat="otp" />OTP</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr data-doc="cap-table">
+                                    <td><input type="checkbox" class="doc-enabled" checked /></td>
+                                    <td><strong>Cap table v3</strong></td>
+                                    <td><input type="time" value="08:00" /></td>
+                                    <td><input type="time" value="18:00" /></td>
+                                    <td>
+                                        <div class="mini-tf-grid">
+                                            <label><input type="checkbox" data-feat="name" checked />Name</label>
+                                            <label><input type="checkbox" data-feat="email" checked />Email</label>
+                                            <label><input type="checkbox" data-feat="watermark" checked />Watermark</label>
+                                            <label><input type="checkbox" data-feat="otp" checked />OTP</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr data-doc="financial-model">
+                                    <td><input type="checkbox" class="doc-enabled" checked /></td>
+                                    <td><strong>Financial model FY26</strong></td>
+                                    <td><input type="time" value="00:00" /></td>
+                                    <td><input type="time" value="23:59" /></td>
+                                    <td>
+                                        <div class="mini-tf-grid">
+                                            <label><input type="checkbox" data-feat="name" checked />Name</label>
+                                            <label><input type="checkbox" data-feat="email" checked />Email</label>
+                                            <label><input type="checkbox" data-feat="watermark" checked />Watermark</label>
+                                            <label><input type="checkbox" data-feat="otp" />OTP</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr data-doc="board-minutes">
+                                    <td><input type="checkbox" class="doc-enabled" /></td>
+                                    <td><strong>Board minutes — Q3</strong></td>
+                                    <td><input type="time" value="09:00" /></td>
+                                    <td><input type="time" value="17:00" /></td>
+                                    <td>
+                                        <div class="mini-tf-grid">
+                                            <label><input type="checkbox" data-feat="name" checked />Name</label>
+                                            <label><input type="checkbox" data-feat="email" checked />Email</label>
+                                            <label><input type="checkbox" data-feat="watermark" checked />Watermark</label>
+                                            <label><input type="checkbox" data-feat="otp" checked />OTP</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="settings-inline-note">
+                            <span>Estimated monthly egress: <strong id="docEgressEstimate">~3.2 GB</strong> of 5 GB</span>
+                            <button class="btn-primary btn-sm" id="saveDocumentsBtn" type="button">Save documents</button>
+                        </div>
+                    </div>
+
+                    <div class="card settings-card" style="border-left: 4px solid var(--warning);">
+                        <h3 class="settings-title">Security Features</h3>
+                        <p class="settings-hint">Enable or disable per-link protections. Features marked <em>Default</em> are turned on for every new link.</p>
+
+                        <table class="ind-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:36px;"><input type="checkbox" id="featSelectAll" aria-label="Enable all" /></th>
+                                    <th>Feature</th>
+                                    <th>Parameters</th>
+                                    <th>Mode</th>
+                                </tr>
+                            </thead>
+                            <tbody id="featTableBody">
+                                <tr>
+                                    <td><input type="checkbox" class="feat-enabled" checked /></td>
+                                    <td><strong>Identity gate</strong></td>
+                                    <td><input class="form-input mono" value="name, email" /></td>
+                                    <td>
+                                        <select class="form-select">
+                                            <option>Default</option>
+                                            <option>Optional</option>
+                                            <option>Required</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="feat-enabled" checked /></td>
+                                    <td><strong>Dynamic watermark</strong></td>
+                                    <td><input class="form-input mono" value="email, ip, timestamp" /></td>
+                                    <td>
+                                        <select class="form-select">
+                                            <option>Default</option>
+                                            <option>Optional</option>
+                                            <option>Required</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="feat-enabled" checked /></td>
+                                    <td><strong>Link expiry</strong></td>
+                                    <td><input class="form-input mono" value="30 days" /></td>
+                                    <td>
+                                        <select class="form-select">
+                                            <option>Default</option>
+                                            <option>Optional</option>
+                                            <option>Required</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="feat-enabled" checked /></td>
+                                    <td><strong>Instant revocation</strong></td>
+                                    <td><input class="form-input mono" value="mid-session" /></td>
+                                    <td>
+                                        <select class="form-select">
+                                            <option>Default</option>
+                                            <option>Optional</option>
+                                            <option>Required</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="feat-enabled" /></td>
+                                    <td><strong>Domain whitelist</strong></td>
+                                    <td><input class="form-input mono" value="@sequoiacap.com" /></td>
+                                    <td>
+                                        <select class="form-select">
+                                            <option>Default</option>
+                                            <option>Optional</option>
+                                            <option>Required</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="feat-enabled" /></td>
+                                    <td><strong>One-time passcode</strong></td>
+                                    <td><input class="form-input mono" value="6 digits, 5m TTL" /></td>
+                                    <td>
+                                        <select class="form-select">
+                                            <option>Default</option>
+                                            <option>Optional</option>
+                                            <option>Required</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="feat-enabled" /></td>
+                                    <td><strong>Password protection</strong></td>
+                                    <td><input class="form-input mono" value="min 8 chars" /></td>
+                                    <td>
+                                        <select class="form-select">
+                                            <option>Default</option>
+                                            <option>Optional</option>
+                                            <option>Required</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="feat-enabled" /></td>
+                                    <td><strong>Server-side rasterization</strong></td>
+                                    <td><input class="form-input mono" value="tiles, 60s TTL" /></td>
+                                    <td>
+                                        <select class="form-select">
+                                            <option>Default</option>
+                                            <option>Optional</option>
+                                            <option>Required</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="settings-inline-note">
+                            <span>Security feature configuration is stored per account.</span>
+                            <button class="btn-primary btn-sm" id="saveFeaturesBtn" type="button">Save features</button>
+                        </div>
+                    </div>
+
                     <div class="card settings-card">
                         <h3 class="settings-title">Personal profile</h3>
-                        <p class="settings-hint">Your name, company, and contact details.</p>
-
+                        <p class="settings-hint">Your personal information — used for account access and notifications.</p>
                         <div class="settings-form">
                             <div class="settings-field">
                                 <label class="settings-label">Full name</label>
-                                <input class="form-input" id="setFullName" placeholder="John Doe" />
+                                <input type="text" class="form-input" id="personalFullName" placeholder="John Doe" />
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-label">Email address</label>
+                                <input type="email" class="form-input" id="personalEmail" placeholder="john@example.com" disabled />
                             </div>
                             <div class="settings-field">
                                 <label class="settings-label">Company</label>
-                                <input class="form-input" id="setCompany" placeholder="Acme Inc." />
-                            </div>
-                            <div class="settings-field">
-                                <label class="settings-label">Email</label>
-                                <input class="form-input" id="setEmail" type="email" disabled />
+                                <input type="text" class="form-input" id="personalCompany" placeholder="Acme Inc." />
                             </div>
                             <div class="settings-field">
                                 <label class="settings-label">Timezone</label>
-                                <select class="form-input" id="setTimezone">
+                                <select class="form-input" id="personalTimezone">
                                     <option value="UTC">UTC</option>
                                     <option value="Africa/Johannesburg" selected>Africa / Johannesburg</option>
                                     <option value="Europe/London">Europe / London</option>
@@ -672,158 +799,79 @@
                                 </select>
                             </div>
                         </div>
-
-                        <div class="form-actions">
-                            <span class="form-status" id="profileStatus"></span>
-                            <button class="btn-primary" type="button" id="saveProfile">Save profile</button>
+                        <div style="margin-top:12px;">
+                            <button class="btn-secondary btn-sm" id="updatePersonalBtn" type="button">Update personal info</button>
                         </div>
                     </div>
 
-                    <!-- Defaults -->
-                    <div class="card settings-card">
-                        <h3 class="settings-title">Defaults</h3>
-                        <p class="settings-hint">Applied automatically when you create new links.</p>
+                    <div class="card settings-card" id="linkDefaultsSection">
+                        <h3 class="settings-title">Link defaults</h3>
+                        <p class="settings-hint">Applied automatically to every new link you create.</p>
 
                         <div class="settings-form">
                             <div class="settings-field">
-                                <label class="settings-label">Default link expiry (days)</label>
-                                <input class="form-input" id="setDefaultExpiry" type="number" min="1" max="365" value="30" />
+                                <label class="settings-label">Default expiry (days)</label>
+                                <input type="number" class="form-input mono" id="paramDefaultExpiry" value="30" min="1" max="365" />
                             </div>
                             <div class="settings-field">
-                                <label class="settings-label">Default link label prefix</label>
-                                <input class="form-input" id="setLabelPrefix" placeholder="e.g. Investor deck — " />
+                                <label class="settings-label">Minimum view duration to track (seconds)</label>
+                                <input type="number" class="form-input mono" id="paramMinViewDuration" value="2" min="0" />
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-label">Engagement score weighting</label>
+                                <select class="form-input" id="paramEngagementWeight">
+                                    <option value="time">Time focused</option>
+                                    <option value="completion" selected>Time × completion</option>
+                                    <option value="pages">Pages read</option>
+                                </select>
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-label">Watermark opacity</label>
+                                <input type="number" step="0.05" class="form-input mono" id="paramWatermarkOpacity" value="0.15" min="0" max="1" />
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-label">Watermark position shift interval</label>
+                                <select class="form-input" id="paramWatermarkInterval">
+                                    <option value="10">Every 10 seconds</option>
+                                    <option value="20" selected>Every 20 seconds</option>
+                                    <option value="30">Every 30 seconds</option>
+                                    <option value="60">Every minute</option>
+                                </select>
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-label">Analytics retention</label>
+                                <select class="form-input" id="paramRetention">
+                                    <option value="forever" selected>Keep indefinitely</option>
+                                    <option value="365">Trim older than 1 year</option>
+                                    <option value="730">Trim older than 2 years</option>
+                                </select>
                             </div>
                         </div>
 
-                        <div class="pref-row">
-                            <div class="pref-row-info">
-                                <strong>Require name on new links</strong>
-                                <span>Viewers must enter their name before viewing.</span>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="setRequireName" checked />
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="pref-row">
-                            <div class="pref-row-info">
-                                <strong>Require email on new links</strong>
-                                <span>Viewers must enter a corporate email before viewing.</span>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="setRequireEmail" checked />
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="pref-row">
-                            <div class="pref-row-info">
-                                <strong>Enable watermarking by default</strong>
-                                <span>Overlay viewer identity on every rendered page.</span>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="setWatermark" />
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="form-actions">
-                            <span class="form-status" id="defaultsStatus"></span>
-                            <button class="btn-primary" type="button" id="saveDefaults">Save defaults</button>
+                        <div style="margin-top:16px;">
+                            <button class="btn-primary btn-sm" id="updateParamsBtn" type="button">Update parameters</button>
                         </div>
                     </div>
 
-                    <!-- Password -->
-                    <div class="card settings-card">
-                        <h3 class="settings-title">Password</h3>
-                        <p class="settings-hint">Change your password. You'll be signed out of all other devices.</p>
-
-                        <div class="settings-form">
-                            <div class="settings-field">
-                                <label class="settings-label">Current password</label>
-                                <input class="form-input" id="setCurrentPassword" type="password" placeholder="••••••••" />
-                            </div>
-                            <div class="settings-field">
-                                <label class="settings-label">New password</label>
-                                <input class="form-input" id="setNewPassword" type="password" placeholder="••••••••" />
-                            </div>
-                            <div class="settings-field">
-                                <label class="settings-label">Confirm new password</label>
-                                <input class="form-input" id="setConfirmPassword" type="password" placeholder="••••••••" />
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <span class="form-status" id="passwordStatus"></span>
-                            <button class="btn-primary" type="button" id="savePassword">Change password</button>
-                        </div>
-                    </div>
-
-                    <!-- Notifications -->
                     <div class="card settings-card">
                         <h3 class="settings-title">Notifications</h3>
-                        <p class="settings-hint">Control which emails Fromple sends you.</p>
-
-                        <div class="pref-row">
-                            <div class="pref-row-info">
-                                <strong>Viewer alerts</strong>
-                                <span>Email me when someone opens one of my links.</span>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="notifViewer" checked />
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="pref-row">
-                            <div class="pref-row-info">
-                                <strong>Link expiry reminders</strong>
-                                <span>Email me 24 hours before a link expires.</span>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="notifExpiry" checked />
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="pref-row">
-                            <div class="pref-row-info">
-                                <strong>Weekly summary</strong>
-                                <span>Every Monday: views, unique viewers, and drop-off pages.</span>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="notifWeekly" />
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="pref-row">
-                            <div class="pref-row-info">
-                                <strong>Product updates</strong>
-                                <span>Occasional emails about new features.</span>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="notifProduct" />
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="form-actions">
-                            <span class="form-status" id="notifStatus"></span>
-                            <button class="btn-primary" type="button" id="saveNotifications">Save notifications</button>
+                        <p class="settings-hint">Choose how you want to be notified about activity on your links.</p>
+                        <div class="notification-options">
+                            <label><input type="checkbox" checked /> Notify when someone opens one of my links</label>
+                            <label><input type="checkbox" checked /> Notify when a link is revoked or expires</label>
+                            <label><input type="checkbox" checked /> Daily viewer summary</label>
+                            <label><input type="checkbox" /> Weekly analytics digest</label>
                         </div>
                     </div>
 
-                    <!-- Danger zone -->
                     <div class="card settings-card settings-danger-card">
-                        <h3 class="settings-title">Danger zone</h3>
-                        <p class="settings-hint">Permanently delete your account and all documents, links, and analytics.</p>
-                        <button class="danger-btn" type="button" id="deleteAccount">Delete account</button>
+                        <h3 class="settings-title">Account</h3>
+                        <p class="settings-hint">Irreversible actions.</p>
+                        <button class="danger-btn" id="deleteAccountBtn" type="button">Delete account</button>
+                        <p style="font-size:13px; color:var(--gray-500); margin-top:8px;">This action cannot be undone. All documents, links, and analytics will be permanently deleted.</p>
                     </div>
 
                 </div>
-
             </section>
 
         </main>
