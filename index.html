@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pattern Registry — Market Condition Discovery</title>
-    <meta name="description" content="An automated market-condition discovery and statistical learning engine. When the market looks like this, what has historically happened next?" />
+    <title>Fromple — Send your deck. Know exactly who read it.</title>
+    <meta name="description" content="Fromple turns any PDF into a secure, tracked link. See who opened it, which page held them, and the second they left. Revoke access instantly." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -24,38 +24,37 @@
                     <div class="hero-content">
                         <span class="eyebrow">
                             <span class="eyebrow-dot"></span>
-                            Market Condition Discovery
+                            Secure document sharing
                         </span>
 
                         <h1 class="hero-title">
-                            When the market looks<br />
-                            <span class="muted">like this — what has</span><br />
-                            <span class="accent">historically happened next?</span>
+                            Send your deck.<br />
+                            <span class="muted">Know exactly</span><br />
+                            <span class="accent">who read it.</span>
                         </h1>
 
                         <p class="hero-sub">
-                            The platform continuously observes the market, identifies combinations
-                            of technical and fundamental conditions, paper-trades each setup in both
-                            directions, and measures what price actually did afterward. Every
-                            observation becomes a lesson in the registry.
+                            Fromple turns any PDF into a secure, tracked link. See who opened it,
+                            which page held their attention, and the second they walked away —
+                            then kill access instantly if you need to.
                         </p>
 
                         <div class="hero-cta">
-                            <a href="dashboard.html" class="btn btn-primary">
-                                Open the registry
+                            <a href="signup.html" class="btn btn-primary">
+                                Start free
                                 <svg class="btn-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                                     <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </a>
                             <a href="#how-it-works" class="btn btn-ghost">
-                                See the loop
+                                See how it works
                             </a>
                         </div>
 
                         <ul class="hero-meta">
-                            <li>Historical analysis</li>
-                            <li>Paper trading only</li>
-                            <li>Configurable criteria</li>
+                            <li>Free forever tier</li>
+                            <li>No credit card</li>
+                            <li>2-minute setup</li>
                         </ul>
                     </div>
 
@@ -65,7 +64,7 @@
                                 <div class="dashboard-dots">
                                     <span></span><span></span><span></span>
                                 </div>
-                                <span class="dashboard-url">app / analysis</span>
+                                <span class="dashboard-url">fromple.app / links / a8Fj2kL9</span>
                                 <span class="dashboard-live">
                                     <span class="live-dot"></span>
                                     Live
@@ -73,22 +72,21 @@
                             </div>
 
                             <div class="dashboard-body">
-                                <!-- Symbol / price toolbar -->
+                                <!-- Document toolbar -->
                                 <div class="chart-toolbar">
                                     <div class="chart-symbol">
-                                        <span class="symbol">EURUSD</span>
-                                        <span class="tf">H1</span>
+                                        <span class="symbol">Q4-Pitch-Deck.pdf</span>
+                                        <span class="tf">24 pages</span>
                                     </div>
                                     <div class="chart-price">
-                                        <span class="price">1.0934</span>
-                                        <span class="change up">+0.42%</span>
+                                        <span class="price">1,842</span>
+                                        <span class="change up">+12% this week</span>
                                     </div>
                                 </div>
 
-                                <!-- Candle chart -->
+                                <!-- Per-page engagement chart -->
                                 <div class="candle-chart">
                                     <svg viewBox="0 0 400 224" aria-hidden="true">
-                                        <!-- grid -->
                                         <g stroke="#ededf0" stroke-width="1">
                                             <line x1="0" y1="50" x2="400" y2="50"/>
                                             <line x1="0" y1="90" x2="400" y2="90"/>
@@ -97,14 +95,14 @@
                                             <line x1="0" y1="176" x2="400" y2="176"/>
                                         </g>
 
-                                        <!-- signal marker -->
+                                        <!-- drop-off marker -->
                                         <line x1="336" y1="14" x2="336" y2="174" stroke="#14b8a6" stroke-width="1" stroke-dasharray="3 4" opacity="0.5"/>
 
-                                        <!-- resistance / support levels -->
+                                        <!-- engagement bands -->
                                         <line x1="0" y1="78" x2="400" y2="78" stroke="#ef4444" stroke-width="1" stroke-dasharray="4 5" opacity="0.42"/>
                                         <line x1="0" y1="120" x2="400" y2="120" stroke="#14b8a6" stroke-width="1" stroke-dasharray="4 5" opacity="0.5"/>
 
-                                        <!-- candles -->
+                                        <!-- per-page time bars -->
                                         <g>
                                             <line x1="12" y1="148" x2="12" y2="165" stroke="#ef4444" stroke-width="1"/>
                                             <rect x="7.5" y="156" width="9" height="5" fill="#ef4444" rx="0.5"/>
@@ -173,11 +171,11 @@
                                             <rect x="385.5" y="76" width="9" height="6" fill="#14b8a6" rx="0.5"/>
                                         </g>
 
-                                        <!-- moving average overlay -->
+                                        <!-- trendline -->
                                         <path d="M12,160 Q100,132 200,110 T390,88"
                                               fill="none" stroke="#71717a" stroke-width="1.2" opacity="0.8"/>
 
-                                        <!-- volume -->
+                                        <!-- volume / density -->
                                         <g>
                                             <rect x="7.5"   y="206" width="9" height="12" fill="#ef4444" opacity="0.3" rx="0.5"/>
                                             <rect x="25.5"  y="198" width="9" height="20" fill="#14b8a6" opacity="0.32" rx="0.5"/>
@@ -207,10 +205,10 @@
 
                                 <!-- legend -->
                                 <div class="chart-legend">
-                                    <span class="legend-item"><i class="dot ma"></i>MA(20)</span>
-                                    <span class="legend-item"><i class="dot res"></i>Resistance</span>
-                                    <span class="legend-item"><i class="dot sup"></i>Support</span>
-                                    <span class="legend-item signal"><i class="dot sig"></i>Signal A-5 detected</span>
+                                    <span class="legend-item"><i class="dot ma"></i>Reading time</span>
+                                    <span class="legend-item"><i class="dot res"></i>Drop-off</span>
+                                    <span class="legend-item"><i class="dot sup"></i>Peak page</span>
+                                    <span class="legend-item signal"><i class="dot sig"></i>Live viewer on p.12</span>
                                 </div>
                             </div>
                         </div>
@@ -223,86 +221,86 @@
         <section class="pillars" id="features">
             <div class="container">
                 <header class="section-head">
-                    <span class="eyebrow">The engine</span>
-                    <h2>Four stages. <span class="muted">One growing registry.</span></h2>
-                    <p>Observe the market, classify the conditions, test both directions, and learn from what happens.</p>
+                    <span class="eyebrow">The workflow</span>
+                    <h2>Four steps. <span class="muted">Full visibility.</span></h2>
+                    <p>Upload a file, set the rules, share a link, and watch who actually engages with it.</p>
                 </header>
 
                 <div class="bento">
-                    <!-- OBSERVE -->
+                    <!-- UPLOAD -->
                     <article class="bento-card">
                         <div class="bento-head">
                             <span class="bento-index">01</span>
-                            <span class="bento-tag">Observe</span>
+                            <span class="bento-tag">Upload</span>
                         </div>
-                        <h3>See the market as it is.</h3>
+                        <h3>Drop the file.</h3>
                         <p>
-                            OHLCV, technical indicators, support and resistance state,
-                            economic-calendar conditions, and COT — collected and
-                            classified every cycle.
+                            Drag a PDF into the dashboard. It goes into a private bucket,
+                            never a public URL. Fromple never exposes the raw file to the
+                            browser — only a protected canvas render.
                         </p>
-                        <a href="dashboard.html?module=observe" class="bento-link">
-                            Explore Observe
+                        <a href="dashboard.html?module=upload" class="bento-link">
+                            Upload a document
                             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
                                 <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </a>
                     </article>
 
-                    <!-- CLASSIFY -->
+                    <!-- RESTRICT -->
                     <article class="bento-card">
                         <div class="bento-head">
                             <span class="bento-index">02</span>
-                            <span class="bento-tag">Classify</span>
+                            <span class="bento-tag">Restrict</span>
                         </div>
-                        <h3>Turn conditions into signals.</h3>
+                        <h3>Set the rules per link.</h3>
                         <p>
-                            Combinations of conditions are matched against the registry.
-                            Similar setups update existing records. Genuinely new ones
-                            are registered once.
+                            Require a name and email. Add a password, an expiry date, or
+                            lock it to one company's domain. Every link can carry a different
+                            policy — decided at share time.
                         </p>
-                        <a href="dashboard.html?module=classify" class="bento-link">
-                            Explore Classify
+                        <a href="dashboard.html?module=restrict" class="bento-link">
+                            Configure access
                             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
                                 <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </a>
                     </article>
 
-                    <!-- TEST -->
+                    <!-- SHARE -->
                     <article class="bento-card">
                         <div class="bento-head">
                             <span class="bento-index">03</span>
-                            <span class="bento-tag">Test</span>
+                            <span class="bento-tag">Share</span>
                         </div>
-                        <h3>Paper-trade both directions.</h3>
+                        <h3>Send one link.</h3>
                         <p>
-                            Every occurrence is tested long and short. The system records
-                            how far price moved — favorable and adverse — not just
-                            win or loss.
+                            Paste the URL anywhere — email, Slack, WhatsApp. No attachments,
+                            no downloads, no forwards. If it changes hands, you see it in
+                            the viewer log with IP and timestamp.
                         </p>
-                        <a href="dashboard.html?module=test" class="bento-link">
-                            Explore Test
+                        <a href="dashboard.html?module=share" class="bento-link">
+                            See the link manager
                             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
                                 <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </a>
                     </article>
 
-                    <!-- LEARN -->
+                    <!-- TRACK -->
                     <article class="bento-card">
                         <div class="bento-head">
                             <span class="bento-index">04</span>
-                            <span class="bento-tag">Learn</span>
+                            <span class="bento-tag">Track</span>
                         </div>
-                        <h3>Accumulate lessons, not noise.</h3>
+                        <h3>Watch what happens.</h3>
                         <p>
-                            Individual conditions and combinations are analysed. Setups
-                            with historically unsatisfactory behaviour are filtered out
-                            of the surface.
+                            Per-page reading time, drop-off points, unique viewers, and a
+                            live feed of activity as it happens. Revoke the link mid-session
+                            and the viewer locks instantly.
                         </p>
-                        <a href="dashboard.html?module=learn" class="bento-link">
-                            Explore Learn
+                        <a href="dashboard.html?module=track" class="bento-link">
+                            Open analytics
                             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
                                 <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
@@ -318,56 +316,54 @@
                 <header class="section-head section-head--dark">
                     <span class="eyebrow eyebrow--dark">
                         <span class="eyebrow-dot"></span>
-                        The central loop
+                        The viewer journey
                     </span>
-                    <h2>Observe. Classify. Test. Learn.<br /><span class="muted">Then do it again.</span></h2>
+                    <h2>What your recipient sees.<br /><span class="muted">What you see back.</span></h2>
                 </header>
 
                 <ol class="timeline">
                     <li class="timeline-step">
                         <div class="timeline-marker"><span>01</span></div>
-                        <h3>Observe &amp; classify</h3>
-                        <p>Market and fundamental data are processed into the current set of conditions.</p>
+                        <h3>They open the link</h3>
+                        <p>A branded gate screen asks for a name and corporate email before anything is shown.</p>
 
                         <div class="step-sources">
-                            <span class="src">OHLCV</span>
+                            <span class="src">Name</span>
                             <span class="src-sep">·</span>
-                            <span class="src">Indicators</span>
+                            <span class="src">Email</span>
                             <span class="src-sep">·</span>
-                            <span class="src">Support / resistance</span>
+                            <span class="src">Optional password</span>
                             <span class="src-sep">·</span>
-                            <span class="src">Economic calendar</span>
+                            <span class="src">OTP (Phase 2)</span>
                             <span class="src-sep">·</span>
-                            <span class="src">COT</span>
-                            <span class="src-sep">·</span>
-                            <span class="src">Fundamentals</span>
+                            <span class="src">IP captured</span>
                         </div>
                     </li>
 
                     <li class="timeline-step">
                         <div class="timeline-marker"><span>02</span></div>
-                        <h3>Identify or create a signal</h3>
+                        <h3>The document unlocks</h3>
                         <p>
-                            If the combination matches the registry, the existing setup
-                            is retrieved. If it doesn't, a new one is registered.
+                            The PDF renders inside a protected canvas. No right-click, no copy,
+                            no download, no print. Watermark overlay if enabled.
                         </p>
                     </li>
 
                     <li class="timeline-step">
                         <div class="timeline-marker"><span>03</span></div>
-                        <h3>Paper-trade both directions</h3>
+                        <h3>Every page is timed</h3>
                         <p>
-                            Long and short experiments run simultaneously. Favorable and
-                            adverse movement are measured and recorded.
+                            Per-page duration, scroll depth, and focus/blur events are logged
+                            as the viewer moves through the document.
                         </p>
                     </li>
 
                     <li class="timeline-step">
                         <div class="timeline-marker"><span>04</span></div>
-                        <h3>Update the registry</h3>
+                        <h3>You see it live</h3>
                         <p>
-                            Statistics accumulate. Individual conditions and combinations
-                            are analysed. Unsatisfactory setups are filtered.
+                            A pulsing feed on the dashboard shows active viewers in real time.
+                            Kill the link mid-session and their screen locks instantly.
                         </p>
                     </li>
                 </ol>
@@ -378,52 +374,52 @@
         <section class="testimonials">
             <div class="container">
                 <header class="section-head">
-                    <span class="eyebrow">How it thinks</span>
-                    <h2>Three rules the system<br /><span class="muted">never breaks.</span></h2>
+                    <span class="eyebrow">How we think</span>
+                    <h2>Three rules the product<br /><span class="muted">never breaks.</span></h2>
                 </header>
 
                 <div class="quotes">
                     <figure class="quote">
                         <blockquote>
-                            The system doesn't ask a model to guess where price is going.
-                            It measures what actually happened after each observed
-                            combination of conditions.
+                            We're honest about what DRM can and cannot do. We can't stop a
+                            determined leaker with a camera. We can tell you exactly who,
+                            when, and from which IP.
                         </blockquote>
                         <figcaption>
-                            <span class="quote-avatar">E</span>
+                            <span class="quote-avatar">A</span>
                             <span class="quote-meta">
-                                <strong>Evidence over prediction</strong>
-                                <em>Registry principle 01</em>
+                                <strong>Audit over illusion</strong>
+                                <em>Fromple principle 01</em>
                             </span>
                         </figcaption>
                     </figure>
 
                     <figure class="quote">
                         <blockquote>
-                            A setup that moves 20 units before reversing is not the same
-                            as one that moves 200. The registry preserves the full
-                            distribution, not a single number.
+                            Your file never leaves our private bucket as a public URL.
+                            Every byte the viewer receives is signed, short-lived, and
+                            traceable back to one session.
                         </blockquote>
                         <figcaption>
-                            <span class="quote-avatar">M</span>
+                            <span class="quote-avatar">S</span>
                             <span class="quote-meta">
-                                <strong>Movement, not win/loss</strong>
-                                <em>Registry principle 02</em>
+                                <strong>Signed access only</strong>
+                                <em>Fromple principle 02</em>
                             </span>
                         </figcaption>
                     </figure>
 
                     <figure class="quote">
                         <blockquote>
-                            Historical evidence and AI inference are structurally
-                            separated. An inference is never presented as if it were
-                            an established result.
+                            A viewer list is not analytics. Per-page duration, drop-off
+                            points, and re-read patterns are what tell you whether the pitch
+                            actually landed.
                         </blockquote>
                         <figcaption>
-                            <span class="quote-avatar">O</span>
+                            <span class="quote-avatar">T</span>
                             <span class="quote-meta">
-                                <strong>Observed vs. inferred</strong>
-                                <em>Registry principle 03</em>
+                                <strong>Engagement, not opens</strong>
+                                <em>Fromple principle 03</em>
                             </span>
                         </figcaption>
                     </figure>
@@ -436,18 +432,18 @@
             <div class="container">
                 <div class="cta-inner">
                     <h2>
-                        The registry grows every time<br />
-                        <span class="cta-accent">the market moves.</span>
+                        Every link tells you<br />
+                        <span class="cta-accent">who actually read it.</span>
                     </h2>
-                    <p>Open the platform to see the current market, the identified setup, and the accumulated evidence behind it.</p>
+                    <p>Start on the free tier. No credit card, no time limit, no sales call.</p>
                     <div class="cta-actions">
-                        <a href="dashboard.html" class="btn btn-light">
-                            Open the registry
+                        <a href="signup.html" class="btn btn-light">
+                            Create your first link
                             <svg class="btn-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                                 <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </a>
-                        <a href="#how-it-works" class="btn btn-light-ghost">See the loop</a>
+                        <a href="pricing.html" class="btn btn-light-ghost">Compare plans</a>
                     </div>
                 </div>
             </div>
