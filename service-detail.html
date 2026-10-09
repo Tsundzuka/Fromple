@@ -8,11 +8,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/service-detail.css" />
 </head>
 <body>
 
     <!-- ========== HEADER ========== -->
     <div id="header"></div>
+
+    <!-- ============================================================ -->
+    <!-- BREADCRUMB                                                   -->
+    <!-- ============================================================ -->
+    <div class="doc-breadcrumb">
+        <div class="container">
+            <a href="index.html">Home</a>
+            <span class="sep">/</span>
+            <a href="services.html">Services</a>
+            <span class="sep">/</span>
+            <span class="current" id="breadcrumbCurrent">Service</span>
+        </div>
+    </div>
 
     <!-- ============================================================ -->
     <!-- LOADING STATE                                                -->
@@ -24,144 +38,112 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- 01 - HERO                                                    -->
+    <!-- DOC SHELL                                                    -->
     <!-- ============================================================ -->
-    <section class="detail-hero-modern" id="heroSection">
-        <div class="container">
-            <div class="detail-hero-grid">
-                <div class="detail-hero-text">
-                    <div class="pillar-tag" id="pillarTag"></div>
-                    <h1 id="moduleTitle"></h1>
-                    <div class="hero-meta">
-                        <span class="feature-count-badge" id="moduleCount"></span>
-                        <span class="module-tag" id="moduleTag"></span>
-                    </div>
-                    <p id="moduleDescription"></p>
-                </div>
-                <div class="detail-hero-visual">
-                    <div class="hero-stats-grid">
-                        <div class="hero-stat">
-                            <span class="hero-stat-number" id="statFeatures"></span>
-                            <span class="hero-stat-label">Features</span>
-                        </div>
-                        <div class="hero-stat">
-                            <span class="hero-stat-number" id="statPlatforms"></span>
-                            <span class="hero-stat-label">Platforms</span>
-                        </div>
-                        <div class="hero-stat highlight-stat">
-                            <span class="hero-stat-number" id="statUseCase"></span>
-                            <span class="hero-stat-label">Primary Use Case</span>
-                        </div>
-                        <div class="hero-stat">
-                            <span class="hero-stat-number">⭐ 4.9</span>
-                            <span class="hero-stat-label">User Rating</span>
-                        </div>
-                    </div>
-                    <div class="hero-platforms" id="platformPills"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="doc-shell">
 
-    <!-- ============================================================ -->
-    <!-- 02 - VALUE BADGES                                            -->
-    <!-- ============================================================ -->
-    <section class="value-badges-modern">
-        <div class="container">
-            <div class="badges-scroll" id="valueBadges"></div>
-        </div>
-    </section>
+        <!-- ==================== STICKY TOC ==================== -->
+        <aside class="doc-nav" id="docNav">
+            <span class="doc-nav-label">On this page</span>
+            <a href="#overview">Overview</a>
+            <a href="#capabilities">Capabilities</a>
+            <a href="#process">How it works</a>
+            <a href="#included">What's included</a>
+            <a href="#platforms">Platforms</a>
+        </aside>
 
-    <!-- ============================================================ -->
-    <!-- 03 - OVERVIEW                                                -->
-    <!-- ============================================================ -->
-    <section class="overview-modern">
-        <div class="container">
-            <div class="overview-wrapper">
-                <div class="overview-left">
-                    <span class="section-label-modern">Overview</span>
-                    <h2>What This Service Does</h2>
-                    <p id="overviewText"></p>
-                    <div class="overview-key-points">
-                        <div class="key-point">
-                            <span class="key-icon"></span>
-                            <span></span>
-                        </div>
-                        <div class="key-point">
-                            <span class="key-icon"></span>
-                            <span></span>
-                        </div>
-                        <div class="key-point">
-                            <span class="key-icon"></span>
-                            <span></span>
-                        </div>
-                    </div>
+        <!-- ==================== MAIN ==================== -->
+        <article class="doc-body">
+
+            <!-- ---------- HEADER ---------- -->
+            <header class="doc-header">
+                <span class="pillar-tag" id="pillarTag"></span>
+                <h1 id="moduleTitle"></h1>
+                <p class="doc-lead" id="moduleDescription"></p>
+
+                <div class="doc-meta">
+                    <span class="feature-count-badge" id="moduleCount"></span>
+                    <span class="module-tag" id="moduleTag"></span>
                 </div>
-                <div class="overview-right">
-                    <div class="overview-card">
-                        <div class="overview-card-icon"></div>
-                        <h3></h3>
-                        <p></p>
-                    </div>
-                    <div class="overview-card">
-                        <div class="overview-card-icon"></div>
-                        <h3></h3>
-                        <p></p>
-                    </div>
-                    <div class="overview-card">
-                        <div class="overview-card-icon"></div>
-                        <h3></h3>
-                        <p></p>
-                    </div>
+
+                <div class="badges-scroll" id="valueBadges"></div>
+            </header>
+
+            <!-- ---------- SPEC STRIP ---------- -->
+            <div class="doc-specs">
+                <div class="doc-spec">
+                    <span class="doc-spec-value" id="statFeatures">—</span>
+                    <span class="doc-spec-label">Features</span>
+                </div>
+                <div class="doc-spec">
+                    <span class="doc-spec-value" id="statPlatforms">—</span>
+                    <span class="doc-spec-label">Platforms</span>
+                </div>
+                <div class="doc-spec highlight">
+                    <span class="doc-spec-value" id="statUseCase">—</span>
+                    <span class="doc-spec-label">Primary use case</span>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- ============================================================ -->
-    <!-- 04 - FEATURES                                                -->
-    <!-- ============================================================ -->
-    <section class="features-modern">
-        <div class="container">
-            <div class="section-header-modern">
-                <span class="section-tag-modern">Features</span>
-                <h2>Everything Included in This Service</h2>
-                <p>Detailed capabilities available in this service.</p>
-            </div>
-            <div class="features-grid-modern" id="featureGrid"></div>
-        </div>
-    </section>
+            <!-- ---------- OVERVIEW ---------- -->
+            <section class="doc-section" id="overview">
+                <span class="doc-section-num">01</span>
+                <h2>Overview</h2>
+                <p id="overviewText"></p>
 
-    <!-- ============================================================ -->
-    <!-- 05 - HOW IT WORKS                                            -->
-    <!-- ============================================================ -->
-    <section class="steps-modern">
-        <div class="container">
-            <div class="section-header-modern">
-                <span class="section-tag-modern">Process</span>
-                <h2>How It Works</h2>
-                <p>The steps involved in this service.</p>
-            </div>
-            <div class="steps-timeline" id="stepsGrid"></div>
-        </div>
-    </section>
+                <div class="overview-key-points">
+                    <div class="key-point">
+                        <span class="key-icon"></span>
+                        <span></span>
+                    </div>
+                    <div class="key-point">
+                        <span class="key-icon"></span>
+                        <span></span>
+                    </div>
+                    <div class="key-point">
+                        <span class="key-icon"></span>
+                        <span></span>
+                    </div>
+                </div>
+            </section>
 
-    <!-- ============================================================ -->
-    <!-- 06 - FREE TOOLS + GUARANTEES                                 -->
-    <!-- ============================================================ -->
-    <section class="value-guarantee-section">
-        <div class="container">
-            <div class="section-header-modern">
-                <span class="section-tag-modern">Included</span>
-                <h2>What Comes With This Service</h2>
-                <p>Free tools included and the guarantees we stand behind.</p>
-            </div>
-            <div class="value-guarantee-grid">
-                <div id="freeToolsGrid"></div>
-                <div id="guaranteesGrid"></div>
-            </div>
-        </div>
-    </section>
+            <!-- ---------- CAPABILITIES ---------- -->
+            <section class="doc-section" id="capabilities">
+                <span class="doc-section-num">02</span>
+                <h2>Capabilities</h2>
+                <p>Every feature included in this service. Each one is available the moment your account is active.</p>
+                <div class="features-grid-modern" id="featureGrid"></div>
+            </section>
+
+            <!-- ---------- PROCESS ---------- -->
+            <section class="doc-section" id="process">
+                <span class="doc-section-num">03</span>
+                <h2>How it works</h2>
+                <p>The lifecycle of a service run — from initial configuration through to output.</p>
+                <div class="steps-timeline" id="stepsGrid"></div>
+            </section>
+
+            <!-- ---------- INCLUDED ---------- -->
+            <section class="doc-section" id="included">
+                <span class="doc-section-num">04</span>
+                <h2>What's included</h2>
+                <p>Free tools available on every plan, and the guarantees we stand behind.</p>
+                <div class="value-guarantee-grid">
+                    <div id="freeToolsGrid"></div>
+                    <div id="guaranteesGrid"></div>
+                </div>
+            </section>
+
+            <!-- ---------- PLATFORMS ---------- -->
+            <section class="doc-section" id="platforms">
+                <span class="doc-section-num">05</span>
+                <h2>Platforms</h2>
+                <p>Where this service runs. No local installation required — everything operates in the browser.</p>
+                <div class="hero-platforms" id="platformPills"></div>
+            </section>
+
+        </article>
+    </div>
 
     <!-- ========== FOOTER ========== -->
     <div id="footer"></div>
@@ -171,5 +153,8 @@
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
     <script src="js/main.js"></script>
+
+    <!-- Small enhancement: TOC scroll-spy + breadcrumb title sync -->
+    <script src="js/service-detail-ui.js"></script>
 </body>
 </html>
