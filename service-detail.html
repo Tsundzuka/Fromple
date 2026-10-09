@@ -6,155 +6,168 @@
     <title>Fromple - Service Detail</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/pages/services.css" />
 </head>
 <body>
 
-    <!-- ========== HEADER ========== -->
     <div id="header"></div>
-
-    <!-- ============================================================ -->
-    <!-- BREADCRUMB                                                   -->
-    <!-- ============================================================ -->
-    <div class="doc-breadcrumb">
-        <div class="container">
-            <a href="index.html">Home</a>
-            <span class="sep">/</span>
-            <a href="services.html">Services</a>
-            <span class="sep">/</span>
-            <span class="current" id="breadcrumbCurrent">Service</span>
-        </div>
-    </div>
 
     <!-- ============================================================ -->
     <!-- LOADING STATE                                                -->
     <!-- ============================================================ -->
     <div id="loadingState">
         <div class="spinner"></div>
-        <h3>Loading Service Details...</h3>
+        <h3>Loading service details</h3>
         <p>Please wait while we fetch the latest information.</p>
     </div>
 
     <!-- ============================================================ -->
-    <!-- DOC SHELL                                                    -->
+    <!-- 01 — HERO                                                    -->
     <!-- ============================================================ -->
-    <div class="doc-shell">
+    <section class="sd-hero">
+        <div class="sd-hero-glow"></div>
+        <div class="sd-hero-grid-bg"></div>
 
-        <!-- ==================== STICKY TOC ==================== -->
-        <aside class="doc-nav" id="docNav">
-            <span class="doc-nav-label">On this page</span>
-            <a href="#overview">Overview</a>
-            <a href="#capabilities">Capabilities</a>
-            <a href="#process">How it works</a>
-            <a href="#included">What's included</a>
-            <a href="#platforms">Platforms</a>
-        </aside>
+        <div class="container">
+            <div class="sd-hero-inner">
 
-        <!-- ==================== MAIN ==================== -->
-        <article class="doc-body">
+                <span class="sd-eyebrow">
+                    <span class="sd-eyebrow-dot"></span>
+                    <span id="pillarTag">Service</span>
+                </span>
 
-            <!-- ---------- HEADER ---------- -->
-            <header class="doc-header">
-                <span class="pillar-tag" id="pillarTag"></span>
-                <h1 id="moduleTitle"></h1>
-                <p class="doc-lead" id="moduleDescription"></p>
+                <h1 class="sd-title" id="moduleTitle"></h1>
 
-                <div class="doc-meta">
-                    <span class="feature-count-badge" id="moduleCount"></span>
-                    <span class="module-tag" id="moduleTag"></span>
+                <p class="sd-lead" id="moduleDescription"></p>
+
+                <div class="sd-chips">
+                    <span class="sd-chip" id="moduleCount"></span>
+                    <span class="sd-chip sd-chip--muted" id="moduleTag"></span>
                 </div>
 
-                <div class="badges-scroll" id="valueBadges"></div>
-            </header>
+                <div class="sd-stats">
+                    <div class="sd-stat">
+                        <span class="sd-stat-value" id="statFeatures">—</span>
+                        <span class="sd-stat-label">Features</span>
+                    </div>
+                    <div class="sd-stat">
+                        <span class="sd-stat-value" id="statPlatforms">—</span>
+                        <span class="sd-stat-label">Platforms</span>
+                    </div>
+                    <div class="sd-stat sd-stat--accent">
+                        <span class="sd-stat-value" id="statUseCase">—</span>
+                        <span class="sd-stat-label">Primary use case</span>
+                    </div>
+                </div>
 
-            <!-- ---------- SPEC STRIP ---------- -->
-            <div class="doc-specs">
-                <div class="doc-spec">
-                    <span class="doc-spec-value" id="statFeatures">—</span>
-                    <span class="doc-spec-label">Features</span>
+                <div class="sd-badges" id="valueBadges"></div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 02 — OVERVIEW                                                -->
+    <!-- ============================================================ -->
+    <section class="sd-section sd-section--paper">
+        <div class="container">
+            <div class="sd-overview">
+                <div class="sd-overview-left">
+                    <span class="sd-section-tag">Overview</span>
+                    <h2>What this service does</h2>
+                    <p id="overviewText"></p>
                 </div>
-                <div class="doc-spec">
-                    <span class="doc-spec-value" id="statPlatforms">—</span>
-                    <span class="doc-spec-label">Platforms</span>
-                </div>
-                <div class="doc-spec highlight">
-                    <span class="doc-spec-value" id="statUseCase">—</span>
-                    <span class="doc-spec-label">Primary use case</span>
+
+                <div class="sd-overview-right">
+                    <div class="sd-key-point">
+                        <span class="sd-key-icon"></span>
+                        <span></span>
+                    </div>
+                    <div class="sd-key-point">
+                        <span class="sd-key-icon"></span>
+                        <span></span>
+                    </div>
+                    <div class="sd-key-point">
+                        <span class="sd-key-icon"></span>
+                        <span></span>
+                    </div>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- ---------- OVERVIEW ---------- -->
-            <section class="doc-section" id="overview">
-                <span class="doc-section-num">01</span>
-                <h2>Overview</h2>
-                <p id="overviewText"></p>
+    <!-- ============================================================ -->
+    <!-- 03 — CAPABILITIES                                            -->
+    <!-- ============================================================ -->
+    <section class="sd-section">
+        <div class="container">
+            <header class="sd-head">
+                <span class="sd-section-tag">Capabilities</span>
+                <h2>Everything included</h2>
+                <p>Each capability is available the moment your account is active.</p>
+            </header>
 
-                <div class="overview-key-points">
-                    <div class="key-point">
-                        <span class="key-icon"></span>
-                        <span></span>
-                    </div>
-                    <div class="key-point">
-                        <span class="key-icon"></span>
-                        <span></span>
-                    </div>
-                    <div class="key-point">
-                        <span class="key-icon"></span>
-                        <span></span>
-                    </div>
-                </div>
-            </section>
+            <div class="sd-features" id="featureGrid"></div>
+        </div>
+    </section>
 
-            <!-- ---------- CAPABILITIES ---------- -->
-            <section class="doc-section" id="capabilities">
-                <span class="doc-section-num">02</span>
-                <h2>Capabilities</h2>
-                <p>Every feature included in this service. Each one is available the moment your account is active.</p>
-                <div class="features-grid-modern" id="featureGrid"></div>
-            </section>
+    <!-- ============================================================ -->
+    <!-- 04 — PROCESS                                                 -->
+    <!-- ============================================================ -->
+    <section class="sd-section sd-section--dark">
+        <div class="sd-section-glow"></div>
 
-            <!-- ---------- PROCESS ---------- -->
-            <section class="doc-section" id="process">
-                <span class="doc-section-num">03</span>
+        <div class="container">
+            <header class="sd-head sd-head--dark">
+                <span class="sd-section-tag sd-section-tag--dark">Process</span>
                 <h2>How it works</h2>
-                <p>The lifecycle of a service run — from initial configuration through to output.</p>
-                <div class="steps-timeline" id="stepsGrid"></div>
-            </section>
+                <p>The lifecycle of a service run — from setup to output.</p>
+            </header>
 
-            <!-- ---------- INCLUDED ---------- -->
-            <section class="doc-section" id="included">
-                <span class="doc-section-num">04</span>
-                <h2>What's included</h2>
-                <p>Free tools available on every plan, and the guarantees we stand behind.</p>
-                <div class="value-guarantee-grid">
-                    <div id="freeToolsGrid"></div>
-                    <div id="guaranteesGrid"></div>
+            <div class="sd-steps" id="stepsGrid"></div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 05 — INCLUDED                                                -->
+    <!-- ============================================================ -->
+    <section class="sd-section sd-section--paper">
+        <div class="container">
+            <header class="sd-head">
+                <span class="sd-section-tag">Included</span>
+                <h2>What comes with this service</h2>
+                <p>Free tools and the guarantees we stand behind.</p>
+            </header>
+
+            <div class="sd-included">
+                <div id="freeToolsGrid"></div>
+                <div id="guaranteesGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 06 — PLATFORMS                                               -->
+    <!-- ============================================================ -->
+    <section class="sd-section">
+        <div class="container">
+            <div class="sd-platforms">
+                <div class="sd-platforms-text">
+                    <span class="sd-section-tag">Platforms</span>
+                    <h2>Where this runs</h2>
+                    <p>No installation required. Everything operates in the browser, on any device.</p>
                 </div>
-            </section>
+                <div class="sd-platforms-list" id="platformPills"></div>
+            </div>
+        </div>
+    </section>
 
-            <!-- ---------- PLATFORMS ---------- -->
-            <section class="doc-section" id="platforms">
-                <span class="doc-section-num">05</span>
-                <h2>Platforms</h2>
-                <p>Where this service runs. No local installation required — everything operates in the browser.</p>
-                <div class="hero-platforms" id="platformPills"></div>
-            </section>
-
-        </article>
-    </div>
-
-    <!-- ========== FOOTER ========== -->
     <div id="footer"></div>
 
-    <!-- ========== SCRIPTS ========== -->
     <script type="module" src="js/service-detail.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
     <script src="js/main.js"></script>
-
-    <!-- Small enhancement: TOC scroll-spy + breadcrumb title sync -->
-    <script src="js/service-detail-ui.js"></script>
 </body>
 </html>
