@@ -88,6 +88,7 @@ function generateHeaderHTML(user, isLoggedIn) {
         <ul class="desktop-nav">
             <li><a href="${assetPath}index.html" class="${isActive('index.html')}">Home</a></li>
             <li><a href="${assetPath}services.html" class="${isActive('services.html')}">Services</a></li>
+            <li><a href="${assetPath}pricing.html" class="${isActive('pricing.html')}">Pricing</a></li>
             <li><a href="${assetPath}blog.html" class="${isActive('blog.html')}">Blog</a></li>
             <li><a href="${assetPath}dashboard.html" class="nav-cta">Dashboard</a></li>
 
@@ -181,6 +182,7 @@ function generateHeaderHTML(user, isLoggedIn) {
                 <ul class="drawer-links">
                     <li><a href="${assetPath}index.html" class="drawer-link ${isActive('index.html')}">Home</a></li>
                     <li><a href="${assetPath}services.html" class="drawer-link ${isActive('services.html')}">Services</a></li>
+                    <li><a href="${assetPath}pricing.html" class="drawer-link ${isActive('pricing.html')}">Pricing</a></li>
                     <li><a href="${assetPath}team.html" class="drawer-link ${isActive('team.html')}">Team</a></li>
                     <li><a href="${assetPath}blog.html" class="drawer-link ${isActive('blog.html')}">Blog</a></li>
                 </ul>
