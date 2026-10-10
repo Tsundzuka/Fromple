@@ -17,7 +17,6 @@ window.showToast = showToast;
 
 let supabaseInstance = null;
 let profileUser = null;
-let currentOrganizationId = null;
 let currentTab = 'overview';
 let pollTimer = null;
 
@@ -27,8 +26,7 @@ let pollTimer = null;
 
 const tabModules = {
     'overview': () => import('./tabs/overview.js'),
-    'review':   () => import('./tabs/review.js'),
-    'usage':    () => import('./tabs/usage.js'),
+    'security': () => import('./tabs/security.js'),
     'settings': () => import('./tabs/settings.js'),
 };
 
@@ -134,7 +132,7 @@ function updateGuestUI() {
     const welcomeSubtitle = document.querySelector('.page-subtitle');
     if (welcomeTitle) welcomeTitle.textContent = 'Your Profile';
     if (welcomeSubtitle) {
-        welcomeSubtitle.innerHTML = `Log in to view your registry statistics and account settings. <a href="/login.html" style="color: var(--primary); font-weight: 600;">Log in</a>`;
+        welcomeSubtitle.innerHTML = `Log in to view your profile and account settings. <a href="/login.html" style="color: var(--primary); font-weight: 600;">Log in</a>`;
     }
 }
 
@@ -147,20 +145,28 @@ function updateUserUI(user) {
     const planEl = document.querySelector('.user-plan');
     if (avatarEl) avatarEl.textContent = initials;
     if (nameEl) nameEl.textContent = fullName;
-    if (planEl) planEl.textContent = 'Research';
+    if (planEl) planEl.textContent = 'Sandbox';
 
     const welcomeTitle = document.querySelector('.dashboard-header h1');
     const welcomeSubtitle = document.querySelector('.page-subtitle');
     if (welcomeTitle) welcomeTitle.textContent = 'Your Profile';
     if (welcomeSubtitle) {
-        welcomeSubtitle.innerHTML = `Registry statistics, activity, and account settings for ${fullName}.`;
+        welcomeSubtitle.innerHTML = `Profile, security, and account settings for ${fullName}.`;
     }
 
-    // Populate personal profile fields
+    // Populate personal profile fields if present
     const fullNameInput = document.getElementById('personalFullName');
     const emailInput = document.getElementById('personalEmail');
     if (fullNameInput) fullNameInput.value = fullName;
     if (emailInput) emailInput.value = user.email || '';
+
+    // Populate profile hero
+    const heroName = document.getElementById('heroName');
+    const heroEmail = document.getElementById('heroEmail');
+    const heroAvatar = document.getElementById('heroAvatar');
+    if (heroName) heroName.textContent = fullName;
+    if (heroEmail) heroEmail.textContent = user.email || '—';
+    if (heroAvatar) heroAvatar.textContent = initials;
 
     // Store user and supabase globally for tab modules
     window.profileUser = user;
@@ -200,11 +206,11 @@ async function loadSystemState() {
         const sub = document.getElementById('ovPipelineSub');
 
         if (dot) dot.classList.toggle('on', isRunning);
-        if (label) label.textContent = isRunning ? 'Pipeline active' : 'Pipeline stopped';
+        if (label) label.textContent = isRunning ? 'Gating enabled' : 'Gating disabled';
         if (sub) {
             sub.textContent = isRunning
-                ? 'API queries are enabled. The pipeline will fetch market data on schedule.'
-                : 'API queries are disabled.';
+                ? 'All new links require name and email.'
+                : 'No gate is applied to new links.';
         }
 
         // Last run
@@ -221,11 +227,11 @@ async function loadSystemState() {
         const sysLastSuccess = document.getElementById('sysLastSuccess');
 
         if (sysDot) sysDot.classList.toggle('on', isRunning);
-        if (sysLabel) sysLabel.textContent = isRunning ? 'Pipeline active' : 'Pipeline stopped';
+        if (sysLabel) sysLabel.textContent = isRunning ? 'Gating enabled' : 'Gating disabled';
         if (sysSub) {
             sysSub.textContent = isRunning
-                ? 'API queries are enabled.'
-                : 'API queries are disabled.';
+                ? 'All new links require name and email.'
+                : 'No gate is applied to new links.';
         }
         if (sysUpdated && updatedAt) sysUpdated.textContent = timeAgo(new Date(updatedAt));
         if (sysLastSuccess && updatedAt) sysLastSuccess.textContent = timeAgo(new Date(updatedAt));
@@ -240,7 +246,7 @@ async function setPipelineRunning(isRunning) {
 
     const sbToggle = document.getElementById('sbPipelineToggle');
     const ovToggle = document.getElementById('ovPipelineToggle');
-    const sysToggle = document.getElementById('sysPipelineToggle');
+    const sysToggle = document.getElementById('sysGateToggle');
     [sbToggle, ovToggle, sysToggle].forEach(t => { if (t) t.disabled = true; });
 
     try {
@@ -255,15 +261,15 @@ async function setPipelineRunning(isRunning) {
         if (ovToggle) ovToggle.checked = isRunning;
         if (sysToggle) sysToggle.checked = isRunning;
 
-        showToast(isRunning ? 'Pipeline started.' : 'Pipeline stopped.', 'success');
+        showToast(isRunning ? 'Gating enabled.' : 'Gating disabled.', 'success');
 
         setTimeout(loadApiUsage, 500);
     } catch (err) {
-        console.error('Failed to toggle pipeline:', err);
+        console.error('Failed to toggle gating:', err);
         if (sbToggle) sbToggle.checked = !isRunning;
         if (ovToggle) ovToggle.checked = !isRunning;
         if (sysToggle) sysToggle.checked = !isRunning;
-        showToast('Could not update pipeline state: ' + (err.message || err), 'error');
+        showToast('Could not update gating state: ' + (err.message || err), 'error');
     } finally {
         [sbToggle, ovToggle, sysToggle].forEach(t => { if (t) t.disabled = false; });
     }
@@ -274,11 +280,10 @@ async function setPipelineRunning(isRunning) {
 // ============================================================
 
 const PROVIDERS = {
-    twelvedata: { name: 'Twelve Data',   limit: 800,   note: 'OHLCV' },
-    finnhub:    { name: 'Finnhub',       limit: 60,    note: 'Calendar' },
-    fxnewsbias: { name: 'FXNewsBias',    limit: 25,    note: 'News' },
-    upstash:    { name: 'Upstash Redis', limit: 10000, note: 'Temp state' },
-    cftc:       { name: 'CFTC Socrata',  limit: 0,     note: 'COT' },
+    supabase: { name: 'Supabase Storage',  limit: 1024, note: 'MB stored' },
+    gemini:   { name: 'Gemini Embeddings', limit: 1500, note: 'Calls / day' },
+    groq:     { name: 'Groq',              limit: 14400, note: 'Tokens / day' },
+    resend:   { name: 'Resend',            limit: 100,  note: 'Emails / day' },
 };
 
 async function loadApiUsage() {
@@ -307,36 +312,36 @@ async function loadApiUsage() {
 }
 
 function renderSidebarUsage(usage) {
-    const td = usage['twelvedata'];
-    const fill = document.querySelector('.sb-api[data-provider="twelvedata"] [data-usage-fill]');
-    const text = document.querySelector('.sb-api[data-provider="twelvedata"] [data-usage-text]');
+    const supa = usage['supabase'];
+    const fill = document.querySelector('.sb-api[data-provider="supabase"] [data-usage-fill]');
+    const text = document.querySelector('.sb-api[data-provider="supabase"] [data-usage-text]');
 
-    if (!td || !td.limit_value) {
-        if (text) text.textContent = '— / 800';
+    if (!supa || !supa.limit_value) {
+        if (text) text.textContent = '— / 1024 MB';
         if (fill) fill.style.width = '0%';
         return;
     }
 
-    const pct = Math.min((td.used / td.limit_value) * 100, 100);
+    const pct = Math.min((supa.used / supa.limit_value) * 100, 100);
     if (fill) {
         fill.style.width = pct + '%';
         fill.classList.toggle('warning', pct >= 70 && pct < 90);
         fill.classList.toggle('danger',  pct >= 90);
     }
     if (text) {
-        text.textContent = `${td.used.toLocaleString()} / ${td.limit_value.toLocaleString()}`;
+        text.textContent = `${supa.used.toLocaleString()} / ${supa.limit_value.toLocaleString()}`;
     }
 }
 
 function renderOverviewUsage(usage) {
-    const el = document.getElementById('ovTdUsage');
+    const el = document.getElementById('ovSupaUsage');
     if (!el) return;
 
-    const td = usage['twelvedata'];
-    if (td && td.limit_value) {
-        el.textContent = `${td.used.toLocaleString()} / ${td.limit_value.toLocaleString()}`;
+    const supa = usage['supabase'];
+    if (supa && supa.limit_value) {
+        el.textContent = `${supa.used.toLocaleString()} / ${supa.limit_value.toLocaleString()}`;
     } else {
-        el.textContent = '— / 800';
+        el.textContent = '— / 1024 MB';
     }
 }
 
@@ -369,10 +374,10 @@ function renderSettingsUsage(usage) {
     });
 
     // Quota warning banner in Settings
-    const td = usage['twelvedata'];
+    const supa = usage['supabase'];
     const warning = document.getElementById('sysQuotaWarning');
     if (warning) {
-        const isHigh = td && td.limit_value && (td.used / td.limit_value) > 0.8;
+        const isHigh = supa && supa.limit_value && (supa.used / supa.limit_value) > 0.8;
         warning.hidden = !isHigh;
     }
 }
@@ -394,7 +399,7 @@ function attachSystemControls() {
         ovToggle.dataset.bound = 'true';
     }
 
-    const sysToggle = document.getElementById('sysPipelineToggle');
+    const sysToggle = document.getElementById('sysGateToggle');
     if (sysToggle && !sysToggle.dataset.bound) {
         sysToggle.addEventListener('change', e => setPipelineRunning(e.target.checked));
         sysToggle.dataset.bound = 'true';
@@ -445,11 +450,11 @@ window.updatePersonalProfile = function() {
     showToast('Settings tab not loaded yet. Please try again.', 'warning');
 };
 
-window.saveTradingParameters = function() {
+window.saveLinkDefaults = function() {
     showToast('Settings tab not loaded yet. Please try again.', 'warning');
 };
 
-window.saveDataSources = function() {
+window.saveSecurityFeatures = function() {
     showToast('Settings tab not loaded yet. Please try again.', 'warning');
 };
 
@@ -461,20 +466,20 @@ window.deleteAccount = function() {
     showToast('Settings tab not loaded yet. Please try again.', 'warning');
 };
 
-window.exportUsageData = function() {
-    showToast('Usage & Analytics tab not loaded yet. Please try again.', 'warning');
+window.enableTfa = function() {
+    showToast('Security tab not loaded yet. Please try again.', 'warning');
 };
 
-window.reviewSetup = function() {
-    showToast('Review tab not loaded yet. Please try again.', 'warning');
+window.generateRecoveryCodes = function() {
+    showToast('Security tab not loaded yet. Please try again.', 'warning');
 };
 
-window.flagSetup = function() {
-    showToast('Review tab not loaded yet. Please try again.', 'warning');
+window.logoutAllSessions = function() {
+    showToast('Security tab not loaded yet. Please try again.', 'warning');
 };
 
-window.dismissSetup = function() {
-    showToast('Review tab not loaded yet. Please try again.', 'warning');
+window.exportAllAnalytics = function() {
+    showToast('Security tab not loaded yet. Please try again.', 'warning');
 };
 
 // ============================================================
@@ -528,7 +533,7 @@ function attachEventListeners() {
     });
 
     const hash = window.location.hash.replace('#', '');
-    const validTabs = ['overview', 'review', 'usage', 'settings'];
+    const validTabs = ['overview', 'security', 'settings'];
     const initialTab = validTabs.includes(hash) ? hash : 'overview';
     await switchTab(initialTab);
 
@@ -539,4 +544,4 @@ function attachEventListeners() {
 // EXPOSE FOR OTHER MODULES
 // ============================================================
 
-export { supabaseInstance, profileUser, currentOrganizationId };
+export { supabaseInstance, profileUser };
