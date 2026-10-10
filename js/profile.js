@@ -2,7 +2,7 @@
 // PROFILE - MAIN ORCHESTRATOR
 // ============================================================
 // Loads session, handles tab switching, and wires the
-// global pipeline toggle + API usage that live in the sidebar
+// global gating toggle + API usage that live in the sidebar
 // and Overview strip.
 
 import { requireAuth } from './auth-guard.js';
@@ -30,7 +30,6 @@ const tabModules = {
     'settings': () => import('./tabs/settings.js'),
 };
 
-// Cache loaded module instances
 const loadedModules = {};
 
 // ============================================================
@@ -71,7 +70,8 @@ async function switchTab(tabId) {
     tabContents.forEach(tab => tab.classList.remove('active'));
     navLinks.forEach(link => link.classList.remove('active'));
 
-    const selectedTab = document.getElementById('tab-' + tabId);
+    // FIXED: use data-tab attribute, not id="tab-..."
+    const selectedTab = document.querySelector(`.tab-content[data-tab="${tabId}"]`);
     if (selectedTab) selectedTab.classList.add('active');
 
     const activeLink = document.querySelector(`.sidebar-nav a[data-tab="${tabId}"]`);
@@ -128,9 +128,7 @@ function updateGuestUI() {
     if (nameEl) nameEl.textContent = 'Guest';
     if (planEl) planEl.textContent = 'Not Logged In';
 
-    const welcomeTitle = document.querySelector('.dashboard-header h1');
     const welcomeSubtitle = document.querySelector('.page-subtitle');
-    if (welcomeTitle) welcomeTitle.textContent = 'Your Profile';
     if (welcomeSubtitle) {
         welcomeSubtitle.innerHTML = `Log in to view your profile and account settings. <a href="/login.html" style="color: var(--primary); font-weight: 600;">Log in</a>`;
     }
@@ -147,14 +145,12 @@ function updateUserUI(user) {
     if (nameEl) nameEl.textContent = fullName;
     if (planEl) planEl.textContent = 'Sandbox';
 
-    const welcomeTitle = document.querySelector('.dashboard-header h1');
     const welcomeSubtitle = document.querySelector('.page-subtitle');
-    if (welcomeTitle) welcomeTitle.textContent = 'Your Profile';
     if (welcomeSubtitle) {
         welcomeSubtitle.innerHTML = `Profile, security, and account settings for ${fullName}.`;
     }
 
-    // Populate personal profile fields if present
+    // Populate personal profile fields
     const fullNameInput = document.getElementById('personalFullName');
     const emailInput = document.getElementById('personalEmail');
     if (fullNameInput) fullNameInput.value = fullName;
@@ -168,13 +164,12 @@ function updateUserUI(user) {
     if (heroEmail) heroEmail.textContent = user.email || '—';
     if (heroAvatar) heroAvatar.textContent = initials;
 
-    // Store user and supabase globally for tab modules
     window.profileUser = user;
     window.supabaseInstance = supabaseInstance;
 }
 
 // ============================================================
-// PIPELINE STATE (sidebar + Overview + Settings)
+// GATING STATE
 // ============================================================
 
 async function loadSystemState() {
@@ -192,15 +187,12 @@ async function loadSystemState() {
         const isRunning = !!data?.is_running;
         const updatedAt = data?.updated_at;
 
-        // Sidebar toggle
         const sbToggle = document.getElementById('sbPipelineToggle');
         if (sbToggle) sbToggle.checked = isRunning;
 
-        // Overview toggle
         const ovToggle = document.getElementById('ovPipelineToggle');
         if (ovToggle) ovToggle.checked = isRunning;
 
-        // Overview dot + labels
         const dot = document.getElementById('ovPipelineDot');
         const label = document.getElementById('ovPipelineLabel');
         const sub = document.getElementById('ovPipelineSub');
@@ -213,18 +205,16 @@ async function loadSystemState() {
                 : 'No gate is applied to new links.';
         }
 
-        // Last run
         const lastRun = document.getElementById('ovLastRun');
         if (lastRun) {
             lastRun.textContent = updatedAt ? timeAgo(new Date(updatedAt)) : '—';
         }
 
-        // Settings tab status block
         const sysDot = document.getElementById('sysStatusDot');
         const sysLabel = document.getElementById('sysStatusLabel');
         const sysSub = document.getElementById('sysStatusSub');
-        const sysUpdated = document.getElementById('sysStateUpdated');
-        const sysLastSuccess = document.getElementById('sysLastSuccess');
+        const sysUpdated = document.getElementById('sysConfigUpdated');
+        const sysLastSuccess = document.getElementById('sysLastCheck');
 
         if (sysDot) sysDot.classList.toggle('on', isRunning);
         if (sysLabel) sysLabel.textContent = isRunning ? 'Gating enabled' : 'Gating disabled';
@@ -241,7 +231,7 @@ async function loadSystemState() {
     }
 }
 
-async function setPipelineRunning(isRunning) {
+async function setGateRunning(isRunning) {
     if (!supabaseInstance) return;
 
     const sbToggle = document.getElementById('sbPipelineToggle');
@@ -280,10 +270,10 @@ async function setPipelineRunning(isRunning) {
 // ============================================================
 
 const PROVIDERS = {
-    supabase: { name: 'Supabase Storage',  limit: 1024, note: 'MB stored' },
-    gemini:   { name: 'Gemini Embeddings', limit: 1500, note: 'Calls / day' },
+    supabase: { name: 'Supabase Storage',  limit: 1024,  note: 'MB stored' },
+    gemini:   { name: 'Gemini Embeddings', limit: 1500,  note: 'Calls / day' },
     groq:     { name: 'Groq',              limit: 14400, note: 'Tokens / day' },
-    resend:   { name: 'Resend',            limit: 100,  note: 'Emails / day' },
+    resend:   { name: 'Resend',            limit: 100,   note: 'Emails / day' },
 };
 
 async function loadApiUsage() {
@@ -373,7 +363,6 @@ function renderSettingsUsage(usage) {
         }
     });
 
-    // Quota warning banner in Settings
     const supa = usage['supabase'];
     const warning = document.getElementById('sysQuotaWarning');
     if (warning) {
@@ -389,19 +378,19 @@ function renderSettingsUsage(usage) {
 function attachSystemControls() {
     const sbToggle = document.getElementById('sbPipelineToggle');
     if (sbToggle && !sbToggle.dataset.bound) {
-        sbToggle.addEventListener('change', e => setPipelineRunning(e.target.checked));
+        sbToggle.addEventListener('change', e => setGateRunning(e.target.checked));
         sbToggle.dataset.bound = 'true';
     }
 
     const ovToggle = document.getElementById('ovPipelineToggle');
     if (ovToggle && !ovToggle.dataset.bound) {
-        ovToggle.addEventListener('change', e => setPipelineRunning(e.target.checked));
+        ovToggle.addEventListener('change', e => setGateRunning(e.target.checked));
         ovToggle.dataset.bound = 'true';
     }
 
     const sysToggle = document.getElementById('sysGateToggle');
     if (sysToggle && !sysToggle.dataset.bound) {
-        sysToggle.addEventListener('change', e => setPipelineRunning(e.target.checked));
+        sysToggle.addEventListener('change', e => setGateRunning(e.target.checked));
         sysToggle.dataset.bound = 'true';
     }
 }
