@@ -1,14 +1,12 @@
 // ============================================================
 // PROFILE - MAIN ORCHESTRATOR
 // ============================================================
-// Loads session, handles tab switching, and wires the
-// global gating toggle + API usage that live in the sidebar
-// and Overview strip.
+// Self-contained. Tab switching, sidebar gating toggle, API
+// usage, and per-tab data loading all live here.
 
 import { requireAuth } from './auth-guard.js';
 import { showToast } from './utils/toast.js';
 
-// Make toast available globally for legacy inline onclick handlers
 window.showToast = showToast;
 
 // ============================================================
@@ -19,18 +17,6 @@ let supabaseInstance = null;
 let profileUser = null;
 let currentTab = 'overview';
 let pollTimer = null;
-
-// ============================================================
-// TAB MODULE MAPPING
-// ============================================================
-
-const tabModules = {
-    'overview': () => import('./tabs/overview.js'),
-    'security': () => import('./tabs/security.js'),
-    'settings': () => import('./tabs/settings.js'),
-};
-
-const loadedModules = {};
 
 // ============================================================
 // INITIALIZATION
@@ -70,7 +56,6 @@ async function switchTab(tabId) {
     tabContents.forEach(tab => tab.classList.remove('active'));
     navLinks.forEach(link => link.classList.remove('active'));
 
-    // FIXED: use data-tab attribute, not id="tab-..."
     const selectedTab = document.querySelector(`.tab-content[data-tab="${tabId}"]`);
     if (selectedTab) selectedTab.classList.add('active');
 
@@ -81,39 +66,103 @@ async function switchTab(tabId) {
     if (sidebar && window.innerWidth <= 768) sidebar.classList.remove('open');
 
     if (tabId) window.location.hash = tabId;
-
     currentTab = tabId;
 
-    await loadTab(tabId);
+    // Load data for the tab
+    if (tabId === 'overview')  await loadOverviewTab();
+    if (tabId === 'security')  await loadSecurityTab();
+    if (tabId === 'settings')  await loadSettingsTab();
 }
 
-async function loadTab(tabId) {
-    if (loadedModules[tabId]) {
-        if (typeof loadedModules[tabId].refresh === 'function') {
-            await loadedModules[tabId].refresh(supabaseInstance, profileUser);
-        }
-        return;
-    }
+// ============================================================
+// TAB DATA LOADERS
+// ============================================================
 
-    const moduleLoader = tabModules[tabId];
-    if (!moduleLoader) {
-        console.warn('No module found for tab:', tabId);
-        return;
-    }
+async function loadOverviewTab() {
+    if (!supabaseInstance || !profileUser) return;
 
     try {
-        const module = await moduleLoader();
-        loadedModules[tabId] = module;
+        // Documents count
+        const { count: docCount } = await supabaseInstance
+            .from('documents')
+            .select('*', { count: 'exact', head: true })
+            .eq('owner_id', profileUser.id)
+            .is('deleted_at', null);
 
-        if (typeof module.init === 'function') {
-            await module.init(supabaseInstance, profileUser);
+        const el1 = document.getElementById('ovDocuments');
+        if (el1) el1.textContent = (docCount ?? 0).toLocaleString();
+
+        // Links count
+        const { count: linkCount } = await supabaseInstance
+            .from('links')
+            .select('*', { count: 'exact', head: true })
+            .eq('owner_id', profileUser.id);
+
+        const el2 = document.getElementById('ovLinks');
+        if (el2) el2.textContent = (linkCount ?? 0).toLocaleString();
+
+        // Views count
+        const { data: linkRows } = await supabaseInstance
+            .from('links')
+            .select('id')
+            .eq('owner_id', profileUser.id);
+
+        const linkIds = (linkRows || []).map(r => r.id);
+        if (linkIds.length) {
+            const { count: viewCount } = await supabaseInstance
+                .from('views')
+                .select('*', { count: 'exact', head: true })
+                .in('link_id', linkIds);
+
+            const el3 = document.getElementById('ovViews');
+            if (el3) el3.textContent = (viewCount ?? 0).toLocaleString();
+        } else {
+            const el3 = document.getElementById('ovViews');
+            if (el3) el3.textContent = '0';
         }
 
-        console.log('✅ Tab loaded:', tabId);
-    } catch (error) {
-        console.error('Error loading tab:', tabId, error);
-        showToast('Error loading tab content. Please refresh.', 'error');
+        // Unique viewers
+        if (linkIds.length) {
+            const { data: viewers } = await supabaseInstance
+                .from('views')
+                .select('viewer_email')
+                .in('link_id', linkIds)
+                .not('viewer_email', 'is', null);
+
+            const unique = new Set((viewers || []).map(v => v.viewer_email));
+            const el4 = document.getElementById('ovViewers');
+            if (el4) el4.textContent = unique.size.toLocaleString();
+        } else {
+            const el4 = document.getElementById('ovViewers');
+            if (el4) el4.textContent = '0';
+        }
+
+        // Plan & usage
+        const docsLimit = 3;
+        const docsUsed = docCount ?? 0;
+        const usageDocs = document.getElementById('usageDocs');
+        const usageDocsFill = document.getElementById('usageDocsFill');
+        if (usageDocs) usageDocs.textContent = `${docsUsed} / ${docsLimit}`;
+        if (usageDocsFill) usageDocsFill.style.width = Math.min((docsUsed / docsLimit) * 100, 100) + '%';
+
+        const sidebarCount = document.getElementById('sidebarDocCount');
+        const sidebarFill = document.getElementById('sidebarDocFill');
+        if (sidebarCount) sidebarCount.textContent = `${docsUsed} / ${docsLimit}`;
+        if (sidebarFill) sidebarFill.style.width = Math.min((docsUsed / docsLimit) * 100, 100) + '%';
+
+    } catch (err) {
+        console.warn('loadOverviewTab:', err.message);
     }
+}
+
+async function loadSecurityTab() {
+    if (!supabaseInstance || !profileUser) return;
+    // Populated later when we build the Security tab in detail
+}
+
+async function loadSettingsTab() {
+    if (!supabaseInstance || !profileUser) return;
+    // Populated later when we build the Settings tab in detail
 }
 
 // ============================================================
@@ -150,13 +199,11 @@ function updateUserUI(user) {
         welcomeSubtitle.innerHTML = `Profile, security, and account settings for ${fullName}.`;
     }
 
-    // Populate personal profile fields
     const fullNameInput = document.getElementById('personalFullName');
     const emailInput = document.getElementById('personalEmail');
     if (fullNameInput) fullNameInput.value = fullName;
     if (emailInput) emailInput.value = user.email || '';
 
-    // Populate profile hero
     const heroName = document.getElementById('heroName');
     const heroEmail = document.getElementById('heroEmail');
     const heroAvatar = document.getElementById('heroAvatar');
@@ -436,39 +483,43 @@ function timeAgo(date) {
 window.switchTab = switchTab;
 
 window.updatePersonalProfile = function() {
-    showToast('Settings tab not loaded yet. Please try again.', 'warning');
+    showToast('Save profile — wired next.', 'info');
 };
 
 window.saveLinkDefaults = function() {
-    showToast('Settings tab not loaded yet. Please try again.', 'warning');
+    showToast('Save defaults — wired next.', 'info');
 };
 
 window.saveSecurityFeatures = function() {
-    showToast('Settings tab not loaded yet. Please try again.', 'warning');
+    showToast('Save features — wired next.', 'info');
 };
 
 window.saveNotificationPreferences = function() {
-    showToast('Settings tab not loaded yet. Please try again.', 'warning');
+    showToast('Save notifications — wired next.', 'info');
 };
 
 window.deleteAccount = function() {
-    showToast('Settings tab not loaded yet. Please try again.', 'warning');
+    if (confirm('Delete your account and all data? This cannot be undone.')) {
+        showToast('Account deletion — wired next.', 'warning');
+    }
 };
 
 window.enableTfa = function() {
-    showToast('Security tab not loaded yet. Please try again.', 'warning');
+    showToast('Two-factor setup — wired next.', 'info');
 };
 
 window.generateRecoveryCodes = function() {
-    showToast('Security tab not loaded yet. Please try again.', 'warning');
+    showToast('Recovery codes — wired next.', 'info');
 };
 
 window.logoutAllSessions = function() {
-    showToast('Security tab not loaded yet. Please try again.', 'warning');
+    if (confirm('Log out of all devices?')) {
+        showToast('Session revocation — wired next.', 'warning');
+    }
 };
 
 window.exportAllAnalytics = function() {
-    showToast('Security tab not loaded yet. Please try again.', 'warning');
+    showToast('CSV export — wired next.', 'info');
 };
 
 // ============================================================
@@ -505,8 +556,8 @@ function attachEventListeners() {
     await initializeProfile();
 
     attachEventListeners();
-
     attachSystemControls();
+
     await loadSystemState();
     await loadApiUsage();
     startPolling();
